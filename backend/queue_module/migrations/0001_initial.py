@@ -16,9 +16,9 @@ class Migration(migrations.Migration):
             name='Queue',
             fields=[
                 ('id', models.UUIDField(default=uuid.uuid1, editable=False, primary_key=True, serialize=False)),
-                ('name', models.CharField(db_index=True, max_length=255, verbose_name='Имя очереди')),
-                ('is_private', models.BooleanField(default=False, verbose_name='Флаг закрытой очереди')),
-                ('members', models.JSONField(default=list, verbose_name='Члены очереди')),
+                ('name', models.CharField(db_index=True, max_length=255, verbose_name='Queue name')),
+                ('is_private', models.BooleanField(default=False, verbose_name='Privacy flag')),
+                ('members', models.JSONField(default=list, verbose_name='Queue members list')),
             ],
         ),
     ]
