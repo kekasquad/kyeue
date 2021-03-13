@@ -8,4 +8,4 @@ class QueueFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Queue
 
-    name = fuzzy.FuzzyText().fuzz()
+    name = fuzzy.FuzzyText()

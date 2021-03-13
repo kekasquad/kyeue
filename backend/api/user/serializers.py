@@ -16,6 +16,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
     password = serializers.CharField(
         required=True,
         max_length=128,
+        write_only=True
     )
 
     firstName = serializers.CharField(
@@ -29,6 +30,10 @@ class UserCreateSerializer(serializers.ModelSerializer):
         source='last_name'
     )
 
+    def create(self, validated_data):
+        user = User.objects.create_user(**validated_data)
+        return user
+
 
 class UserUpdateSerializer(serializers.ModelSerializer):
     class Meta:
@@ -39,6 +44,7 @@ class UserUpdateSerializer(serializers.ModelSerializer):
     password = serializers.CharField(
         required=False,
         max_length=128,
+        write_only=True
     )
     firstName = serializers.CharField(
         max_length=60,
@@ -55,7 +61,7 @@ class UserUpdateSerializer(serializers.ModelSerializer):
 class UserRetrieveSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        read_only_fields = ('id', 'username', 'password', 'firstName', 'lastName')
+        read_only_fields = ('id', 'username', 'firstName', 'lastName')
         fields = read_only_fields
 
     firstName = serializers.CharField(

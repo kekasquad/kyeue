@@ -1,11 +1,13 @@
 from rest_framework.generics import RetrieveUpdateDestroyAPIView
-from rest_framework.permissions import SAFE_METHODS
+from rest_framework.permissions import SAFE_METHODS, IsAuthenticated
 
 from core.models import User
 from . import serializers
 
 
 class UserRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
+    permission_classes = (IsAuthenticated,)
+
     queryset = User.objects.all()
 
     def get_serializer_class(self):

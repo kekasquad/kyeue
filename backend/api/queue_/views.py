@@ -1,6 +1,6 @@
 from rest_framework import status
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, UpdateAPIView
-from rest_framework.permissions import SAFE_METHODS
+from rest_framework.permissions import SAFE_METHODS, IsAuthenticated
 from rest_framework.response import Response
 
 from queue_module.models import Queue
@@ -8,6 +8,8 @@ from . import serializers
 
 
 class QueueListCreateAPIView(ListCreateAPIView):
+    permission_classes = (IsAuthenticated,)
+
     queryset = Queue.objects.all()
 
     def get_serializer_class(self):
@@ -17,6 +19,8 @@ class QueueListCreateAPIView(ListCreateAPIView):
 
 
 class QueueRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
+    permission_classes = (IsAuthenticated,)
+
     queryset = Queue.objects.all()
 
     def get_serializer_class(self):
@@ -26,6 +30,8 @@ class QueueRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
 
 
 class BaseQueueMemberOperationAPIView(UpdateAPIView):
+    permission_classes = (IsAuthenticated,)
+
     queryset = Queue.objects.all()
     serializer_class = serializers.QueueMemberSerializer
 
