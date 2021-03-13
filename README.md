@@ -11,4 +11,3 @@
     pip install -r requirements.txt
     python manage.py migrate  # creates db and tables
     python manage.py runserver <host>:<port> (ex.: 0.0.0.0:8000)
-    
