@@ -7,15 +7,17 @@ from rest_framework import status
 
 from factories import QueueFactory
 from queue_module.models import Queue
+from ..tests import AuthMixin
 
 
-class QueueAPITestCases(TestCase):
+class QueueAPITestCases(AuthMixin, TestCase):
 
     def test_create_queue(self):
         name = 'abc'
         response = self.client.post(
             reverse('api_queue_list_create_api_view'),
-            data={'name': name}
+            data={'name': name},
+            HTTP_AUTHORIZATION=self.access_header
         )
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -27,10 +29,14 @@ class QueueAPITestCases(TestCase):
         for i in range(count):
             self.client.post(
                 reverse('api_queue_list_create_api_view'),
-                data={'name': str(i)}
+                data={'name': str(i)},
+                HTTP_AUTHORIZATION=self.access_header
             )
 
-        response = self.client.get(reverse('api_queue_list_create_api_view'))
+        response = self.client.get(
+            reverse('api_queue_list_create_api_view'),
+            HTTP_AUTHORIZATION=self.access_header
+        )
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         queue_list = response.json()
@@ -44,7 +50,7 @@ class QueueAPITestCases(TestCase):
         response = self.client.get(reverse(
             'api_queue_retrieve_update_destroy_api_view',
             kwargs={'pk': str(queue.id)}
-        ))
+        ), HTTP_AUTHORIZATION=self.access_header)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         response = response.json()
@@ -61,19 +67,26 @@ class QueueAPITestCases(TestCase):
 
         members = [str(uuid.uuid1()) for _ in range(count)]
         for member in members:
-            res = self.client.put(reverse(
-                'api_queue_add_member_api_view',
-                kwargs={'pk': str(queue.id)}
-            ), data={'userId': member}, content_type='application/json')
+            res = self.client.put(
+                reverse(
+                    'api_queue_add_member_api_view',
+                    kwargs={'pk': str(queue.id)}
+                ),
+                data={'userId': member}, content_type='application/json',
+                HTTP_AUTHORIZATION=self.access_header
+            )
             self.assertEqual(res.status_code, status.HTTP_200_OK)
 
         queue.refresh_from_db()
         self.assertEqual(queue.members, members[::-1])
         for member in members:
-            res = self.client.put(reverse(
-                'api_queue_move_member_to_end_api_view',
-                kwargs={'pk': str(queue.id)}
-            ), data={'userId': member}, content_type='application/json')
+            res = self.client.put(
+                reverse(
+                    'api_queue_move_member_to_end_api_view',
+                    kwargs={'pk': str(queue.id)}
+                ), data={'userId': member}, content_type='application/json',
+                HTTP_AUTHORIZATION=self.access_header
+            )
             self.assertEqual(res.status_code, status.HTTP_200_OK)
             queue.refresh_from_db()
             self.assertEqual(queue.members[0], member)
@@ -83,10 +96,13 @@ class QueueAPITestCases(TestCase):
 
         for i in range(count):
             member = members[i]
-            res = self.client.put(reverse(
-                'api_queue_remove_member_api_view',
-                kwargs={'pk': str(queue.id)}
-            ), data={'userId': member}, content_type='application/json')
+            res = self.client.put(
+                reverse(
+                    'api_queue_remove_member_api_view',
+                    kwargs={'pk': str(queue.id)}
+                ), data={'userId': member}, content_type='application/json',
+                HTTP_AUTHORIZATION=self.access_header
+            )
             self.assertEqual(res.status_code, status.HTTP_200_OK)
             queue.refresh_from_db()
             self.assertEqual(len(queue.members), count - i - 1)
@@ -94,10 +110,13 @@ class QueueAPITestCases(TestCase):
     def test_delete_queue(self):
         queue = QueueFactory()
 
-        res = self.client.delete(reverse(
-            'api_queue_retrieve_update_destroy_api_view',
-            kwargs={'pk': str(queue.id)}
-        ))
+        res = self.client.delete(
+            reverse(
+                'api_queue_retrieve_update_destroy_api_view',
+                kwargs={'pk': str(queue.id)}
+            ),
+            HTTP_AUTHORIZATION=self.access_header
+        )
         self.assertEqual(res.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Queue.objects.count(), 0)
 
@@ -105,10 +124,13 @@ class QueueAPITestCases(TestCase):
         queue = QueueFactory()
         new_name = fuzzy.FuzzyText().fuzz()
 
-        res = self.client.patch(reverse(
-            'api_queue_retrieve_update_destroy_api_view',
-            kwargs={'pk': str(queue.id)}
-        ), data={'name': new_name}, content_type='application/json')
+        res = self.client.patch(
+            reverse(
+                'api_queue_retrieve_update_destroy_api_view',
+                kwargs={'pk': str(queue.id)}
+            ), data={'name': new_name}, content_type='application/json',
+            HTTP_AUTHORIZATION=self.access_header
+        )
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
         queue.refresh_from_db()
