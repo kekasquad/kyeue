@@ -25,8 +25,10 @@ export class AuthComponent implements OnInit {
   });
 
   isProcess = false;
-  signUpMode = false;
+  selectedIndex = 0;
   serverErrors: ServerErrorsInterface;
+
+  successfulOperation = false;
 
   constructor(
     private api: ApiService,
@@ -36,12 +38,11 @@ export class AuthComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  changeMode(): void {
+  resetState(): void {
     if (this.isProcess) {
       return;
     }
     this.isProcess = true;
-    this.signUpMode = !this.signUpMode;
     this.loginForm.reset();
     this.signUpForm.reset();
     this.serverErrors = null;
@@ -61,7 +62,12 @@ export class AuthComponent implements OnInit {
     ).subscribe(
       () => {
         this.isProcess = false;
-        this.router.navigate(['/']);
+        this.successfulOperation = true;
+
+        setTimeout(() => {
+          this.successfulOperation = false;
+          this.router.navigate(['/']);
+        }, 1500);
       },
       (err) => {
         this.serverErrors = err.error;
@@ -79,7 +85,13 @@ export class AuthComponent implements OnInit {
     this.api.signUp(this.signUpForm.value).subscribe(
       () => {
         this.isProcess = false;
-        this.changeMode();
+        this.successfulOperation = true;
+
+        setTimeout(() => {
+          this.successfulOperation = false;
+          this.resetState();
+          this.selectedIndex = 0;
+        }, 1500);
       },
       (err) => {
         this.serverErrors = err.error;

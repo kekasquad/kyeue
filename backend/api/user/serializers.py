@@ -1,4 +1,6 @@
+from django.db import IntegrityError
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 
 from core.models import User
 
@@ -31,8 +33,11 @@ class UserCreateSerializer(serializers.ModelSerializer):
     )
 
     def create(self, validated_data):
-        user = User.objects.create_user(**validated_data)
-        return user
+        try:
+            user = User.objects.create_user(**validated_data)
+            return user
+        except IntegrityError:
+            raise ValidationError({'username': ['User with this username already exists']})
 
 
 class UserUpdateSerializer(serializers.ModelSerializer):
