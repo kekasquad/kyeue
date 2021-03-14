@@ -36,9 +36,11 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'django.contrib.staticfiles',
     'corsheaders',
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
+    'drf_yasg',
 
     'queue_module',
     'core',
@@ -150,3 +152,5 @@ CORS_ALLOW_HEADERS = (
     'retry-after',
     'x-version-id',
 )
+
+STATIC_URL = '/static/'
