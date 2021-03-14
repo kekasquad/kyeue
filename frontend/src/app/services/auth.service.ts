@@ -20,9 +20,10 @@ export class AuthService {
     return this.currentUserSubject.value;
   }
 
-  login(username: string, password: string): Observable<any> {
-    return this.http.post<any>(`${environment.apiUrl}/auth/authenticate`, { username, password })
-      .pipe(map(user => {
+  login(username: string, password: string): Observable<User> {
+    return this.http.post(`${environment.apiUrl}/auth/login`, { username, password })
+      .pipe(map(res => {
+        const user = new User(res);
         localStorage.setItem('currentUser', JSON.stringify(user));
         this.currentUserSubject.next(user);
         return user;

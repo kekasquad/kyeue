@@ -10,7 +10,6 @@ const routes: Routes = [
     pathMatch: 'full',
     loadChildren: () => import('./queue/queue.module').then(m => m.QueueModule),
     canActivate: [ AuthGuard ],
-    canActivateChild: [ AuthGuard ]
   },
   {
     path: 'auth',
