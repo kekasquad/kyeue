@@ -1,7 +1,9 @@
 package io.kekasquad.queue.base
 
 import androidx.lifecycle.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 abstract class BaseViewModel<
@@ -41,8 +43,10 @@ abstract class BaseViewModel<
 
         _effectLiveData.addSource(intents) {
             viewModelScope.launch {
-                if (it !is NothingIntent) {
-                    _effectLiveData.postValue(performAction(intentInterpreter(it)))
+                withContext(Dispatchers.IO) {
+                    if (it !is NothingIntent) {
+                        _effectLiveData.postValue(performAction(intentInterpreter(it)))
+                    }
                 }
             }
         }
