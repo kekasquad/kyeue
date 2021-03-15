@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">Queue</string>
+    <string name="text_item_empty">No data</string>
+    <string name="text_item_loading_error">Loading error</string>
+    <string name="text_btn_item_loading_retry">Retry</string>
+    <string name="text_btn_sign_in">Sign in</string>
+    <string name="text_btn_sign_up">Sign up</string>
+    <string name="text_hint_login">Login</string>
+    <string name="text_hint_password">Password</string>
+    <string name="text_hint_name">Name</string>
+    <string name="text_hint_group">Group</string>
 </resources>

@@ -23,7 +23,7 @@ buildscript {
         moshi_version = '1.11.0'
 
         hilt_version = '2.33-beta'
-        androidx_hilt_version = '1.0.0-alpha03'
+        androidx_hilt_version = '1.0.0-alpha02'
 
         timber_version = '4.7.1'
     }

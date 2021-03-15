@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorSurface">@color/colorSurface</item>
+        <item name="colorError">@color/colorError</item>
+
+        <item name="colorOnPrimary">@color/colorOnPrimary</item>
+        <item name="colorOnSurface">@color/colorOnSurface</item>
+        <item name="colorOnError">@color/colorOnError</item>
+
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">
+            true
+        </item>
+        <item name="android:navigationBarColor" tools:targetApi="o_mr1">
+            @android:color/transparent
+        </item>
+    </style>
+</resources>
