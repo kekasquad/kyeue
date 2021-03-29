@@ -3,9 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:background="@color/colorSurface">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@drawable/gradient"
+        app:layout_constraintBottom_toTopOf="@+id/guideline2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.textfield.TextInputLayout
+        style="@style/Theme.Qeyeu.InputField"
         android:id="@+id/input_layout_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,7 +27,7 @@
         app:layout_constraintBottom_toTopOf="@+id/input_layout_group"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:shapeAppearanceOverlay="@style/AppTheme.SmoothCornerView">
+        app:shapeAppearanceOverlay="@style/Theme.Qeyeu.SmoothCornerView">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/input_edit_name"
@@ -26,6 +37,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
+        style="@style/Theme.Qeyeu.InputField"
         android:id="@+id/input_layout_group"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -36,7 +48,7 @@
         app:layout_constraintBottom_toTopOf="@+id/input_layout_login"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:shapeAppearanceOverlay="@style/AppTheme.SmoothCornerView">
+        app:shapeAppearanceOverlay="@style/Theme.Qeyeu.SmoothCornerView">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/input_edit_group"
@@ -46,6 +58,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
+        style="@style/Theme.Qeyeu.InputField"
         android:id="@+id/input_layout_login"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -56,7 +69,7 @@
         app:layout_constraintBottom_toTopOf="@+id/guideline2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:shapeAppearanceOverlay="@style/AppTheme.SmoothCornerView">
+        app:shapeAppearanceOverlay="@style/Theme.Qeyeu.SmoothCornerView">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/input_edit_login"
@@ -66,6 +79,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
+        style="@style/Theme.Qeyeu.InputField"
         android:id="@+id/input_layout_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -76,12 +90,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline2"
-        app:shapeAppearanceOverlay="@style/AppTheme.SmoothCornerView">
+        app:shapeAppearanceOverlay="@style/Theme.Qeyeu.SmoothCornerView">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/input_edit_password"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -99,6 +113,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:text="@string/text_btn_sign_in"
+        android:textAppearance="@style/TextAppearance.Theme.Qeyeu.Button"
         app:layout_constraintBottom_toTopOf="@+id/btn_sign_up"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -110,6 +125,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:text="@string/text_btn_sign_up"
+        android:textAppearance="@style/TextAppearance.Theme.Qeyeu.Button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
