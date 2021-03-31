@@ -16,7 +16,6 @@ class QueueListCreateAPIView(ListCreateAPIView):
             return serializers.QueueRetrieveSerializer
         return serializers.QueueCreateSerializer
 
-
     def perform_create(self, serializer):
         serializer.save(creator=self.request.user)
 
@@ -30,6 +29,14 @@ class QueueRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
         if self.request.method in SAFE_METHODS:
             return serializers.QueueRetrieveSerializer
         return serializers.QueueUpdateSerializer
+
+    def perform_update(self, serializer):
+        if self.get_object().creator == self.request.user:
+            super().perform_update(serializer)
+
+    def perform_destroy(self, instance):
+        if self.get_object().creator == self.request.user:
+            super().perform_destroy(instance)
 
 
 class BaseQueueMemberOperationAPIView(UpdateAPIView):
@@ -51,6 +58,10 @@ class BaseQueueMemberOperationAPIView(UpdateAPIView):
         response_serializer = serializers.QueueRetrieveSerializer(instance=instance)
         return Response(response_serializer.data)
 
+    def perform_update(self, serializer):
+        if self.request.data['userId'] == self.request.user.id or self.get_object().creator == self.request.user:
+            super().perform_update(serializer)
+
 
 class QueueAddMemberAPIView(BaseQueueMemberOperationAPIView):
     method_name = 'push_member'
@@ -62,4 +73,3 @@ class QueueRemoveMemberAPIView(BaseQueueMemberOperationAPIView):
 
 class QueueMoveMemberToEndAPIView(BaseQueueMemberOperationAPIView):
     method_name = 'move_member_to_the_end'
-
