@@ -5,7 +5,7 @@ from django.urls import reverse
 from factory import fuzzy
 from rest_framework import status
 
-from factories import QueueFactory
+from backend.queue_module.factories import QueueFactory
 from queue_module.models import Queue
 from ..tests import AuthMixin
 
@@ -21,6 +21,7 @@ class QueueAPITestCases(AuthMixin, TestCase):
         )
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(self.user, Queue.objects.first().creator)
         self.assertEqual(Queue.objects.count(), 1)
         Queue.objects.get(name=name)
 
@@ -45,7 +46,7 @@ class QueueAPITestCases(AuthMixin, TestCase):
             self.assertEqual(queue['name'], str(ind))
 
     def test_get_queue_details(self):
-        queue = QueueFactory()
+        queue = QueueFactory(creator=self.user)
 
         response = self.client.get(reverse(
             'api_queue_retrieve_update_destroy_api_view',
@@ -62,7 +63,7 @@ class QueueAPITestCases(AuthMixin, TestCase):
         self.assertEqual(response['isPrivate'], queue.is_private)
 
     def test_member_operations(self):
-        queue = QueueFactory()
+        queue = QueueFactory(creator=self.user)
         count = 3
 
         members = [str(uuid.uuid1()) for _ in range(count)]
@@ -108,7 +109,7 @@ class QueueAPITestCases(AuthMixin, TestCase):
             self.assertEqual(len(queue.members), count - i - 1)
 
     def test_delete_queue(self):
-        queue = QueueFactory()
+        queue = QueueFactory(creator=self.user)
 
         res = self.client.delete(
             reverse(
@@ -121,7 +122,7 @@ class QueueAPITestCases(AuthMixin, TestCase):
         self.assertEqual(Queue.objects.count(), 0)
 
     def test_update_queue(self):
-        queue = QueueFactory()
+        queue = QueueFactory(creator=self.user)
         new_name = fuzzy.FuzzyText().fuzz()
 
         res = self.client.patch(

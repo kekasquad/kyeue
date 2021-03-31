@@ -18,6 +18,10 @@ class QueueListCreateAPIView(ListCreateAPIView):
         return serializers.QueueCreateSerializer
 
 
+    def perform_create(self, serializer):
+        serializer.save(creator=self.request.user)
+
+
 class QueueRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticated,)
 

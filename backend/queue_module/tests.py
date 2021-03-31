@@ -2,6 +2,7 @@
 """
 from django.test import TestCase
 
+from core.models import User
 from .models import Queue
 
 
@@ -10,7 +11,9 @@ class QueueTestCases(TestCase):
     """
 
     def test_queue_members_operations(self):
-        queue = Queue(name='abc')
+        user = User()
+        user.save()
+        queue = Queue(name='abc', creator=user)
         queue.save()
         queue.refresh_from_db()
         self.assertEqual(queue.members, [])
