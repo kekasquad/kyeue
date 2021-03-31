@@ -12,10 +12,23 @@ import CoreData
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var window: UIWindow?
+    var flag = false
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        
+        if JWTAuthentication.shared.isAuthorized {
+            flag = true
+        }
+        
         return true
+    }
+    
+    func applicationDidBecomeActive(_ application: UIApplication) {
+        if flag {
+            flag = false
+            let VC = UIApplication.shared.windows.first!.rootViewController as! SignVC
+            VC.didSignInWithNoAnimation()
+        }
     }
 
     // MARK: - Core Data stack

@@ -129,6 +129,34 @@
             </objects>
             <point key="canvasLocation" x="13.043478260869566" y="108.48214285714285"/>
         </scene>
+        <!--Qveve-->
+        <scene sceneID="nS6-oT-T2d">
+            <objects>
+                <viewController storyboardIdentifier="MainVC" useStoryboardIdentifierAsRestorationIdentifier="YES" id="KcU-NG-D5F" customClass="MainVC" customModule="kyeue" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="AZ7-D1-FE1">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="fcj-90-QdG">
+                                <rect key="frame" x="188.5" y="429.5" width="37" height="37"/>
+                            </activityIndicatorView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="GKS-Wl-Oh6"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="fcj-90-QdG" firstAttribute="centerY" secondItem="AZ7-D1-FE1" secondAttribute="centerY" id="AoL-ku-ViC"/>
+                            <constraint firstItem="fcj-90-QdG" firstAttribute="centerX" secondItem="AZ7-D1-FE1" secondAttribute="centerX" id="HEd-o7-rML"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Qveve" id="i7Y-fA-Tch"/>
+                    <connections>
+                        <outlet property="activityIndicator" destination="fcj-90-QdG" id="fgJ-xR-Zde"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="yuE-0M-KAd" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="833" y="108"/>
+        </scene>
     </scenes>
     <resources>
         <systemColor name="labelColor">

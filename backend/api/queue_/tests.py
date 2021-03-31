@@ -55,7 +55,6 @@ class QueueAPITestCases(AuthMixin, TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         response = response.json()
-        print(response)
         for key in ('name', 'members'):
             self.assertEqual(response[key], getattr(queue, key))
 

@@ -16,7 +16,7 @@ class AuthAPITestCases(TestCase):
 
     @staticmethod
     def _get_auth_header(token):
-        return f'Bearer {token}'
+        return f'Token {token}'
 
     def test_forbidden_request(self):
         response = self.client.get(reverse('api_queue_list_create_api_view'))
@@ -62,19 +62,15 @@ class AuthAPITestCases(TestCase):
         user.set_password(password)
         user.save()
 
-        jwt_response = self.client.post(reverse('api_auth_login_api_view'), data={
+        response = self.client.post(reverse('api_auth_login_api_view'), data={
             'username': user.username,
             'password': password
         })
-        self.assertEqual(jwt_response.status_code, status.HTTP_200_OK)
-
-        jwt = jwt_response.json()
-        self.assertIn('access', jwt)
-        self.assertIn('refresh', jwt)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         res = self.client.get(
             reverse('api_queue_list_create_api_view'),
-            HTTP_AUTHORIZATION=self._get_auth_header(jwt["access"])
+            HTTP_AUTHORIZATION=self._get_auth_header(response.json()['key'])
         )
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
@@ -87,7 +83,7 @@ class AuthAPITestCases(TestCase):
             'username': user.username,
             'password': fuzzy.FuzzyText().fuzz()
         })
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_logout(self):
         user = UserFactory()
@@ -95,28 +91,16 @@ class AuthAPITestCases(TestCase):
         user.set_password(password)
         user.save()
 
-        jwt = self.client.post(reverse('api_auth_login_api_view'), data={
+        key = self.client.post(reverse('api_auth_login_api_view'), data={
             'username': user.username,
             'password': password
-        }).json()
+        }).json()['key']
 
         response = self.client.post(
             reverse('api_auth_logout_api_view'),
-            HTTP_AUTHORIZATION=self._get_auth_header(jwt['access'])
+            HTTP_AUTHORIZATION=self._get_auth_header(key)
         )
         self.assertEqual(response.status_code, status.HTTP_205_RESET_CONTENT)
 
-        response = self.client.post(
-            reverse('api_auth_login_refresh_api_view'),
-            HTTP_AUTHORIZATION=self._get_auth_header(jwt['refresh'])
-        )
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-
-        mock_ = mock.Mock()
-        mock_.return_value = aware_utcnow() +\
-            settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'] +\
-            timedelta(seconds=1)
-
-        with mock.patch('rest_framework_simplejwt.tokens.aware_utcnow', mock_):
-            response = self.client.get(reverse('api_queue_list_create_api_view'))
+        response = self.client.get(reverse('api_queue_list_create_api_view'))
         self.assertEquals(response.status_code, status.HTTP_401_UNAUTHORIZED)

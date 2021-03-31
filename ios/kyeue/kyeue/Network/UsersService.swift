@@ -36,7 +36,6 @@ class UsersService {
         
         if  let url = url {
             
-            print(url)
             var request = URLRequest(url: url)
             request.httpMethod = "POST"
             request.addValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -99,7 +98,6 @@ class UsersService {
         
         if  let url = url {
             
-            print(url)
             var request = URLRequest(url: url)
             request.httpMethod = "POST"
             request.addValue("application/json", forHTTPHeaderField: "Content-Type")

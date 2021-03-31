@@ -136,17 +136,28 @@ class SignVC: UIViewController {
             self.completionStuff()
             self.errorAlert(with: message, action: self.signIn)
         } completion: { [weak self] (token) in
-            print(token)
             guard let self = self else { return }
-            self.completionStuff()
-            self.successAlert(with: "You successfully signed in!", action: self.didSignIn)
+            TokensStorageManager.shared.save(token: token) { [weak self] in
+                guard let self = self else { return }
+                self.completionStuff()
+                self.successAlert(with: "You successfully signed in!", action: self.didSignInWithAnimation)
+            }
         }
     }
     
-    func didSignIn() {
-        // go next
+    func didSignInWithNoAnimation() {
+        let newVC = MainVC.makeVC()
+        let navVC = UINavigationController(rootViewController: newVC)
+        navVC.modalPresentationStyle = .fullScreen
+        present(navVC, animated: false)
     }
     
+    func didSignInWithAnimation() {
+        let newVC = MainVC.makeVC()
+        let navVC = UINavigationController(rootViewController: newVC)
+        navVC.modalPresentationStyle = .fullScreen
+        present(navVC, animated: true)
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
