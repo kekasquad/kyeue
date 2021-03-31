@@ -31,7 +31,7 @@ class LogInView(CreateAPIView):
         )
         if not user:
             return Response({'error': 'Invalid Credentials'},
-                            status=status.HTTP_400_BAD_REQUEST)
+                            status=status.HTTP_401_UNAUTHORIZED)
 
         token, _ = Token.objects.get_or_create(user=user)
         token_serializer = TokenRetrieveSerializer(instance=token)
