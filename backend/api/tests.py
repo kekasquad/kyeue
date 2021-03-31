@@ -11,11 +11,11 @@ class AuthMixin:
         self.user.set_password(self.user_password)
         self.user.save()
 
-        jwt = self.client.post(
+        key = self.client.post(
             reverse('api_auth_login_api_view'),
             data={
                 'username': self.user.username,
                 'password': self.user_password
             }
-        ).json()
-        self.access_header = f"Bearer {jwt['access']}"
+        ).json()['key']
+        self.access_header = f"Token {key}"
