@@ -1,9 +1,10 @@
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, UpdateAPIView
-from rest_framework.permissions import BasePermission, SAFE_METHODS, IsAuthenticated
+from rest_framework.permissions import SAFE_METHODS, IsAuthenticated
 from rest_framework.response import Response
 
 from queue_module.models import Queue
 from . import serializers
+from .permissions import QueueRetrieveUpdateDestroyAPIPermission, BaseQueueMemberOperationAPIPermission
 
 
 class QueueListCreateAPIView(ListCreateAPIView):
@@ -20,14 +21,6 @@ class QueueListCreateAPIView(ListCreateAPIView):
         serializer.save(creator=self.request.user)
 
 
-class QueueRetrieveUpdateDestroyAPIPermission(BasePermission):
-    def has_permission(self, request, view):
-        if request.method in SAFE_METHODS:
-            return True
-        else:
-            return view.get_object().creator == request.user
-
-
 class QueueRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticated, QueueRetrieveUpdateDestroyAPIPermission)
 
@@ -37,11 +30,6 @@ class QueueRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
         if self.request.method in SAFE_METHODS:
             return serializers.QueueRetrieveSerializer
         return serializers.QueueUpdateSerializer
-
-
-class BaseQueueMemberOperationAPIPermission(BasePermission):
-    def has_permission(self, request, view):
-        return request.data['userId'] == request.user.id or view.get_object().creator == request.user
 
 
 class BaseQueueMemberOperationAPIView(UpdateAPIView):
