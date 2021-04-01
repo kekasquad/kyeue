@@ -1,5 +1,5 @@
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, UpdateAPIView
-from rest_framework.permissions import SAFE_METHODS, IsAuthenticated
+from rest_framework.permissions import BasePermission, SAFE_METHODS, IsAuthenticated
 from rest_framework.response import Response
 
 from queue_module.models import Queue
@@ -20,8 +20,16 @@ class QueueListCreateAPIView(ListCreateAPIView):
         serializer.save(creator=self.request.user)
 
 
+class QueueRetrieveUpdateDestroyAPIPermission(BasePermission):
+    def has_permission(self, request, view):
+        if request.method in SAFE_METHODS:
+            return True
+        else:
+            return view.get_object().creator == request.user
+
+
 class QueueRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
-    permission_classes = (IsAuthenticated,)
+    permission_classes = [IsAuthenticated|QueueRetrieveUpdateDestroyAPIPermission]
 
     queryset = Queue.objects.all()
 
@@ -30,13 +38,10 @@ class QueueRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
             return serializers.QueueRetrieveSerializer
         return serializers.QueueUpdateSerializer
 
-    def perform_update(self, serializer):
-        if self.get_object().creator == self.request.user:
-            super().perform_update(serializer)
 
-    def perform_destroy(self, instance):
-        if self.get_object().creator == self.request.user:
-            super().perform_destroy(instance)
+class BaseQueueMemberOperationAPIPermission(BasePermission):
+    def has_permission(self, request, view):
+        return request.data['userId'] == request.user.id or view.get_object().creator == request.user
 
 
 class BaseQueueMemberOperationAPIView(UpdateAPIView):
@@ -58,9 +63,6 @@ class BaseQueueMemberOperationAPIView(UpdateAPIView):
         response_serializer = serializers.QueueRetrieveSerializer(instance=instance)
         return Response(response_serializer.data)
 
-    def perform_update(self, serializer):
-        if self.request.data['userId'] == self.request.user.id or self.get_object().creator == self.request.user:
-            super().perform_update(serializer)
 
 
 class QueueAddMemberAPIView(BaseQueueMemberOperationAPIView):

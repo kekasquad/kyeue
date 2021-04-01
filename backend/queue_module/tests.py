@@ -32,3 +32,22 @@ class QueueTestCases(TestCase):
         queue.save()
         queue.refresh_from_db()
         self.assertEqual(queue.members, [])
+
+    def test_cascade_deletion(self):
+        user = User()
+        user.save()
+        queue = Queue(name='abc', creator=user)
+        queue.save()
+        self.assertEqual(Queue.objects.count(), 1)
+        self.assertEqual(User.objects.count(), 1)
+        queue.delete()
+        self.assertEqual(Queue.objects.count(), 0)
+        self.assertEqual(User.objects.count(), 1)
+
+        queue = Queue(name='abcd', creator=user)
+        queue.save()
+        self.assertEqual(Queue.objects.count(), 1)
+        self.assertEqual(User.objects.count(), 1)
+        user.delete()
+        self.assertEqual(Queue.objects.count(), 0)
+        self.assertEqual(User.objects.count(), 0)
