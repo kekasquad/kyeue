@@ -15,6 +15,7 @@ class MainVC: UIViewController {
         super.viewDidLoad()
         
         setupNavVC()
+        let _ = Authentication.shared.isAuthorized
         view.backgroundColor = .white
     }
     
@@ -36,10 +37,22 @@ class MainVC: UIViewController {
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.font: UIFont(name: "Courier", size: 36)!]
     }
     
+    func logout() {
+        activityIndicator.startAnimating()
+        guard let key = Authentication.shared.user?.key else { return }
+        UsersService.shared.logout(with: key) { [weak self] (err) in
+            guard let self = self else { return }
+            self.errorAlert(with: err, action: self.logout)
+            self.activityIndicator.stopAnimating()
+        } completion: {
+            self.dismiss(animated: true)
+        }
+    }
+    
     @objc func dismissNavVC() {
         activityIndicator.startAnimating()
-        TokensStorageManager.shared.delete { [weak self] in
-            self?.dismiss(animated: true)
+        UsersStorageManager.shared.delete { [weak self] in
+            self?.logout()
         }
     }
     

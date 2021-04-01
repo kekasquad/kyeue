@@ -3,10 +3,11 @@ from rest_framework.permissions import SAFE_METHODS, IsAuthenticated
 
 from core.models import User
 from . import serializers
+from .permissions import UserRetrieveUpdateDestroyAPIPermission
 
 
 class UserRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated, UserRetrieveUpdateDestroyAPIPermission)
 
     queryset = User.objects.all()
 

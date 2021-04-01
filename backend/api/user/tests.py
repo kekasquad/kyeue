@@ -3,6 +3,7 @@ from django.urls import reverse
 from factory import fuzzy
 from rest_framework import status
 
+from core.factories import UserFactory
 from core.models import User
 from ..tests import AuthMixin
 
@@ -62,3 +63,16 @@ class UserAPITestCases(AuthMixin, TestCase):
         self.assertTrue(self.user.check_password(update_data['password']))
         self.assertEqual(self.user.first_name, update_data['firstName'])
         self.assertEqual(self.user.last_name, update_data['lastName'])
+
+    def test_permissions(self):
+        another_user = UserFactory()
+        password = fuzzy.FuzzyText().fuzz()
+        another_user.set_password(password)
+        another_user.save()
+
+        response = self.client.delete(
+            self._get_url(another_user.id),
+            HTTP_AUTHORIZATION=self.access_header
+        )
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+

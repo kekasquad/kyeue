@@ -22,7 +22,7 @@ extension PostingUser {
 
 
 struct User: Codable {
-    let id: UUID
+    let id: String
     let username: String
     let firstName: String
     let lastName: String
@@ -38,4 +38,10 @@ extension User {
 struct SignInUser: Codable {
     let username: String
     let password: String
+}
+
+struct SignedUser: Codable {
+    let key: String
+    let user: User
+    let created: String
 }

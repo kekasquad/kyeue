@@ -4,6 +4,7 @@ from rest_framework.response import Response
 
 from queue_module.models import Queue
 from . import serializers
+from .permissions import QueueRetrieveUpdateDestroyAPIPermission, BaseQueueMemberOperationAPIPermission
 
 
 class QueueListCreateAPIView(ListCreateAPIView):
@@ -16,9 +17,12 @@ class QueueListCreateAPIView(ListCreateAPIView):
             return serializers.QueueRetrieveSerializer
         return serializers.QueueCreateSerializer
 
+    def perform_create(self, serializer):
+        serializer.save(creator=self.request.user)
+
 
 class QueueRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated, QueueRetrieveUpdateDestroyAPIPermission)
 
     queryset = Queue.objects.all()
 
@@ -29,7 +33,7 @@ class QueueRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
 
 
 class BaseQueueMemberOperationAPIView(UpdateAPIView):
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated, BaseQueueMemberOperationAPIPermission)
 
     queryset = Queue.objects.all()
     serializer_class = serializers.QueueMemberSerializer
@@ -48,6 +52,7 @@ class BaseQueueMemberOperationAPIView(UpdateAPIView):
         return Response(response_serializer.data)
 
 
+
 class QueueAddMemberAPIView(BaseQueueMemberOperationAPIView):
     method_name = 'push_member'
 
@@ -58,4 +63,3 @@ class QueueRemoveMemberAPIView(BaseQueueMemberOperationAPIView):
 
 class QueueMoveMemberToEndAPIView(BaseQueueMemberOperationAPIView):
     method_name = 'move_member_to_the_end'
-

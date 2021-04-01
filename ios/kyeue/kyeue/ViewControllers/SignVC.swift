@@ -135,9 +135,9 @@ class SignVC: UIViewController {
             guard let self = self else { return }
             self.completionStuff()
             self.errorAlert(with: message, action: self.signIn)
-        } completion: { [weak self] (token) in
+        } completion: { [weak self] (user) in
             guard let self = self else { return }
-            TokensStorageManager.shared.save(token: token) { [weak self] in
+            UsersStorageManager.shared.save(user: user) { [weak self] in
                 guard let self = self else { return }
                 self.completionStuff()
                 self.successAlert(with: "You successfully signed in!", action: self.didSignInWithAnimation)

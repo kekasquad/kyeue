@@ -3,6 +3,7 @@
 import uuid
 
 from django.db import models
+from core.models import User
 
 from . import signals
 
@@ -25,6 +26,10 @@ class Queue(models.Model):
     is_private = models.BooleanField(
         verbose_name='Privacy flag',
         default=False
+    )
+    creator = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE
     )
     members = models.JSONField(
         verbose_name='Queue members list',

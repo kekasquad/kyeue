@@ -1,13 +1,8 @@
-from datetime import timedelta
-from unittest import mock
-
 from django.test import TestCase
 from django.urls import reverse
 from factory import fuzzy
 from rest_framework import status
-from rest_framework_simplejwt.utils import aware_utcnow
 
-import settings
 from core.factories import UserFactory
 from core.models import User
 
