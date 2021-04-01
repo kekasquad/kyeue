@@ -6,11 +6,16 @@ from factory import fuzzy
 from rest_framework import status
 
 from backend.queue_module.factories import QueueFactory
+from core.factories import UserFactory
 from queue_module.models import Queue
 from ..tests import AuthMixin
 
 
 class QueueAPITestCases(AuthMixin, TestCase):
+
+    @staticmethod
+    def _get_auth_header(token):
+        return f'Token {token}'
 
     def test_create_queue(self):
         name = 'abc'
@@ -94,6 +99,9 @@ class QueueAPITestCases(AuthMixin, TestCase):
         queue.refresh_from_db()
         self.assertEqual(queue.members, members[::-1])
 
+        queue.refresh_from_db()
+        self.assertEqual(queue.members, members[::-1])
+
         for i in range(count):
             member = members[i]
             res = self.client.put(
@@ -136,3 +144,45 @@ class QueueAPITestCases(AuthMixin, TestCase):
         queue.refresh_from_db()
         self.assertEqual(queue.name, new_name)
         self.assertEqual(res.json()['name'], new_name)
+
+    def test_check_permission(self):
+        queue = QueueFactory(creator=self.user)
+        count = 3
+
+        members = [UserFactory() for _ in range(count)]
+        for member in members:
+            res = self.client.put(
+                reverse(
+                    'api_queue_add_member_api_view',
+                    kwargs={'pk': str(queue.id)}
+                ),
+                data={'userId': member.id}, content_type='application/json',
+                HTTP_AUTHORIZATION=self.access_header
+            )
+            self.assertEqual(res.status_code, status.HTTP_200_OK)
+
+        queue.refresh_from_db()
+        self.assertEqual(len(queue.members), count)
+
+        for i in range(count):
+            member = members[i]
+            member_request = members[(i + 1) % len(members)]
+            password = fuzzy.FuzzyText().fuzz()
+            member_request.set_password(password)
+            member_request.save()
+
+            key = self.client.post(reverse('api_auth_login_api_view'), data={
+                'username': member_request.username,
+                'password': password
+            }).json()['key']
+
+            res = self.client.put(
+                reverse(
+                    'api_queue_remove_member_api_view',
+                    kwargs={'pk': str(queue.id)}
+                ), data={'userId': member.id}, content_type='application/json',
+                HTTP_AUTHORIZATION=self._get_auth_header(key)
+            )
+            self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
+            queue.refresh_from_db()
+            self.assertEqual(len(queue.members), count)

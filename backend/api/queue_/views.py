@@ -29,7 +29,7 @@ class QueueRetrieveUpdateDestroyAPIPermission(BasePermission):
 
 
 class QueueRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
-    permission_classes = [IsAuthenticated|QueueRetrieveUpdateDestroyAPIPermission]
+    permission_classes = (IsAuthenticated, QueueRetrieveUpdateDestroyAPIPermission)
 
     queryset = Queue.objects.all()
 
@@ -45,7 +45,7 @@ class BaseQueueMemberOperationAPIPermission(BasePermission):
 
 
 class BaseQueueMemberOperationAPIView(UpdateAPIView):
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated, BaseQueueMemberOperationAPIPermission)
 
     queryset = Queue.objects.all()
     serializer_class = serializers.QueueMemberSerializer
