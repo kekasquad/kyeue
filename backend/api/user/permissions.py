@@ -6,4 +6,4 @@ class UserRetrieveUpdateDestroyAPIPermission(BasePermission):
         if request.method in SAFE_METHODS:
             return True
         else:
-            return request.data['userId'] == request.user.id
+            return view.get_object().id == request.user.id
