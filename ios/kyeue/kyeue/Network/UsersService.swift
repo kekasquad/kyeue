@@ -5,7 +5,7 @@
 //  Created by Vladislav Grokhotov on 15.03.2021.
 //
 
-import UIKit
+import Foundation
 
 class UsersService {
     
@@ -18,13 +18,15 @@ class UsersService {
     private let api = "/api"
     private let auth = "/auth"
     private let login = "/login"
+    private let logout = "/logout"
     private let signup = "/signup"
 
+    private let badMessage = "Bedi s bashkoi"
     
     //MARK: POST
     
     
-    func create(user: PostingUser, errorCompletion: @escaping (String) -> (),  completion: @escaping (User) -> ()) {
+    func create(user: PostingUser, errCompletion: @escaping (String) -> (),  completion: @escaping (User) -> ()) {
         
         var components = URLComponents()
         components.scheme = scheme
@@ -41,8 +43,9 @@ class UsersService {
             request.addValue("application/json", forHTTPHeaderField: "Content-Type")
             
             guard let httpBody = try? JSONEncoder().encode(user)  else {
+                print("bad http body of User")
                 DispatchQueue.main.async {
-                    errorCompletion("Wrong structure of new User, please, send the sсreenshot of this message to developer")
+                    errCompletion(self.badMessage)
                 }
                 return
             }
@@ -53,25 +56,27 @@ class UsersService {
             let task = session.dataTask(with: request) { (data, response, error) in
                 
                 if let error = error {
+                    print(error.localizedDescription)
                     DispatchQueue.main.async {
-                        errorCompletion(error.localizedDescription)
+                        errCompletion(error.localizedDescription)
                     }
-                } else if let data = data {
-                    let newUser = try? JSONDecoder().decode(User.self, from: data)
-                    if let newUser = newUser {
-                        DispatchQueue.main.async {
-                            //мб чето сделать с вернувшимся юзером, пока не понятно
-                            completion(newUser)
+                } else if let httpResponse = response as? HTTPURLResponse {
+                    print(httpResponse.statusCode)
+                    if httpResponse.statusCode == 201 {
+                        if let data = data {
+                            let user = try? JSONDecoder().decode(User.self, from: data)
+                            if let user = user {
+                                DispatchQueue.main.async {
+                                    completion(user)
+                                }
+                            }
                         }
                     } else {
-                        do {
-                            let message = try JSONSerialization.jsonObject(with: data) as! [String: [String]]
+                        if let data = data {
+                            let message = try? JSONSerialization.jsonObject(with: data) as? [String: [String]]
+                            print(message?.values.first?.first ?? self.badMessage)
                             DispatchQueue.main.async {
-                                errorCompletion(message.values.first!.first!)
-                            }
-                        } catch {
-                            DispatchQueue.main.async {
-                                errorCompletion(error.localizedDescription)
+                                errCompletion(message?.values.first?.first ?? self.badMessage)
                             }
                         }
                     }
@@ -80,13 +85,14 @@ class UsersService {
             task.resume()
             
         } else {
+            print("Wrong URL of sign up")
             DispatchQueue.main.async {
-                errorCompletion("Wrong URL of sign up, please, send the sсreenshot of this message to developer")
+                errCompletion(self.badMessage)
             }
         }
     }
     
-    func signIn(with user: SignInUser, errorCompletion: @escaping (String) -> (),  completion: @escaping (Token) -> ()) {
+    func signIn(with user: SignInUser, errCompletion: @escaping (String) -> (),  completion: @escaping (SignedUser) -> ()) {
         
         var components = URLComponents()
         components.scheme = scheme
@@ -103,8 +109,9 @@ class UsersService {
             request.addValue("application/json", forHTTPHeaderField: "Content-Type")
             
             guard let httpBody = try? JSONEncoder().encode(user)  else {
+                print("bad http body of SignUser")
                 DispatchQueue.main.async {
-                    errorCompletion("Wrong structure of Sign User, please, send the sсreenshot of this message to developer")
+                    errCompletion(self.badMessage)
                 }
                 return
             }
@@ -115,26 +122,42 @@ class UsersService {
             let task = session.dataTask(with: request) { (data, response, error) in
                 
                 if let error = error {
+                    print(error.localizedDescription)
                     DispatchQueue.main.async {
-                        errorCompletion(error.localizedDescription)
+                        errCompletion(error.localizedDescription)
                     }
-                } else if let data = data {
-                    let token = try? JSONDecoder().decode(Token.self, from: data)
-                    if let token = token {
-                        DispatchQueue.main.async {
-                            //мб чето сделать с вернувшимся юзером, пока не понятно
-                            completion(token)
+                } else if let httpResponse = response as? HTTPURLResponse {
+                    print(httpResponse.statusCode)
+                    let status = httpResponse.statusCode
+                    switch status {
+                    case 200:
+                        if let data = data {
+                            let user = try? JSONDecoder().decode(SignedUser.self, from: data)
+                            if let user = user {
+                                DispatchQueue.main.async {
+                                    completion(user)
+                                }
+                            }
                         }
-                    } else {
-                        do {
-                            let message = try JSONSerialization.jsonObject(with: data) as! [String: String]
+                    case 400:
+                        if let data = data {
+                            let message = try? JSONSerialization.jsonObject(with: data) as? [String: [String]]
+                            print(message?.values.first?.first ?? self.badMessage)
                             DispatchQueue.main.async {
-                                errorCompletion(message.values.first!)
+                                errCompletion(self.badMessage)
                             }
-                        } catch {
+                        }
+                    case 401:
+                        if let data = data {
+                            let message = try? JSONSerialization.jsonObject(with: data) as? [String: String]
+                            print(message?["error"] ?? self.badMessage)
                             DispatchQueue.main.async {
-                                errorCompletion(error.localizedDescription)
+                                errCompletion(message?["error"] ?? self.badMessage)
                             }
+                        }
+                    default:
+                        DispatchQueue.main.async {
+                            errCompletion(self.badMessage)
                         }
                     }
                 }
@@ -143,7 +166,61 @@ class UsersService {
             
         } else {
             DispatchQueue.main.async {
-                errorCompletion("Wrong URL of sign in, please, send the sсreenshot of this message to developer")
+                print("Wrong URL of sign in")
+                errCompletion(self.badMessage)
+            }
+        }
+    }
+    
+    
+    func logout(with key: String, errCompletion: @escaping (String) -> (), completion: @escaping () -> ()) {
+        
+        var components = URLComponents()
+        components.scheme = scheme
+        components.host = host
+        components.port = port
+        components.path = api + auth + logout
+        
+        let url = components.url
+        
+        if  let url = url {
+            
+            var request = URLRequest(url: url)
+            request.httpMethod = "POST"
+            request.addValue("Token " + key, forHTTPHeaderField: "Authorization")
+            
+            let session = URLSession.shared
+            
+            let task = session.dataTask(with: request) { (data, response, error) in
+                
+                if let error = error {
+                    print(error.localizedDescription)
+                    DispatchQueue.main.async {
+                        errCompletion(error.localizedDescription)
+                    }
+                } else if let httpResponse = response as? HTTPURLResponse {
+                    print(httpResponse.statusCode)
+                    if httpResponse.statusCode == 205 {
+                        DispatchQueue.main.async {
+                            completion()
+                        }
+                    } else {
+                        if let data = data {
+                            let message = try? JSONSerialization.jsonObject(with: data) as? [String: String]
+                            print(message?.values.first ?? self.badMessage)
+                            DispatchQueue.main.async {
+                                errCompletion(self.badMessage)
+                            }
+                        }
+                    }
+                }
+            }
+            task.resume()
+            
+        } else {
+            print("Wrong URL of logout")
+            DispatchQueue.main.async {
+                errCompletion(self.badMessage)
             }
         }
     }

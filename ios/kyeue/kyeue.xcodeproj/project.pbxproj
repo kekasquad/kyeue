@@ -16,12 +16,11 @@
 		8F6D83D925FEBEB20012AB65 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F6D83D825FEBEB20012AB65 /* Extensions.swift */; };
 		8F92F02F25FF9ECB0083E188 /* BaseProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F92F02E25FF9ECB0083E188 /* BaseProtocols.swift */; };
 		8F92F03425FFA9260083E188 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F92F03325FFA9260083E188 /* User.swift */; };
-		8F92F03B25FFAAFA0083E188 /* JWTAuthentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F92F03A25FFAAFA0083E188 /* JWTAuthentication.swift */; };
+		8F92F03B25FFAAFA0083E188 /* Authentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F92F03A25FFAAFA0083E188 /* Authentication.swift */; };
 		8F92F04325FFAE540083E188 /* UsersService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F92F04225FFAE540083E188 /* UsersService.swift */; };
-		8FB73E9325FFFDCA001B32EE /* Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FB73E9225FFFDCA001B32EE /* Token.swift */; };
 		8FD53D092614BE5300E995BC /* MainVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FD53D082614BE5300E995BC /* MainVC.swift */; };
-		8FD53D102614E2A500E995BC /* TokensStorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FD53D0F2614E2A500E995BC /* TokensStorageManager.swift */; };
-		8FD53D142614E41300E995BC /* TokenObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FD53D132614E41300E995BC /* TokenObject.swift */; };
+		8FD53D102614E2A500E995BC /* UserStorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FD53D0F2614E2A500E995BC /* UserStorageManager.swift */; };
+		8FD53D142614E41300E995BC /* UserObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FD53D132614E41300E995BC /* UserObject.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,12 +35,11 @@
 		8F6D83D825FEBEB20012AB65 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		8F92F02E25FF9ECB0083E188 /* BaseProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseProtocols.swift; sourceTree = "<group>"; };
 		8F92F03325FFA9260083E188 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
-		8F92F03A25FFAAFA0083E188 /* JWTAuthentication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JWTAuthentication.swift; sourceTree = "<group>"; };
+		8F92F03A25FFAAFA0083E188 /* Authentication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Authentication.swift; sourceTree = "<group>"; };
 		8F92F04225FFAE540083E188 /* UsersService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersService.swift; sourceTree = "<group>"; };
-		8FB73E9225FFFDCA001B32EE /* Token.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Token.swift; sourceTree = "<group>"; };
 		8FD53D082614BE5300E995BC /* MainVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainVC.swift; sourceTree = "<group>"; };
-		8FD53D0F2614E2A500E995BC /* TokensStorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokensStorageManager.swift; sourceTree = "<group>"; };
-		8FD53D132614E41300E995BC /* TokenObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenObject.swift; sourceTree = "<group>"; };
+		8FD53D0F2614E2A500E995BC /* UserStorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserStorageManager.swift; sourceTree = "<group>"; };
+		8FD53D132614E41300E995BC /* UserObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserObject.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,7 +95,6 @@
 		8F25381A25FDA16700B99A45 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				8FB73E9125FFFDAF001B32EE /* Token */,
 				8F92F03225FFA9170083E188 /* User */,
 			);
 			path = Models;
@@ -127,25 +124,17 @@
 		8F92F03225FFA9170083E188 /* User */ = {
 			isa = PBXGroup;
 			children = (
+				8FD53D132614E41300E995BC /* UserObject.swift */,
+				8F92F03A25FFAAFA0083E188 /* Authentication.swift */,
 				8F92F03325FFA9260083E188 /* User.swift */,
 			);
 			path = User;
 			sourceTree = "<group>";
 		};
-		8FB73E9125FFFDAF001B32EE /* Token */ = {
-			isa = PBXGroup;
-			children = (
-				8FB73E9225FFFDCA001B32EE /* Token.swift */,
-				8FD53D132614E41300E995BC /* TokenObject.swift */,
-				8F92F03A25FFAAFA0083E188 /* JWTAuthentication.swift */,
-			);
-			path = Token;
-			sourceTree = "<group>";
-		};
 		8FD53D0E2614E28900E995BC /* CoreData */ = {
 			isa = PBXGroup;
 			children = (
-				8FD53D0F2614E2A500E995BC /* TokensStorageManager.swift */,
+				8FD53D0F2614E2A500E995BC /* UserStorageManager.swift */,
 			);
 			path = CoreData;
 			sourceTree = "<group>";
@@ -223,15 +212,14 @@
 				8F25380325FDA09E00B99A45 /* SignVC.swift in Sources */,
 				8FD53D092614BE5300E995BC /* MainVC.swift in Sources */,
 				8F25380925FDA09E00B99A45 /* kyeue.xcdatamodeld in Sources */,
-				8F92F03B25FFAAFA0083E188 /* JWTAuthentication.swift in Sources */,
-				8FD53D142614E41300E995BC /* TokenObject.swift in Sources */,
+				8F92F03B25FFAAFA0083E188 /* Authentication.swift in Sources */,
+				8FD53D142614E41300E995BC /* UserObject.swift in Sources */,
 				8F92F03425FFA9260083E188 /* User.swift in Sources */,
 				8F2537FF25FDA09E00B99A45 /* AppDelegate.swift in Sources */,
 				8F6D83D925FEBEB20012AB65 /* Extensions.swift in Sources */,
-				8FB73E9325FFFDCA001B32EE /* Token.swift in Sources */,
 				8F92F02F25FF9ECB0083E188 /* BaseProtocols.swift in Sources */,
 				8F92F04325FFAE540083E188 /* UsersService.swift in Sources */,
-				8FD53D102614E2A500E995BC /* TokensStorageManager.swift in Sources */,
+				8FD53D102614E2A500E995BC /* UserStorageManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
