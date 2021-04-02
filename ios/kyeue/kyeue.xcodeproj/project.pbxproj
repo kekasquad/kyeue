@@ -7,6 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8F1FDAA72616A74600BA6159 /* Queue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F1FDAA62616A74600BA6159 /* Queue.swift */; };
+		8F1FDAAB2616A90300BA6159 /* QueuesService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F1FDAAA2616A90300BA6159 /* QueuesService.swift */; };
+		8F1FDAAF2616A91300BA6159 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F1FDAAE2616A91300BA6159 /* AuthService.swift */; };
+		8F1FDAB32616A9BF00BA6159 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F1FDAB22616A9BF00BA6159 /* Utils.swift */; };
+		8F1FDAB72616AE7500BA6159 /* QueueCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F1FDAB52616AE7500BA6159 /* QueueCell.swift */; };
+		8F1FDAB82616AE7500BA6159 /* QueueCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8F1FDAB62616AE7500BA6159 /* QueueCell.xib */; };
+		8F1FDABB2616AF7000BA6159 /* QueueVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F1FDABA2616AF7000BA6159 /* QueueVC.swift */; };
 		8F2537FF25FDA09E00B99A45 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F2537FE25FDA09E00B99A45 /* AppDelegate.swift */; };
 		8F25380325FDA09E00B99A45 /* SignVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F25380225FDA09E00B99A45 /* SignVC.swift */; };
 		8F25380625FDA09E00B99A45 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8F25380425FDA09E00B99A45 /* Main.storyboard */; };
@@ -24,6 +31,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		8F1FDAA62616A74600BA6159 /* Queue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Queue.swift; sourceTree = "<group>"; };
+		8F1FDAAA2616A90300BA6159 /* QueuesService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueuesService.swift; sourceTree = "<group>"; };
+		8F1FDAAE2616A91300BA6159 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
+		8F1FDAB22616A9BF00BA6159 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
+		8F1FDAB52616AE7500BA6159 /* QueueCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueCell.swift; sourceTree = "<group>"; };
+		8F1FDAB62616AE7500BA6159 /* QueueCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = QueueCell.xib; sourceTree = "<group>"; };
+		8F1FDABA2616AF7000BA6159 /* QueueVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueVC.swift; sourceTree = "<group>"; };
 		8F2537FB25FDA09E00B99A45 /* kyeue.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = kyeue.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8F2537FE25FDA09E00B99A45 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8F25380225FDA09E00B99A45 /* SignVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignVC.swift; sourceTree = "<group>"; };
@@ -53,6 +67,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		8F1FDAA92616A75A00BA6159 /* Queue */ = {
+			isa = PBXGroup;
+			children = (
+				8F1FDAA62616A74600BA6159 /* Queue.swift */,
+				8F1FDAB52616AE7500BA6159 /* QueueCell.swift */,
+				8F1FDAB62616AE7500BA6159 /* QueueCell.xib */,
+			);
+			path = Queue;
+			sourceTree = "<group>";
+		};
 		8F2537F225FDA09E00B99A45 = {
 			isa = PBXGroup;
 			children = (
@@ -88,6 +112,7 @@
 			children = (
 				8F25380225FDA09E00B99A45 /* SignVC.swift */,
 				8FD53D082614BE5300E995BC /* MainVC.swift */,
+				8F1FDABA2616AF7000BA6159 /* QueueVC.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -95,6 +120,7 @@
 		8F25381A25FDA16700B99A45 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				8F1FDAA92616A75A00BA6159 /* Queue */,
 				8F92F03225FFA9170083E188 /* User */,
 			);
 			path = Models;
@@ -104,6 +130,8 @@
 			isa = PBXGroup;
 			children = (
 				8F92F04225FFAE540083E188 /* UsersService.swift */,
+				8F1FDAAA2616A90300BA6159 /* QueuesService.swift */,
+				8F1FDAAE2616A91300BA6159 /* AuthService.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -117,6 +145,7 @@
 				8F6D83D825FEBEB20012AB65 /* Extensions.swift */,
 				8F25380725FDA09E00B99A45 /* kyeue.xcdatamodeld */,
 				8F92F02E25FF9ECB0083E188 /* BaseProtocols.swift */,
+				8F1FDAB22616A9BF00BA6159 /* Utils.swift */,
 			);
 			path = SupportFiles;
 			sourceTree = "<group>";
@@ -199,6 +228,7 @@
 				8F25380E25FDA09F00B99A45 /* LaunchScreen.storyboard in Resources */,
 				8F25380B25FDA09F00B99A45 /* Assets.xcassets in Resources */,
 				8F25380625FDA09E00B99A45 /* Main.storyboard in Resources */,
+				8F1FDAB82616AE7500BA6159 /* QueueCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -210,16 +240,22 @@
 			buildActionMask = 2147483647;
 			files = (
 				8F25380325FDA09E00B99A45 /* SignVC.swift in Sources */,
+				8F1FDAAB2616A90300BA6159 /* QueuesService.swift in Sources */,
+				8F1FDABB2616AF7000BA6159 /* QueueVC.swift in Sources */,
 				8FD53D092614BE5300E995BC /* MainVC.swift in Sources */,
 				8F25380925FDA09E00B99A45 /* kyeue.xcdatamodeld in Sources */,
 				8F92F03B25FFAAFA0083E188 /* Authentication.swift in Sources */,
+				8F1FDAB32616A9BF00BA6159 /* Utils.swift in Sources */,
 				8FD53D142614E41300E995BC /* UserObject.swift in Sources */,
 				8F92F03425FFA9260083E188 /* User.swift in Sources */,
 				8F2537FF25FDA09E00B99A45 /* AppDelegate.swift in Sources */,
+				8F1FDAA72616A74600BA6159 /* Queue.swift in Sources */,
 				8F6D83D925FEBEB20012AB65 /* Extensions.swift in Sources */,
 				8F92F02F25FF9ECB0083E188 /* BaseProtocols.swift in Sources */,
 				8F92F04325FFAE540083E188 /* UsersService.swift in Sources */,
 				8FD53D102614E2A500E995BC /* UserStorageManager.swift in Sources */,
+				8F1FDAAF2616A91300BA6159 /* AuthService.swift in Sources */,
+				8F1FDAB72616AE7500BA6159 /* QueueCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
