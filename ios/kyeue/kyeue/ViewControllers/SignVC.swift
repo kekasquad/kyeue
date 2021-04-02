@@ -95,7 +95,7 @@ class SignVC: UIViewController {
         activityIndicator.startAnimating()
         disable(views: loginTextFielld, firstNameTextField, lastNameTextField, passwordTextField, signUpButton, signInButton)
         
-        UsersService.shared.create(user: user) { [weak self] (message) in
+        AuthService.shared.create(user: user) { [weak self] (message) in
             guard let self = self else { return }
             self.completionStuff()
             self.errorAlert(with: message, action: self.signUp)
@@ -131,7 +131,7 @@ class SignVC: UIViewController {
         activityIndicator.startAnimating()
         disable(views: loginTextFielld, firstNameTextField, lastNameTextField, passwordTextField, signUpButton, signInButton)
         
-        UsersService.shared.signIn(with: user) { [weak self] (message) in
+        AuthService.shared.signIn(with: user) { [weak self] (message) in
             guard let self = self else { return }
             self.completionStuff()
             self.errorAlert(with: message, action: self.signIn)
