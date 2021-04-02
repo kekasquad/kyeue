@@ -137,25 +137,60 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="fcj-90-QdG">
-                                <rect key="frame" x="188.5" y="429.5" width="37" height="37"/>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="9y1-9z-6mg">
+                                <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            </tableView>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="large" id="fcj-90-QdG">
+                                <rect key="frame" x="0.0" y="429" width="414" height="37"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </activityIndicatorView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="GKS-Wl-Oh6"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="fcj-90-QdG" firstAttribute="centerY" secondItem="AZ7-D1-FE1" secondAttribute="centerY" id="AoL-ku-ViC"/>
-                            <constraint firstItem="fcj-90-QdG" firstAttribute="centerX" secondItem="AZ7-D1-FE1" secondAttribute="centerX" id="HEd-o7-rML"/>
+                            <constraint firstItem="GKS-Wl-Oh6" firstAttribute="trailing" secondItem="9y1-9z-6mg" secondAttribute="trailing" id="AX5-kF-Xey"/>
+                            <constraint firstItem="9y1-9z-6mg" firstAttribute="top" secondItem="GKS-Wl-Oh6" secondAttribute="top" id="LL3-BU-sPW"/>
+                            <constraint firstItem="GKS-Wl-Oh6" firstAttribute="bottom" secondItem="9y1-9z-6mg" secondAttribute="bottom" id="X9m-bo-24X"/>
+                            <constraint firstItem="9y1-9z-6mg" firstAttribute="leading" secondItem="GKS-Wl-Oh6" secondAttribute="leading" id="eGa-Fe-Pq1"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Qveve" id="i7Y-fA-Tch"/>
                     <connections>
                         <outlet property="activityIndicator" destination="fcj-90-QdG" id="fgJ-xR-Zde"/>
+                        <outlet property="tableView" destination="9y1-9z-6mg" id="ST4-NU-kju"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="yuE-0M-KAd" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="833" y="108"/>
+        </scene>
+        <!--QueueVC-->
+        <scene sceneID="K9v-tH-s3Z">
+            <objects>
+                <viewController storyboardIdentifier="QueueVC" useStoryboardIdentifierAsRestorationIdentifier="YES" id="IeG-Y2-UhC" customClass="QueueVC" customModule="kyeue" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="TRL-5s-VGB">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Queue" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OP8-d2-nRw">
+                                <rect key="frame" x="134.5" y="424" width="145" height="48"/>
+                                <fontDescription key="fontDescription" name="Courier" family="Courier" pointSize="48"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="L0d-WV-ssu"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="OP8-d2-nRw" firstAttribute="centerX" secondItem="TRL-5s-VGB" secondAttribute="centerX" id="dI3-es-7dc"/>
+                            <constraint firstItem="OP8-d2-nRw" firstAttribute="centerY" secondItem="TRL-5s-VGB" secondAttribute="centerY" id="lU2-DG-U12"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="1ZY-IC-pGz" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1626" y="108"/>
         </scene>
     </scenes>
     <resources>
