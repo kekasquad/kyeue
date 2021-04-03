@@ -78,8 +78,14 @@ class UsersService {
                         }
                         break
                     default:
-                        DispatchQueue.main.async {
-                            errCompletion(self.badMessage)
+                        if let data = data {
+                            let message = try? JSONSerialization.jsonObject(with: data) as? [String: Any]
+                            if let message = message {
+                                print(message)
+                            }
+                            DispatchQueue.main.async {
+                                errCompletion(self.badMessage)
+                            }
                         }
                         break
                     }
@@ -95,27 +101,4 @@ class UsersService {
         }
     }
     
-    func getUsers(with members: [QueueMember], key: String) -> UsersContainer {
-        
-        let container = UsersContainer()
-        
-        let amount = members.count
-        
-        for member in members {
-            self.getBy(id: member.userId, key: key) { (err) in
-                container.error = err
-            } completion: { (user) in
-                container.users.append(user)
-            }
-        }
-        
-        while  amount != container.users.count {
-            if let _ = container.error {
-                break
-            }
-        }
-        
-        return container
-    }
-
 }
