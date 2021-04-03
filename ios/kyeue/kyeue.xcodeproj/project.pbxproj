@@ -20,6 +20,7 @@
 		8F25380925FDA09E00B99A45 /* kyeue.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 8F25380725FDA09E00B99A45 /* kyeue.xcdatamodeld */; };
 		8F25380B25FDA09F00B99A45 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8F25380A25FDA09F00B99A45 /* Assets.xcassets */; };
 		8F25380E25FDA09F00B99A45 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8F25380C25FDA09F00B99A45 /* LaunchScreen.storyboard */; };
+		8F3966A3261908420070E771 /* WebSocketMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F3966A2261908420070E771 /* WebSocketMessage.swift */; };
 		8F6D83D925FEBEB20012AB65 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F6D83D825FEBEB20012AB65 /* Extensions.swift */; };
 		8F92F02F25FF9ECB0083E188 /* BaseProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F92F02E25FF9ECB0083E188 /* BaseProtocols.swift */; };
 		8F92F03425FFA9260083E188 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F92F03325FFA9260083E188 /* User.swift */; };
@@ -49,6 +50,7 @@
 		8F25380A25FDA09F00B99A45 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8F25380D25FDA09F00B99A45 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8F25380F25FDA09F00B99A45 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8F3966A2261908420070E771 /* WebSocketMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocketMessage.swift; sourceTree = "<group>"; };
 		8F6D83D825FEBEB20012AB65 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		8F92F02E25FF9ECB0083E188 /* BaseProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseProtocols.swift; sourceTree = "<group>"; };
 		8F92F03325FFA9260083E188 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
@@ -131,6 +133,7 @@
 			children = (
 				8F1FDAA92616A75A00BA6159 /* Queue */,
 				8F92F03225FFA9170083E188 /* User */,
+				8F3966A2261908420070E771 /* WebSocketMessage.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -250,6 +253,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8F25380325FDA09E00B99A45 /* SignVC.swift in Sources */,
+				8F3966A3261908420070E771 /* WebSocketMessage.swift in Sources */,
 				8F1FDAAB2616A90300BA6159 /* QueuesService.swift in Sources */,
 				8F1FDABB2616AF7000BA6159 /* QueueVC.swift in Sources */,
 				8FD53D092614BE5300E995BC /* MainVC.swift in Sources */,

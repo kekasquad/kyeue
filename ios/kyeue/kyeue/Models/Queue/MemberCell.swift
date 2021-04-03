@@ -30,7 +30,7 @@ extension MemberCell: ConfigurableView {
     
     func configure(with model: QueueUser) {
         user = model
-        nameLabel.text = model.getFullName()
+        nameLabel.text = "\(model.position). " +  model.getFullName()
     }
     
 }
