@@ -81,7 +81,6 @@ class QueueAPITestCases(AuthMixin, TestCase):
                 HTTP_AUTHORIZATION=self.access_header
             )
             self.assertEqual(res.status_code, status.HTTP_200_OK)
-            print(res.json())
 
         queue.refresh_from_db()
         self.assertEqual(queue.members, list(map(lambda x: str(x.id), users[::-1])))

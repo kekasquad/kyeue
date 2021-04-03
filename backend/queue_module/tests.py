@@ -1,13 +1,18 @@
 """ Queue tests
 """
+from django.dispatch import receiver
 from django.test import TestCase
+from django.urls import reverse
 
 from core.models import User
 from core.factories import UserFactory
+from api.tests import AuthMixin
+from .factories import QueueFactory
 from .models import Queue
+from . import signals
 
 
-class QueueTestCases(TestCase):
+class QueueTestCases(AuthMixin, TestCase):
     """ Queue tests
     """
 
@@ -51,3 +56,20 @@ class QueueTestCases(TestCase):
         user.delete()
         self.assertEqual(Queue.objects.count(), 0)
         self.assertEqual(User.objects.count(), 0)
+
+    def test_signals(self):
+        queue = QueueFactory(creator=self.user)
+        self.signal_received = False
+
+        @receiver(signals.push_member_signal)
+        def signal_handler(sender, **_):
+            self.assertEqual(sender, Queue)
+            self.signal_received = True
+
+        self.client.put(
+            reverse('api_queue_add_member_api_view', kwargs={'pk': str(queue.id)}),
+            data={'userId': str(self.user.id)},
+            content_type='application/json',
+            HTTP_AUTHORIZATION=self.access_header
+        )
+        self.assertTrue(self.signal_received)

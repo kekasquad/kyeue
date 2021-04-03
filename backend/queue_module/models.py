@@ -55,6 +55,7 @@ class Queue(models.Model):
 
     def move_member_to_the_end(self, user_id) -> None:
         if user_id in self.members:
+            User.objects.get(pk=user_id)
             self.members.remove(user_id)
             self.members.insert(0, user_id)
             signals.move_member_to_the_end_signal.send(
