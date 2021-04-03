@@ -156,9 +156,16 @@ class AuthService {
                             }
                         }
                     default:
-                        DispatchQueue.main.async {
-                            errCompletion(self.badMessage)
+                        if let data = data {
+                            let message = try? JSONSerialization.jsonObject(with: data) as? [String: Any]
+                            if let message = message {
+                                print(message)
+                            }
+                            DispatchQueue.main.async {
+                                errCompletion(self.badMessage)
+                            }
                         }
+                        break
                     }
                 }
             }
