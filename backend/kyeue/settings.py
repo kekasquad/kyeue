@@ -41,9 +41,11 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'drf_yasg',
+    'channels',
 
     'queue_module',
     'core',
+    'websockets'
 ]
 
 MIDDLEWARE = [
@@ -78,6 +80,13 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'kyeue.wsgi.application'
 
+ASGI_APPLICATION = "websockets.routing.application"
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+    }
+}
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases

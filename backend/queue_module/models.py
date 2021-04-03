@@ -5,6 +5,8 @@ import uuid
 from django.db import models
 from core.models import User
 
+from . import signals
+
 
 class Queue(models.Model):
     """ Queue model
@@ -35,16 +37,24 @@ class Queue(models.Model):
         default=list
     )
 
+    def _send_signal(self, signal, user_id):
+        signal.send(sender=self.__class__, instance=self, user_id=user_id)
+
     def push_member(self, user_id: str) -> None:
         if user_id not in self.members:
             User.objects.get(pk=user_id)
             self.members.insert(0, user_id)
+            self._send_signal(signals.push_member_signal, user_id)
 
     def pop_member(self, user_id: str) -> None:
         if user_id in self.members:
             User.objects.get(pk=user_id)
             self.members.remove(user_id)
+            self._send_signal(signals.pop_member_signal, user_id)
 
     def move_member_to_the_end(self, user_id) -> None:
-        self.pop_member(user_id)
-        self.push_member(user_id)
+        if user_id in self.members:
+            User.objects.get(pk=user_id)
+            self.members.remove(user_id)
+            self.members.insert(0, user_id)
+            self._send_signal(signals.move_member_to_the_end_signal, user_id)
