@@ -28,3 +28,14 @@ struct Queue: Codable {
     let creator: User
 }
 
+extension Queue {
+    func inQueue(userId: String) -> Bool {
+        for user in members {
+            if userId == user.id {
+                return true
+            }
+        }
+        return false
+    }
+}
+

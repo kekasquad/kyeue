@@ -57,15 +57,34 @@ class QueueVC: UIViewController {
         
         let cancel = UIAlertAction(title: "Cancel", style: .cancel)
         
-        actionSheet.addAction(add)
-        actionSheet.addAction(remove)
+        guard
+            let queue = queue,
+            let userId = Authentication.shared.user?.user.id,
+            let isTeacher = Authentication.shared.user?.user.isTeacher
+        else {
+            return
+        }
+        
+        if !isTeacher {
+            if queue.inQueue(userId: userId) {
+                actionSheet.addAction(remove)
+            } else {
+                actionSheet.addAction(add)
+            }
+        }
+        
         actionSheet.addAction(cancel)
         
         present(actionSheet, animated: true)
     }
     
     @objc func leaveQueue() {
-        removeWithLeave()
+        guard let isTeacher = Authentication.shared.user?.user.isTeacher else { return }
+        if !isTeacher {
+            removeWithLeave()
+        } else {
+            navigationController?.popViewController(animated: true)
+        }
     }
     
     func getQueue() {
