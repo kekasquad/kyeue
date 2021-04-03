@@ -113,7 +113,6 @@ class SignVC: UIViewController {
             self.completionStuff()
             self.errorAlert(with: message, action: self.signUp)
         } completion: { [weak self] (user) in
-            print(user)
             guard let self = self else { return }
             self.completionStuff()
             self.successAlert(with: "You successfully signed up!", action: self.switchSign)
