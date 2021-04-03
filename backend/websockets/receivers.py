@@ -18,21 +18,21 @@ def send_message(message, message_type, queue_id):
 
 
 @receiver(queue_signals.push_member_signal)
-def push_member_receiver(sender, **kwargs):
+def push_member_receiver(**kwargs):
     send_message({
         'push_member': kwargs.get('user_id')
     }, 'member_operation', kwargs.get('queue_id'))
 
 
 @receiver(queue_signals.pop_member_signal)
-def pop_member_reciever(sender, **kwargs):
+def pop_member_reciever(**kwargs):
     send_message({
         'pop_member': kwargs.get('user_id')
     }, 'member_operation', kwargs.get('queue_id'))
 
 
 @receiver(queue_signals.move_member_to_the_end_signal)
-def move_member_to_the_end_reciever(sender, **kwargs):
+def move_member_to_the_end_reciever(**kwargs):
     send_message({
         'move_member_to_the_end': kwargs.get('user_id')
     }, 'member_operation', kwargs.get('queue_id'))
