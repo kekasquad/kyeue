@@ -8,9 +8,10 @@ from api.user.serializers import UserRetrieveSerializer
 class QueueRetrieveSerializer(serializers.ModelSerializer):
     class Meta:
         model = Queue
-        read_only_fields = ('id', 'name', 'isPrivate', 'members')
+        read_only_fields = ('id', 'name', 'isPrivate', 'members', 'creator')
         fields = read_only_fields
 
+    creator = UserRetrieveSerializer(read_only=True, many=False)
     isPrivate = serializers.BooleanField(read_only=True, source='is_private')
     members = serializers.SerializerMethodField(read_only=True)
 
@@ -26,8 +27,10 @@ class QueueRetrieveSerializer(serializers.ModelSerializer):
 class QueueCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Queue
-        read_only_fields = ('id',)
+        read_only_fields = ('id', 'creator')
         fields = read_only_fields + ('name',)
+
+    creator = UserRetrieveSerializer(read_only=True, many=False)
 
 
 class QueueUpdateSerializer(serializers.ModelSerializer):

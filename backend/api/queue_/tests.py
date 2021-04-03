@@ -26,6 +26,7 @@ class QueueAPITestCases(AuthMixin, TestCase):
         )
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.json()['creator']['id'], str(self.user.id))
         self.assertEqual(self.user, Queue.objects.first().creator)
         self.assertEqual(Queue.objects.count(), 1)
         Queue.objects.get(name=name)
@@ -65,6 +66,7 @@ class QueueAPITestCases(AuthMixin, TestCase):
 
         self.assertEqual(response['id'], str(queue.id))
         self.assertEqual(response['isPrivate'], queue.is_private)
+        self.assertEqual(response['creator']['id'], str(self.user.id))
 
     def test_member_operations(self):
         queue = QueueFactory(creator=self.user)
