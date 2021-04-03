@@ -3,7 +3,8 @@ from channels.generic.websocket import JsonWebsocketConsumer
 
 
 class QueueConsumer(JsonWebsocketConsumer):
-
+    """ Consumer for a WS connection to particular queue
+    """
     queue_id = None
 
     def connect(self):
@@ -18,5 +19,16 @@ class QueueConsumer(JsonWebsocketConsumer):
     def member_operation(self, message):
         self.send_json(message)
 
-    def disconnect(self, close_code):
-        pass
+
+class CommonNotificationsConsumer(JsonWebsocketConsumer):
+    """ Consumer for common WS notifications
+    """
+    def connect(self):
+        async_to_sync(self.channel_layer.group_add)(
+            'common_notifications',
+            self.channel_name
+        )
+        self.accept()
+
+    def queue_operation(self, message):
+        self.send_json(message)
