@@ -23,6 +23,7 @@ class NewQueueVC: UIViewController {
         
         title = "New Queue"
         
+        setupToHideKeyboardOnTapOnView()
     }
     
     func createQueue() {
