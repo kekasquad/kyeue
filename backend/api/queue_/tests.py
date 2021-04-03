@@ -217,3 +217,26 @@ class QueueAPITestCases(AuthMixin, TestCase):
 
         queue.refresh_from_db()
         self.assertEqual(len(queue.members), count)
+
+    def test_is_teacher_permissions(self):
+        user = UserFactory(is_teacher=True)
+        password = fuzzy.FuzzyText().fuzz()
+        user.set_password(password)
+        user.save()
+        key = self.client.post(reverse('api_auth_login_api_view'), data={
+            'username': user.username,
+            'password': password
+        }).json()['key']
+
+        queue = QueueFactory(creator=self.user)
+
+        for token in (self._get_auth_header(key), self.access_header):
+            res = self.client.put(
+                reverse(
+                    'api_queue_add_member_api_view',
+                    kwargs={'pk': str(queue.id)}
+                ),
+                data={'userId': str(user.id)}, content_type='application/json',
+                HTTP_AUTHORIZATION=token
+            )
+            self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)

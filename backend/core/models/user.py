@@ -25,3 +25,10 @@ class User(AbstractUser):
             'unique': "A user with that username already exists.",
         },
     )
+    is_teacher = models.BooleanField(
+        verbose_name='Flag if person is a teacher',
+        editable=False,
+        blank=False,
+        null=False,
+        default=False
+    )

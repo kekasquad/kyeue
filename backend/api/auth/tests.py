@@ -24,6 +24,7 @@ class AuthAPITestCases(TestCase):
             'password': fuzzy_text.fuzz(),
             'firstName': fuzzy_text.fuzz(),
             'lastName': fuzzy_text.fuzz(),
+            'isTeacher': True
         }
 
         response = self.client.post(reverse('api_auth_signup_api_view'), data=data)
@@ -34,7 +35,8 @@ class AuthAPITestCases(TestCase):
         user = User.objects.get(
             username=data['username'],
             first_name=data['firstName'] if 'firstName' in data else None,
-            last_name=data['lastName'] if 'lastName' in data else None
+            last_name=data['lastName'] if 'lastName' in data else None,
+            is_teacher=data['isTeacher']
         )
         self.assertTrue(user.check_password(data['password']))
 

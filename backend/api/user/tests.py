@@ -38,6 +38,7 @@ class UserAPITestCases(AuthMixin, TestCase):
         self.assertEqual(response['username'], self.user.username)
         self.assertEqual(response['firstName'], self.user.first_name)
         self.assertEqual(response['lastName'], self.user.last_name)
+        self.assertEqual(response['isTeacher'], self.user.is_teacher)
 
     def test_update_user_successful(self):
         fuzzy_text = fuzzy.FuzzyText()
@@ -46,6 +47,7 @@ class UserAPITestCases(AuthMixin, TestCase):
             'password': fuzzy_text.fuzz(),
             'firstName': fuzzy_text.fuzz(),
             'lastName': fuzzy_text.fuzz(),
+            'isTeacher': True
         }
         response = self.client.patch(
             self._get_url(self.user.id),
@@ -63,6 +65,8 @@ class UserAPITestCases(AuthMixin, TestCase):
         self.assertTrue(self.user.check_password(update_data['password']))
         self.assertEqual(self.user.first_name, update_data['firstName'])
         self.assertEqual(self.user.last_name, update_data['lastName'])
+        self.assertFalse(self.user.is_teacher)
+        self.assertNotEqual(self.user.username, update_data['username'])
 
     def test_permissions(self):
         another_user = UserFactory()

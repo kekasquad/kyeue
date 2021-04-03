@@ -9,7 +9,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         read_only_fields = ('id',)
-        fields = read_only_fields + ('username', 'password', 'firstName', 'lastName')
+        fields = read_only_fields + ('username', 'password', 'firstName', 'lastName', 'isTeacher')
 
     username = serializers.CharField(
         required=True,
@@ -31,6 +31,10 @@ class UserCreateSerializer(serializers.ModelSerializer):
         required=False,
         source='last_name'
     )
+    isTeacher = serializers.BooleanField(
+        required=False,
+        source='is_teacher'
+    )
 
     def create(self, validated_data):
         try:
@@ -43,7 +47,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
 class UserUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        read_only_fields = ('id', 'username')
+        read_only_fields = ('id', 'username', 'isTeacher')
         fields = read_only_fields + ('password', 'firstName', 'lastName')
 
     password = serializers.CharField(
@@ -61,6 +65,10 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         required=False,
         source='last_name'
     )
+    isTeacher = serializers.BooleanField(
+        read_only=True,
+        source='is_teacher'
+    )
 
     def update(self, instance, validated_data):
         instance = super().update(instance, validated_data)
@@ -74,7 +82,7 @@ class UserUpdateSerializer(serializers.ModelSerializer):
 class UserRetrieveSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        read_only_fields = ('id', 'username', 'firstName', 'lastName')
+        read_only_fields = ('id', 'username', 'firstName', 'lastName', 'isTeacher')
         fields = read_only_fields
 
     firstName = serializers.CharField(
@@ -84,4 +92,8 @@ class UserRetrieveSerializer(serializers.ModelSerializer):
     lastName = serializers.CharField(
         required=False,
         source='last_name'
+    )
+    isTeacher = serializers.BooleanField(
+        read_only=True,
+        source='is_teacher'
     )
