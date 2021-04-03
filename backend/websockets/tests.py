@@ -7,7 +7,7 @@ from factory.fuzzy import FuzzyText
 
 from api.tests import AuthMixin
 from queue_module.factories import QueueFactory
-from .consumers import QueueConsumer
+from .consumers import QueueConsumer, CommonNotificationsConsumer
 
 
 class WebsocketTestCases(AuthMixin, TestCase):
@@ -45,7 +45,7 @@ class WebsocketTestCases(AuthMixin, TestCase):
 
     async def test_queue_creation_notification(self):
         application = URLRouter([
-            re_path(r'^ws/notifications/?$', QueueConsumer.as_asgi()),
+            re_path(r'^ws/notifications/?$', CommonNotificationsConsumer.as_asgi()),
         ])
 
         communicator = WebsocketCommunicator(application, f'/ws/notifications')
@@ -60,8 +60,8 @@ class WebsocketTestCases(AuthMixin, TestCase):
 
         message = await communicator.receive_json_from()
         self.assertEqual(message, {
-            'type': 'member_operation',
+            'type': 'queue_operation',
             'text': {
-                'queue_created': response.json()['id']
+                'create_queue': response.json()['id']
             }
         })
