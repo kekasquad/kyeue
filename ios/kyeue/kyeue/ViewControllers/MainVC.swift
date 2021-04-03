@@ -22,14 +22,11 @@ class MainVC: UIViewController {
         let _ = Authentication.shared.isAuthorized
         view.backgroundColor = .white
         
-//        UsersService.shared.getBy(id: user.user.id, key: "lol") { (string) in
-////            print(string)
-//        } completion: { (gotUser) in
-//            print(gotUser)
-//        }
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
         
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.tableFooterView = UIView()
         
         tableView.register(UINib(nibName: String(describing: QueueCell.self), bundle: Bundle.main), forCellReuseIdentifier: String(describing: QueueCell.self))
         
@@ -79,7 +76,8 @@ class MainVC: UIViewController {
     }
     
     @objc func newQueue() {
-        print("FY")
+        let destinationViewController = NewQueueVC.makeVC()
+        navigationController?.pushViewController(destinationViewController, animated: true)
     }
     
     func getQueues() {

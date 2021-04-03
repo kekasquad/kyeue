@@ -11,10 +11,14 @@ struct PostingQueue: Codable {
     let name: String
 }
 
+struct CreatedQueue: Codable {
+    let id: String
+    let name: String
+}
+
 struct QueueMember: Codable {
     let userId: String
 }
-
 
 struct Queue: Codable {
     let id: String
