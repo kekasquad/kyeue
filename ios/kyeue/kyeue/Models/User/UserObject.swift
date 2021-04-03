@@ -16,11 +16,12 @@ class UserObject: NSManagedObject {
     @NSManaged public var firstName: String
     @NSManaged public var lastName: String
     @NSManaged public var created: String
+    @NSManaged public var isTeacher: Bool
     
 }
 
 extension UserObject {
     func toUser() -> SignedUser {
-        return SignedUser(key: key, user: User(id: id, username: username, firstName: firstName, lastName: lastName), created: created)
+        return SignedUser(key: key, user: User(id: id, username: username, firstName: firstName, lastName: lastName, isTeacher: isTeacher), created: created)
     }
 }

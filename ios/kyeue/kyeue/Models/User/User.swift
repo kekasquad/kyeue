@@ -12,6 +12,7 @@ struct PostingUser: Codable {
     let password: String
     let firstName: String
     let lastName: String
+    let isTeacher: Bool
 }
 
 extension PostingUser {
@@ -26,6 +27,7 @@ struct User: Codable {
     let username: String
     let firstName: String
     let lastName: String
+    let isTeacher: Bool
 }
 
 extension User {
@@ -51,6 +53,7 @@ struct QueueUser {
     let username: String
     let firstName: String
     let lastName: String
+    let isTeacher: Bool
     let position: Int
 }
 
@@ -64,6 +67,7 @@ extension QueueUser {
         username = user.username
         firstName = user.firstName
         lastName = user.lastName
+        isTeacher = user.isTeacher
         self.position = position
     }
 }
