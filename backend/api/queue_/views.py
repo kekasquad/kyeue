@@ -52,7 +52,6 @@ class BaseQueueMemberOperationAPIView(UpdateAPIView):
         return Response(response_serializer.data)
 
 
-
 class QueueAddMemberAPIView(BaseQueueMemberOperationAPIView):
     method_name = 'push_member'
 
