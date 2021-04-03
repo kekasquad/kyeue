@@ -12,13 +12,14 @@ class SignVC: UIViewController {
     @IBOutlet weak var loginTextFielld: UITextField!
     @IBOutlet weak var firstNameTextField: UITextField!
     @IBOutlet weak var lastNameTextField: UITextField!
+    @IBOutlet weak var segmentedControl: UISegmentedControl!
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var switchButton: UIButton!
     @IBOutlet weak var signUpButton: UIButton!
     @IBOutlet weak var signInButton: UIButton!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
-    @IBOutlet weak var passwordToLastNameConstraint: NSLayoutConstraint!
+    @IBOutlet weak var passwordToControlConstraint: NSLayoutConstraint!
     
     private enum CurrentSignButton {
         case In
@@ -38,15 +39,16 @@ class SignVC: UIViewController {
                 show(view: firstNameTextField)
                 show(view: lastNameTextField)
                 show(view: signUpButton)
+                show(view: segmentedControl)
                 currentSignButton = .Up
                 switchButton.underline(with: "Already have an account?")
                 
                 textFieldChanged()
                 disable(views: signInButton)
                 
-                NSLayoutConstraint.deactivate([passwordToLastNameConstraint])
-                passwordToLastNameConstraint = lastNameTextField.bottomAnchor.constraint(equalTo: passwordTextField.topAnchor, constant: -40)
-                NSLayoutConstraint.activate([passwordToLastNameConstraint])
+                NSLayoutConstraint.deactivate([passwordToControlConstraint])
+                passwordToControlConstraint = segmentedControl.bottomAnchor.constraint(equalTo: passwordTextField.topAnchor, constant: -20)
+                NSLayoutConstraint.activate([passwordToControlConstraint])
                 
                 UIView.animate(withDuration: 0.5, delay: 0.0, options: .curveEaseIn, animations: {
                          self.view.layoutIfNeeded()
@@ -57,6 +59,7 @@ class SignVC: UIViewController {
                 hide(view: signUpButton)
                 hide(view: firstNameTextField)
                 hide(view: lastNameTextField)
+                hide(view: segmentedControl)
                 show(view: signInButton)
                 currentSignButton = .In
                 switchButton.underline(with: "Register")
@@ -64,9 +67,9 @@ class SignVC: UIViewController {
                 textFieldChanged()
                 disable(views: signUpButton)
                 
-                NSLayoutConstraint.deactivate([passwordToLastNameConstraint])
-                passwordToLastNameConstraint = loginTextFielld.bottomAnchor.constraint(equalTo: passwordTextField.topAnchor, constant: -40)
-                NSLayoutConstraint.activate([passwordToLastNameConstraint])
+                NSLayoutConstraint.deactivate([passwordToControlConstraint])
+                passwordToControlConstraint = loginTextFielld.bottomAnchor.constraint(equalTo: passwordTextField.topAnchor, constant: -40)
+                NSLayoutConstraint.activate([passwordToControlConstraint])
                 
                 UIView.animate(withDuration: 0.5, delay: 0.0, options: .curveEaseIn, animations: {
                          self.view.layoutIfNeeded()
@@ -90,7 +93,17 @@ class SignVC: UIViewController {
             return
         }
         
-        let user = PostingUser(username: username, password: password, firstName: firstName, lastName: lastName)
+        var isTeacher = false
+        switch segmentedControl.selectedSegmentIndex {
+            case 0:
+                isTeacher = false
+            case 1:
+                isTeacher = true
+            default:
+                isTeacher = false
+        }
+        
+        let user = PostingUser(username: username, password: password, firstName: firstName, lastName: lastName, isTeacher: isTeacher)
         
         activityIndicator.startAnimating()
         disable(views: loginTextFielld, firstNameTextField, lastNameTextField, passwordTextField, signUpButton, signInButton)

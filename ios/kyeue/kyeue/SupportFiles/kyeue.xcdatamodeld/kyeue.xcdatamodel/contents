@@ -4,11 +4,12 @@
         <attribute name="created" attributeType="String"/>
         <attribute name="firstName" optional="YES" attributeType="String"/>
         <attribute name="id" attributeType="String"/>
+        <attribute name="isTeacher" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="key" optional="YES" attributeType="String"/>
         <attribute name="lastName" optional="YES" attributeType="String"/>
         <attribute name="username" optional="YES" attributeType="String"/>
     </entity>
     <elements>
-        <element name="UserObject" positionX="-63" positionY="-18" width="128" height="119"/>
+        <element name="UserObject" positionX="-63" positionY="-18" width="128" height="134"/>
     </elements>
 </model>
