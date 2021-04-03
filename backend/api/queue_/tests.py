@@ -81,7 +81,6 @@ class QueueAPITestCases(AuthMixin, TestCase):
                 HTTP_AUTHORIZATION=self.access_header
             )
             self.assertEqual(res.status_code, status.HTTP_200_OK)
-            print(res.json())
 
         queue.refresh_from_db()
         self.assertEqual(queue.members, list(map(lambda x: str(x.id), users[::-1])))
@@ -187,3 +186,32 @@ class QueueAPITestCases(AuthMixin, TestCase):
             self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
             queue.refresh_from_db()
             self.assertEqual(len(queue.members), count)
+
+    def test_permission_for_user_himself(self):
+        queue = QueueFactory(creator=self.user)
+        count = 3
+
+        members = [UserFactory() for _ in range(count)]
+
+        for member in members:
+            password = fuzzy.FuzzyText().fuzz()
+            member.set_password(password)
+            member.save()
+
+            token = self.client.post(reverse('api_auth_login_api_view'), data={
+                'username': member.username,
+                'password': password
+            }).json()['key']
+
+            res = self.client.put(
+                reverse(
+                    'api_queue_add_member_api_view',
+                    kwargs={'pk': str(queue.id)}
+                ),
+                data={'userId': member.id}, content_type='application/json',
+                HTTP_AUTHORIZATION=self._get_auth_header(token)
+            )
+            self.assertEqual(res.status_code, status.HTTP_200_OK)
+
+        queue.refresh_from_db()
+        self.assertEqual(len(queue.members), count)

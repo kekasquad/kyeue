@@ -2,12 +2,13 @@
 """
 from django.test import TestCase
 
+from api.tests import AuthMixin
 from core.models import User
 from core.factories import UserFactory
 from .models import Queue
 
 
-class QueueTestCases(TestCase):
+class QueueTestCases(AuthMixin, TestCase):
     """ Queue tests
     """
 
@@ -34,9 +35,7 @@ class QueueTestCases(TestCase):
         self.assertEqual(queue.members, [])
 
     def test_cascade_deletion(self):
-        user = User()
-        user.save()
-        queue = Queue(name='abc', creator=user)
+        queue = Queue(name='abc', creator=self.user)
         queue.save()
         self.assertEqual(Queue.objects.count(), 1)
         self.assertEqual(User.objects.count(), 1)
@@ -44,10 +43,10 @@ class QueueTestCases(TestCase):
         self.assertEqual(Queue.objects.count(), 0)
         self.assertEqual(User.objects.count(), 1)
 
-        queue = Queue(name='abcd', creator=user)
+        queue = Queue(name='abcd', creator=self.user)
         queue.save()
         self.assertEqual(Queue.objects.count(), 1)
         self.assertEqual(User.objects.count(), 1)
-        user.delete()
+        self.user.delete()
         self.assertEqual(Queue.objects.count(), 0)
         self.assertEqual(User.objects.count(), 0)

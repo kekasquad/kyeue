@@ -11,4 +11,6 @@ class QueueRetrieveUpdateDestroyAPIPermission(BasePermission):
 
 class BaseQueueMemberOperationAPIPermission(BasePermission):
     def has_permission(self, request, view):
-        return request.data['userId'] == request.user.id or view.get_object().creator == request.user
+        return str(request.user.id) in (
+            request.data.get('userId', None), str(view.get_object().creator.id)
+        )
