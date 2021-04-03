@@ -9,7 +9,11 @@ import UIKit
 
 class MainVC: UIViewController {
 
+    @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    
+    lazy var user: SignedUser = Authentication.shared.user!
+    var queues: [Queue] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -17,6 +21,21 @@ class MainVC: UIViewController {
         setupNavVC()
         let _ = Authentication.shared.isAuthorized
         view.backgroundColor = .white
+        
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+        
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.tableFooterView = UIView()
+        
+        tableView.register(UINib(nibName: String(describing: QueueCell.self), bundle: Bundle.main), forCellReuseIdentifier: String(describing: QueueCell.self))
+        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        getQueues()
     }
     
     func setupNavVC() {
@@ -40,7 +59,7 @@ class MainVC: UIViewController {
     func logout() {
         activityIndicator.startAnimating()
         guard let key = Authentication.shared.user?.key else { return }
-        UsersService.shared.logout(with: key) { [weak self] (err) in
+        AuthService.shared.logout(with: key) { [weak self] (err) in
             guard let self = self else { return }
             self.errorAlert(with: err, action: self.logout)
             self.activityIndicator.stopAnimating()
@@ -57,7 +76,21 @@ class MainVC: UIViewController {
     }
     
     @objc func newQueue() {
-        print("FY")
+        let destinationViewController = NewQueueVC.makeVC()
+        navigationController?.pushViewController(destinationViewController, animated: true)
+    }
+    
+    func getQueues() {
+        activityIndicator.startAnimating()
+        QueuesService.shared.getQueues(with: user.key) { [weak self] (string) in
+            self?.errorAlert(with: string, action: self?.getQueues)
+            self?.activityIndicator.stopAnimating()
+        } completion: { [weak self] (queues) in
+            self?.queues = queues
+            self?.tableView.reloadData()
+            self?.activityIndicator.stopAnimating()
+        }
+
     }
     
     static func makeVC() -> MainVC {
@@ -66,4 +99,43 @@ class MainVC: UIViewController {
         return newVC
     }
 
+}
+
+extension MainVC: UITableViewDelegate, UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 45 // chenge
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        queues.count
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+
+        tableView.deselectRow(at: indexPath, animated: true)
+
+        guard
+            let queueCell = tableView.cellForRow(at: indexPath) as? QueueCell,
+            let queue = queueCell.queue
+        else { return }
+
+        let destinationViewController = QueueVC.makeVC(with: queue)
+
+        navigationController?.pushViewController(destinationViewController, animated: true)
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        let queue = queues[indexPath.row]
+        
+        let identifier = String(describing: QueueCell.self)
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: identifier) as? QueueCell else { return QueueCell() }
+        
+        cell.configure(with: queue)
+        
+        return cell
+    }
+    
+    
 }

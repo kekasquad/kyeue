@@ -1,6 +1,8 @@
 from rest_framework import serializers
 
+from core.models import User
 from queue_module.models import Queue
+from user.serializers import UserRetrieveSerializer
 
 
 class QueueRetrieveSerializer(serializers.ModelSerializer):
@@ -10,6 +12,15 @@ class QueueRetrieveSerializer(serializers.ModelSerializer):
         fields = read_only_fields
 
     isPrivate = serializers.BooleanField(read_only=True, source='is_private')
+    members = serializers.SerializerMethodField(read_only=True)
+
+    def get_members(self, obj):
+        members = []
+        for member_id in obj.members:
+            members.append(
+                UserRetrieveSerializer(User.objects.get(pk=member_id)).data
+            )
+        return members
 
 
 class QueueCreateSerializer(serializers.ModelSerializer):

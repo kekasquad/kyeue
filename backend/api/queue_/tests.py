@@ -69,46 +69,47 @@ class QueueAPITestCases(AuthMixin, TestCase):
     def test_member_operations(self):
         queue = QueueFactory(creator=self.user)
         count = 3
+        users = UserFactory.create_batch(count)
 
-        members = [str(uuid.uuid1()) for _ in range(count)]
-        for member in members:
+        for user in users:
             res = self.client.put(
                 reverse(
                     'api_queue_add_member_api_view',
                     kwargs={'pk': str(queue.id)}
                 ),
-                data={'userId': member}, content_type='application/json',
+                data={'userId': str(user.id)}, content_type='application/json',
                 HTTP_AUTHORIZATION=self.access_header
             )
             self.assertEqual(res.status_code, status.HTTP_200_OK)
+            print(res.json())
 
         queue.refresh_from_db()
-        self.assertEqual(queue.members, members[::-1])
-        for member in members:
+        self.assertEqual(queue.members, list(map(lambda x: str(x.id), users[::-1])))
+        for user in users:
             res = self.client.put(
                 reverse(
                     'api_queue_move_member_to_end_api_view',
                     kwargs={'pk': str(queue.id)}
-                ), data={'userId': member}, content_type='application/json',
+                ), data={'userId': str(user.id)}, content_type='application/json',
                 HTTP_AUTHORIZATION=self.access_header
             )
             self.assertEqual(res.status_code, status.HTTP_200_OK)
             queue.refresh_from_db()
-            self.assertEqual(queue.members[0], member)
+            self.assertEqual(queue.members[0], str(user.id))
 
         queue.refresh_from_db()
-        self.assertEqual(queue.members, members[::-1])
+        self.assertEqual(queue.members, list(map(lambda x: str(x.id), users[::-1])))
 
         queue.refresh_from_db()
-        self.assertEqual(queue.members, members[::-1])
+        self.assertEqual(queue.members, list(map(lambda x: str(x.id), users[::-1])))
 
         for i in range(count):
-            member = members[i]
+            user = users[i]
             res = self.client.put(
                 reverse(
                     'api_queue_remove_member_api_view',
                     kwargs={'pk': str(queue.id)}
-                ), data={'userId': member}, content_type='application/json',
+                ), data={'userId': str(user.id)}, content_type='application/json',
                 HTTP_AUTHORIZATION=self.access_header
             )
             self.assertEqual(res.status_code, status.HTTP_200_OK)

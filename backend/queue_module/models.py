@@ -39,6 +39,7 @@ class Queue(models.Model):
 
     def push_member(self, user_id: str) -> None:
         if user_id not in self.members:
+            User.objects.get(pk=user_id)
             self.members.insert(0, user_id)
             signals.push_member_signal.send(
                 sender=self.__class__, queue_id=str(self.id), user_id=user_id
@@ -46,6 +47,7 @@ class Queue(models.Model):
 
     def pop_member(self, user_id: str) -> None:
         if user_id in self.members:
+            User.objects.get(pk=user_id)
             self.members.remove(user_id)
             signals.pop_member_signal.send(
                 sender=self.__class__, queue_id=str(self.id), user_id=user_id

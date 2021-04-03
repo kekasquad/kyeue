@@ -45,3 +45,30 @@ struct SignedUser: Codable {
     let user: User
     let created: String
 }
+
+struct QueueUser {
+    let id: String
+    let username: String
+    let firstName: String
+    let lastName: String
+    let position: Int
+}
+
+extension QueueUser {
+    func getFullName() -> String {
+        return firstName + " " + lastName
+    }
+    
+    init(user: User, position: Int) {
+        id = user.id
+        username = user.username
+        firstName = user.firstName
+        lastName = user.lastName
+        self.position = position
+    }
+}
+
+class UsersContainer {
+    var users: [User] = []
+    var error: String?
+}

@@ -23,22 +23,22 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="login" textAlignment="natural" adjustsFontSizeToFit="NO" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="XZt-J2-8fH">
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="login" textAlignment="center" adjustsFontSizeToFit="NO" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="XZt-J2-8fH">
                                 <rect key="frame" x="20" y="144" width="374" height="34"/>
                                 <fontDescription key="fontDescription" name="Courier" family="Courier" pointSize="24"/>
                                 <textInputTraits key="textInputTraits" returnKeyType="done" enablesReturnKeyAutomatically="YES" textContentType="username"/>
                             </textField>
-                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="first name" textAlignment="natural" adjustsFontSizeToFit="NO" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Ziw-Ti-viY">
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="first name" textAlignment="center" adjustsFontSizeToFit="NO" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Ziw-Ti-viY">
                                 <rect key="frame" x="20" y="218" width="374" height="34"/>
                                 <fontDescription key="fontDescription" name="Courier" family="Courier" pointSize="24"/>
                                 <textInputTraits key="textInputTraits" returnKeyType="done" enablesReturnKeyAutomatically="YES" textContentType="name"/>
                             </textField>
-                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="last name" textAlignment="natural" adjustsFontSizeToFit="NO" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="9Rm-cR-fRC">
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="last name" textAlignment="center" adjustsFontSizeToFit="NO" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="9Rm-cR-fRC">
                                 <rect key="frame" x="20" y="292" width="374" height="34"/>
                                 <fontDescription key="fontDescription" name="Courier" family="Courier" pointSize="24"/>
                                 <textInputTraits key="textInputTraits" returnKeyType="done" enablesReturnKeyAutomatically="YES" textContentType="family-name"/>
                             </textField>
-                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="password" textAlignment="natural" adjustsFontSizeToFit="NO" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Fhl-Yz-t02">
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="password" textAlignment="center" adjustsFontSizeToFit="NO" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Fhl-Yz-t02">
                                 <rect key="frame" x="20" y="366" width="374" height="34"/>
                                 <fontDescription key="fontDescription" name="Courier" family="Courier" pointSize="24"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="words" returnKeyType="done" enablesReturnKeyAutomatically="YES" secureTextEntry="YES" textContentType="username"/>
@@ -137,25 +137,137 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="fcj-90-QdG">
-                                <rect key="frame" x="188.5" y="429.5" width="37" height="37"/>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="9y1-9z-6mg">
+                                <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            </tableView>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="large" id="fcj-90-QdG">
+                                <rect key="frame" x="0.0" y="429" width="414" height="37"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </activityIndicatorView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="GKS-Wl-Oh6"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="fcj-90-QdG" firstAttribute="centerY" secondItem="AZ7-D1-FE1" secondAttribute="centerY" id="AoL-ku-ViC"/>
-                            <constraint firstItem="fcj-90-QdG" firstAttribute="centerX" secondItem="AZ7-D1-FE1" secondAttribute="centerX" id="HEd-o7-rML"/>
+                            <constraint firstItem="GKS-Wl-Oh6" firstAttribute="trailing" secondItem="9y1-9z-6mg" secondAttribute="trailing" id="AX5-kF-Xey"/>
+                            <constraint firstItem="9y1-9z-6mg" firstAttribute="top" secondItem="GKS-Wl-Oh6" secondAttribute="top" id="LL3-BU-sPW"/>
+                            <constraint firstItem="GKS-Wl-Oh6" firstAttribute="bottom" secondItem="9y1-9z-6mg" secondAttribute="bottom" id="X9m-bo-24X"/>
+                            <constraint firstItem="9y1-9z-6mg" firstAttribute="leading" secondItem="GKS-Wl-Oh6" secondAttribute="leading" id="eGa-Fe-Pq1"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Qveve" id="i7Y-fA-Tch"/>
                     <connections>
                         <outlet property="activityIndicator" destination="fcj-90-QdG" id="fgJ-xR-Zde"/>
+                        <outlet property="tableView" destination="9y1-9z-6mg" id="ST4-NU-kju"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="yuE-0M-KAd" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="833" y="108"/>
+        </scene>
+        <!--QueueVC-->
+        <scene sceneID="K9v-tH-s3Z">
+            <objects>
+                <viewController storyboardIdentifier="QueueVC" useStoryboardIdentifierAsRestorationIdentifier="YES" id="IeG-Y2-UhC" customClass="QueueVC" customModule="kyeue" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="TRL-5s-VGB">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="KmS-NB-sME">
+                                <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            </tableView>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="BRV-XF-3fR">
+                                <rect key="frame" x="188.5" y="429.5" width="37" height="37"/>
+                            </activityIndicatorView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="L0d-WV-ssu"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="KmS-NB-sME" firstAttribute="leading" secondItem="L0d-WV-ssu" secondAttribute="leading" id="8xT-vP-0AO"/>
+                            <constraint firstItem="BRV-XF-3fR" firstAttribute="centerX" secondItem="TRL-5s-VGB" secondAttribute="centerX" id="MTF-bx-pmn"/>
+                            <constraint firstItem="L0d-WV-ssu" firstAttribute="bottom" secondItem="KmS-NB-sME" secondAttribute="bottom" id="NPZ-6S-gDS"/>
+                            <constraint firstItem="BRV-XF-3fR" firstAttribute="centerY" secondItem="TRL-5s-VGB" secondAttribute="centerY" id="OnG-rJ-Iut"/>
+                            <constraint firstItem="KmS-NB-sME" firstAttribute="top" secondItem="L0d-WV-ssu" secondAttribute="top" id="ZZv-wn-eAv"/>
+                            <constraint firstItem="L0d-WV-ssu" firstAttribute="trailing" secondItem="KmS-NB-sME" secondAttribute="trailing" id="rjm-aK-vHW"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="tableView" destination="KmS-NB-sME" id="Sxj-p3-nvN"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="1ZY-IC-pGz" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1626" y="108"/>
+        </scene>
+        <!--New QueueVC-->
+        <scene sceneID="CEx-bB-3Ih">
+            <objects>
+                <viewController storyboardIdentifier="NewQueueVC" useStoryboardIdentifierAsRestorationIdentifier="YES" id="C7p-02-Etj" customClass="NewQueueVC" customModule="kyeue" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="sja-8E-UIW">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="fdt-RX-sRL">
+                                <rect key="frame" x="188.5" y="429.5" width="37" height="37"/>
+                            </activityIndicatorView>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="queue name" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="5ci-r4-R4x">
+                                <rect key="frame" x="20" y="227" width="374" height="34"/>
+                                <fontDescription key="fontDescription" name="Courier" family="Courier" pointSize="24"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Entere new queue" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qRm-mE-YTu">
+                                <rect key="frame" x="20" y="144" width="374" height="24"/>
+                                <fontDescription key="fontDescription" name="Courier" family="Courier" pointSize="24"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="name" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hMS-is-FL7">
+                                <rect key="frame" x="20" y="178" width="374" height="24"/>
+                                <fontDescription key="fontDescription" name="Courier" family="Courier" pointSize="24"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dR7-Zq-AsZ">
+                                <rect key="frame" x="142" y="745" width="130" height="48"/>
+                                <fontDescription key="fontDescription" name="Courier" family="Courier" pointSize="36"/>
+                                <state key="normal" title="Create">
+                                    <color key="titleColor" systemColor="labelColor"/>
+                                </state>
+                                <connections>
+                                    <action selector="createButtonPressed:" destination="C7p-02-Etj" eventType="touchUpInside" id="cRZ-Md-EYf"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="hRd-75-RZF"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="hMS-is-FL7" firstAttribute="top" secondItem="qRm-mE-YTu" secondAttribute="bottom" constant="10" id="1Dd-Gw-QGc"/>
+                            <constraint firstItem="hMS-is-FL7" firstAttribute="leading" secondItem="hRd-75-RZF" secondAttribute="leading" constant="20" id="4je-wY-RQD"/>
+                            <constraint firstItem="hRd-75-RZF" firstAttribute="trailing" secondItem="5ci-r4-R4x" secondAttribute="trailing" constant="20" id="8Mp-a7-01Q"/>
+                            <constraint firstItem="fdt-RX-sRL" firstAttribute="centerY" secondItem="sja-8E-UIW" secondAttribute="centerY" id="DEb-P3-O7R"/>
+                            <constraint firstItem="5ci-r4-R4x" firstAttribute="leading" secondItem="hRd-75-RZF" secondAttribute="leading" constant="20" id="EEk-0C-FgG"/>
+                            <constraint firstItem="5ci-r4-R4x" firstAttribute="top" secondItem="hMS-is-FL7" secondAttribute="bottom" constant="25" id="HXp-ud-aiV"/>
+                            <constraint firstItem="hRd-75-RZF" firstAttribute="trailing" secondItem="hMS-is-FL7" secondAttribute="trailing" constant="20" id="PSd-n1-93h"/>
+                            <constraint firstItem="hRd-75-RZF" firstAttribute="bottom" secondItem="dR7-Zq-AsZ" secondAttribute="bottom" constant="20" id="T6G-33-iIx"/>
+                            <constraint firstItem="dR7-Zq-AsZ" firstAttribute="centerX" secondItem="sja-8E-UIW" secondAttribute="centerX" id="ggQ-XW-IR0"/>
+                            <constraint firstItem="qRm-mE-YTu" firstAttribute="top" secondItem="hRd-75-RZF" secondAttribute="top" constant="100" id="nyb-bd-t4n"/>
+                            <constraint firstItem="fdt-RX-sRL" firstAttribute="centerX" secondItem="sja-8E-UIW" secondAttribute="centerX" id="qky-DP-uy6"/>
+                            <constraint firstItem="hRd-75-RZF" firstAttribute="trailing" secondItem="qRm-mE-YTu" secondAttribute="trailing" constant="20" id="qz5-9b-zMO"/>
+                            <constraint firstItem="qRm-mE-YTu" firstAttribute="leading" secondItem="hRd-75-RZF" secondAttribute="leading" constant="20" id="yqT-wm-pea"/>
+                        </constraints>
+                    </view>
+                    <toolbarItems/>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
+                    <connections>
+                        <outlet property="activityIndicator" destination="fdt-RX-sRL" id="MxY-nC-YuI"/>
+                        <outlet property="createButton" destination="dR7-Zq-AsZ" id="c4x-He-tE2"/>
+                        <outlet property="nameTextField" destination="5ci-r4-R4x" id="fTN-IP-gY6"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="GXr-xe-MNc" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2402.898550724638" y="107.8125"/>
         </scene>
     </scenes>
     <resources>
