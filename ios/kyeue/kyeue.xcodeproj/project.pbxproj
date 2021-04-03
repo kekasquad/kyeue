@@ -25,9 +25,12 @@
 		8F92F03425FFA9260083E188 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F92F03325FFA9260083E188 /* User.swift */; };
 		8F92F03B25FFAAFA0083E188 /* Authentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F92F03A25FFAAFA0083E188 /* Authentication.swift */; };
 		8F92F04325FFAE540083E188 /* UsersService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F92F04225FFAE540083E188 /* UsersService.swift */; };
+		8FAA995826173B6400D905DE /* NewQueueVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FAA995726173B6400D905DE /* NewQueueVC.swift */; };
 		8FD53D092614BE5300E995BC /* MainVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FD53D082614BE5300E995BC /* MainVC.swift */; };
 		8FD53D102614E2A500E995BC /* UserStorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FD53D0F2614E2A500E995BC /* UserStorageManager.swift */; };
 		8FD53D142614E41300E995BC /* UserObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FD53D132614E41300E995BC /* UserObject.swift */; };
+		8FEE70C226181FBF00B42B1E /* MemberCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FEE70C026181FBF00B42B1E /* MemberCell.swift */; };
+		8FEE70C326181FBF00B42B1E /* MemberCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8FEE70C126181FBF00B42B1E /* MemberCell.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -51,9 +54,12 @@
 		8F92F03325FFA9260083E188 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		8F92F03A25FFAAFA0083E188 /* Authentication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Authentication.swift; sourceTree = "<group>"; };
 		8F92F04225FFAE540083E188 /* UsersService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersService.swift; sourceTree = "<group>"; };
+		8FAA995726173B6400D905DE /* NewQueueVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewQueueVC.swift; sourceTree = "<group>"; };
 		8FD53D082614BE5300E995BC /* MainVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainVC.swift; sourceTree = "<group>"; };
 		8FD53D0F2614E2A500E995BC /* UserStorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserStorageManager.swift; sourceTree = "<group>"; };
 		8FD53D132614E41300E995BC /* UserObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserObject.swift; sourceTree = "<group>"; };
+		8FEE70C026181FBF00B42B1E /* MemberCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemberCell.swift; sourceTree = "<group>"; };
+		8FEE70C126181FBF00B42B1E /* MemberCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MemberCell.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -73,6 +79,8 @@
 				8F1FDAA62616A74600BA6159 /* Queue.swift */,
 				8F1FDAB52616AE7500BA6159 /* QueueCell.swift */,
 				8F1FDAB62616AE7500BA6159 /* QueueCell.xib */,
+				8FEE70C026181FBF00B42B1E /* MemberCell.swift */,
+				8FEE70C126181FBF00B42B1E /* MemberCell.xib */,
 			);
 			path = Queue;
 			sourceTree = "<group>";
@@ -113,6 +121,7 @@
 				8F25380225FDA09E00B99A45 /* SignVC.swift */,
 				8FD53D082614BE5300E995BC /* MainVC.swift */,
 				8F1FDABA2616AF7000BA6159 /* QueueVC.swift */,
+				8FAA995726173B6400D905DE /* NewQueueVC.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -227,6 +236,7 @@
 			files = (
 				8F25380E25FDA09F00B99A45 /* LaunchScreen.storyboard in Resources */,
 				8F25380B25FDA09F00B99A45 /* Assets.xcassets in Resources */,
+				8FEE70C326181FBF00B42B1E /* MemberCell.xib in Resources */,
 				8F25380625FDA09E00B99A45 /* Main.storyboard in Resources */,
 				8F1FDAB82616AE7500BA6159 /* QueueCell.xib in Resources */,
 			);
@@ -254,6 +264,8 @@
 				8F92F02F25FF9ECB0083E188 /* BaseProtocols.swift in Sources */,
 				8F92F04325FFAE540083E188 /* UsersService.swift in Sources */,
 				8FD53D102614E2A500E995BC /* UserStorageManager.swift in Sources */,
+				8FEE70C226181FBF00B42B1E /* MemberCell.swift in Sources */,
+				8FAA995826173B6400D905DE /* NewQueueVC.swift in Sources */,
 				8F1FDAAF2616A91300BA6159 /* AuthService.swift in Sources */,
 				8F1FDAB72616AE7500BA6159 /* QueueCell.swift in Sources */,
 			);

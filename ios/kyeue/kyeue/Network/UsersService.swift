@@ -16,7 +16,7 @@ class UsersService {
     private let host = Utils.host
     private let port = Utils.port
     private let api = "/api"
-    private let userPath = "/user"
+    private let userPath = "/user/"
 
     private let badMessage = Utils.badMessage
     
@@ -26,7 +26,7 @@ class UsersService {
         components.scheme = scheme
         components.host = host
         components.port = port
-        components.path = api + userPath + "/" + id
+        components.path = api + userPath + id
         
         let url = components.url
         
@@ -93,6 +93,29 @@ class UsersService {
                 errCompletion(self.badMessage)
             }
         }
+    }
+    
+    func getUsers(with members: [QueueMember], key: String) -> UsersContainer {
+        
+        let container = UsersContainer()
+        
+        let amount = members.count
+        
+        for member in members {
+            self.getBy(id: member.userId, key: key) { (err) in
+                container.error = err
+            } completion: { (user) in
+                container.users.append(user)
+            }
+        }
+        
+        while  amount != container.users.count {
+            if let _ = container.error {
+                break
+            }
+        }
+        
+        return container
     }
 
 }
