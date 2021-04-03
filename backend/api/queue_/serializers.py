@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from core.models import User
 from queue_module.models import Queue
-from user.serializers import UserRetrieveSerializer
+from api.user.serializers import UserRetrieveSerializer
 
 
 class QueueRetrieveSerializer(serializers.ModelSerializer):
