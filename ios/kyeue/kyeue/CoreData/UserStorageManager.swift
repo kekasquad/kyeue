@@ -56,6 +56,7 @@ class UsersStorageManager: UsersDataManager {
             currentUserObject?.firstName = user.user.firstName
             currentUserObject?.lastName = user.user.lastName
             currentUserObject?.username = user.user.username
+            currentUserObject?.isTeacher = user.user.isTeacher
             
             try? context.save()
             
