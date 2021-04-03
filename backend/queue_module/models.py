@@ -37,10 +37,12 @@ class Queue(models.Model):
 
     def push_member(self, user_id: str) -> None:
         if user_id not in self.members:
+            User.objects.get(pk=user_id)
             self.members.insert(0, user_id)
 
     def pop_member(self, user_id: str) -> None:
         if user_id in self.members:
+            User.objects.get(pk=user_id)
             self.members.remove(user_id)
 
     def move_member_to_the_end(self, user_id) -> None:

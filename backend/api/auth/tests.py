@@ -78,7 +78,7 @@ class AuthAPITestCases(TestCase):
             'username': user.username,
             'password': fuzzy.FuzzyText().fuzz()
         })
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_logout(self):
         user = UserFactory()

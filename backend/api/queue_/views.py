@@ -1,6 +1,8 @@
+from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, UpdateAPIView
 from rest_framework.permissions import SAFE_METHODS, IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.serializers import ValidationError
 
 from queue_module.models import Queue
 from . import serializers
@@ -45,12 +47,13 @@ class BaseQueueMemberOperationAPIView(UpdateAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid()
 
-        getattr(instance, self.method_name)(str(serializer.validated_data['userId']))
-        instance.save()
-
-        response_serializer = serializers.QueueRetrieveSerializer(instance=instance)
-        return Response(response_serializer.data)
-
+        try:
+            getattr(instance, self.method_name)(str(serializer.validated_data['userId']))
+            instance.save()
+            response_serializer = serializers.QueueRetrieveSerializer(instance=instance)
+            return Response(response_serializer.data)
+        except ObjectDoesNotExist:
+            raise ValidationError({'userId': ['User with provided id does not exist']})
 
 
 class QueueAddMemberAPIView(BaseQueueMemberOperationAPIView):

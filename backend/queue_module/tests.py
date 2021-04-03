@@ -3,6 +3,7 @@
 from django.test import TestCase
 
 from core.models import User
+from core.factories import UserFactory
 from .models import Queue
 
 
@@ -11,24 +12,23 @@ class QueueTestCases(TestCase):
     """
 
     def test_queue_members_operations(self):
-        user = User()
-        user.save()
-        queue = Queue(name='abc', creator=user)
+        creator = UserFactory()
+        users = UserFactory.create_batch(2)
+        queue = Queue(name='abc', creator=creator)
         queue.save()
-        queue.refresh_from_db()
         self.assertEqual(queue.members, [])
 
-        queue.push_member('1')
+        queue.push_member(str(users[0].id))
         queue.save()
         queue.refresh_from_db()
-        self.assertEqual(queue.members, ['1'])
+        self.assertEqual(queue.members, [str(users[0].id)])
 
-        queue.pop_member('2')
+        queue.pop_member(str(users[1].id))
         queue.save()
         queue.refresh_from_db()
-        self.assertEqual(queue.members, ['1'])
+        self.assertEqual(queue.members, [str(users[0].id)])
 
-        queue.pop_member('1')
+        queue.pop_member(str(users[0].id))
         queue.save()
         queue.refresh_from_db()
         self.assertEqual(queue.members, [])
