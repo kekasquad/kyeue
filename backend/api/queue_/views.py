@@ -1,4 +1,5 @@
 from django.core.exceptions import ObjectDoesNotExist
+from django_filters import rest_framework as rest_framework_filters
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, UpdateAPIView
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import SAFE_METHODS, IsAuthenticated
@@ -7,12 +8,15 @@ from rest_framework.serializers import ValidationError
 
 from queue_module.models import Queue
 from . import serializers
+from .filters import QueueFilter
 from .permissions import QueueRetrieveUpdateDestroyAPIPermission, BaseQueueMemberOperationAPIPermission
 
 
 class QueueListCreateAPIView(ListCreateAPIView):
     permission_classes = (IsAuthenticated,)
     pagination_class = LimitOffsetPagination
+    filter_backends = (rest_framework_filters.DjangoFilterBackend,)
+    filterset_class = QueueFilter
 
     queryset = Queue.objects.all().order_by('-updated', '-created')
 

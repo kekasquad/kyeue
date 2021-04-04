@@ -3,6 +3,7 @@ import uuid
 from django.test import TestCase
 from django.urls import reverse
 from factory import fuzzy
+from factory.fuzzy import FuzzyText
 from rest_framework import status
 
 from backend.queue_module.factories import QueueFactory
@@ -261,3 +262,38 @@ class QueueAPITestCases(AuthMixin, TestCase):
             )
             self.assertEqual(res.status_code, status.HTTP_200_OK)
             self.assertEqual(len(res.json()['results']), count - offset)
+
+    def test_filters(self):
+        user = UserFactory()
+        queue_1 = QueueFactory(creator=self.user)
+        queue_2 = QueueFactory(creator=user)
+
+        for filters, queue in (
+            ({
+                'name': queue_1.name,
+                'creatorId': str(self.user.id),
+                'creatorUsername': self.user.username
+            }, queue_1),
+            ({
+                'name': queue_2.name,
+                'creatorId': str(user.id),
+                'creatorUsername': user.username
+            }, queue_2)
+        ):
+            res = self.client.get(
+                reverse('api_queue_list_create_api_view'),
+                data=filters,
+                HTTP_AUTHORIZATION=self.access_header
+            )
+            self.assertEqual(res.status_code, status.HTTP_200_OK)
+            res = res.json()
+            self.assertEqual(len(res), 1)
+            self.assertEqual(res[0]['id'], str(queue.id))
+
+        res = self.client.get(
+            reverse('api_queue_list_create_api_view'),
+            data={'name': FuzzyText().fuzz()},
+            HTTP_AUTHORIZATION=self.access_header
+        )
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(res.json()), 0)
