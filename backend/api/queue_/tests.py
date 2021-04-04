@@ -270,11 +270,13 @@ class QueueAPITestCases(AuthMixin, TestCase):
 
         for filters, queue in (
             ({
+                'id': str(queue_1.id),
                 'name': queue_1.name,
                 'creatorId': str(self.user.id),
                 'creatorUsername': self.user.username
             }, queue_1),
             ({
+                'id': str(queue_2.id),
                 'name': queue_2.name,
                 'creatorId': str(user.id),
                 'creatorUsername': user.username

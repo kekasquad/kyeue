@@ -9,6 +9,9 @@ class QueueFilter(django_filters.FilterSet):
         model = Queue
         fields = ('name', 'creatorId', 'creatorUsername')
 
+    id = django_filters.UUIDFilter(
+        field_name='id', lookup_expr='exact'
+    )
     name = django_filters.CharFilter(
         field_name='name', lookup_expr='istartswith'
     )
