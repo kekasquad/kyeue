@@ -5,10 +5,11 @@ import uuid
 from django.db import models
 from core.models import User
 
+from .mixins import TimeStampedModel
 from . import signals
 
 
-class Queue(models.Model):
+class Queue(TimeStampedModel):
     """ Queue model
     """
 

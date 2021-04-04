@@ -1,5 +1,6 @@
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, UpdateAPIView
+from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import SAFE_METHODS, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.serializers import ValidationError
@@ -11,8 +12,9 @@ from .permissions import QueueRetrieveUpdateDestroyAPIPermission, BaseQueueMembe
 
 class QueueListCreateAPIView(ListCreateAPIView):
     permission_classes = (IsAuthenticated,)
+    pagination_class = LimitOffsetPagination
 
-    queryset = Queue.objects.all()
+    queryset = Queue.objects.all().order_by('-updated', '-created')
 
     def get_serializer_class(self):
         if self.request.method in SAFE_METHODS:

@@ -240,3 +240,24 @@ class QueueAPITestCases(AuthMixin, TestCase):
                 HTTP_AUTHORIZATION=token
             )
             self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_pagination(self):
+        count = 50
+        QueueFactory.create_batch(count, creator=self.user)
+        for limit in range(1, count + 10):
+            res = self.client.get(
+                reverse('api_queue_list_create_api_view'),
+                data={'limit': limit},
+                HTTP_AUTHORIZATION=self.access_header
+            )
+            self.assertEqual(res.status_code, status.HTTP_200_OK)
+            self.assertEqual(len(res.json()['results']), min(limit, count))
+
+        for offset in range(count+1):
+            res = self.client.get(
+                reverse('api_queue_list_create_api_view'),
+                data={'limit': count, 'offset': offset},
+                HTTP_AUTHORIZATION=self.access_header
+            )
+            self.assertEqual(res.status_code, status.HTTP_200_OK)
+            self.assertEqual(len(res.json()['results']), count - offset)
