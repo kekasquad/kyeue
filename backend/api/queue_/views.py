@@ -61,6 +61,7 @@ class BaseQueueMemberOperationAPIView(UpdateAPIView):
         except ObjectDoesNotExist:
             raise ValidationError({'userId': ['User with provided id does not exist']})
 
+
 class QueueAddMemberAPIView(BaseQueueMemberOperationAPIView):
     method_name = 'push_member'
 
@@ -71,3 +72,7 @@ class QueueRemoveMemberAPIView(BaseQueueMemberOperationAPIView):
 
 class QueueMoveMemberToEndAPIView(BaseQueueMemberOperationAPIView):
     method_name = 'move_member_to_the_end'
+
+
+class QueueSkipTurnAPIView(BaseQueueMemberOperationAPIView):
+    method_name = 'skip_turn'

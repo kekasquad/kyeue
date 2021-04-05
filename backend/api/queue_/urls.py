@@ -22,5 +22,9 @@ urlpatterns = [
     re_path(
         r'^(?P<pk>[^/]+)/move-to-end/?$', views.QueueMoveMemberToEndAPIView.as_view(),
         name='api_queue_move_member_to_end_api_view'
+    ),
+    re_path(
+        r'^(?P<pk>[^/]+)/skip-turn/?$', views.QueueSkipTurnAPIView.as_view(),
+        name='api_queue_skip_turn_api_view'
     )
 ]

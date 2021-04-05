@@ -40,6 +40,13 @@ def move_member_to_the_end_reciever(instance, **kwargs):
     }, 'member_operation', str(instance.id))
 
 
+@receiver(queue_signals.skip_turn_signal)
+def skip_turn_receiver(instance, **kwargs):
+    send_message({
+        'skip_turn': kwargs.get('user_id')
+    }, 'member_operation', str(instance.id))
+
+
 @receiver(post_save, sender=Queue)
 def create_queue_receiver(created, instance, **_):
     if created:

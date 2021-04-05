@@ -1,5 +1,3 @@
-import uuid
-
 from django.test import TestCase
 from django.urls import reverse
 from factory import fuzzy
@@ -50,7 +48,7 @@ class QueueAPITestCases(AuthMixin, TestCase):
         queue_list = response.json()
         self.assertEqual(len(queue_list), count)
         for ind, queue in enumerate(queue_list):
-            self.assertEqual(queue['name'], str(ind))
+            self.assertEqual(queue['name'], str(count-ind-1))
 
     def test_get_queue_details(self):
         queue = QueueFactory(creator=self.user)
@@ -117,6 +115,41 @@ class QueueAPITestCases(AuthMixin, TestCase):
             self.assertEqual(res.status_code, status.HTTP_200_OK)
             queue.refresh_from_db()
             self.assertEqual(len(queue.members), count - i - 1)
+
+    def test_skip_turn_operation(self):
+        queue = QueueFactory(creator=self.user)
+        user_1, user_2 = UserFactory(), UserFactory()
+
+        def _skip_turn(user):
+            res = self.client.put(
+                reverse('api_queue_skip_turn_api_view', kwargs={'pk': str(queue.id)}),
+                data={
+                    'userId': str(user.id)
+                },
+                content_type='application/json',
+                HTTP_AUTHORIZATION=self.access_header
+            )
+            self.assertEqual(res.status_code, status.HTTP_200_OK)
+            queue.refresh_from_db()
+
+        _skip_turn(user_1)
+        self.assertEqual(queue.members, [])
+
+        queue.push_member(str(user_1.id))
+        queue.save()
+        for user in (user_1, user_2):
+            _skip_turn(user)
+            self.assertEqual(queue.members, [str(user_1.id)])
+        _skip_turn(user_1)
+        self.assertEqual(queue.members, [str(user_1.id)])
+
+        queue.push_member(str(user_2.id))
+        queue.save()
+
+        _skip_turn(user_2)
+        self.assertEqual(queue.members, [str(user_2.id), str(user_1.id)])
+        _skip_turn(user_1)
+        self.assertEqual(queue.members, [str(user_1.id), str(user_2.id)])
 
     def test_delete_queue(self):
         queue = QueueFactory(creator=self.user)

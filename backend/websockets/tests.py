@@ -6,6 +6,7 @@ from django.urls import re_path, reverse
 from factory.fuzzy import FuzzyText
 
 from api.tests import AuthMixin
+from core.factories import UserFactory
 from queue_module.factories import QueueFactory
 from .consumers import QueueConsumer, CommonNotificationsConsumer
 
@@ -42,6 +43,34 @@ class WebsocketTestCases(AuthMixin, TestCase):
             })
 
         await communicator.disconnect()
+
+    async def test_skip_turn_notification(self):
+        users = await sync_to_async(UserFactory.create_batch)(2)
+        queue = await sync_to_async(QueueFactory)(
+            creator=self.user, members=[str(u.id) for u in users]
+        )
+
+        application = URLRouter([
+            re_path(r'^ws/queue/(?P<queue_id>[^/]+)/?$', QueueConsumer.as_asgi()),
+        ])
+
+        communicator = WebsocketCommunicator(application, f'/ws/queue/{str(queue.id)}')
+        connected, _ = await communicator.connect()
+
+        await sync_to_async(self.client.put)(
+            reverse('api_queue_skip_turn_api_view', kwargs={'pk': str(queue.id)}),
+            data={'userId': str(users[1].id)},
+            content_type='application/json',
+            HTTP_AUTHORIZATION=self.access_header
+        )
+
+        message = await communicator.receive_json_from()
+        self.assertEqual(message, {
+            'type': 'member_operation',
+            'text': {
+                'skip_turn': str(users[1].id)
+            }
+        })
 
     async def test_queue_creation_notification(self):
         application = URLRouter([
