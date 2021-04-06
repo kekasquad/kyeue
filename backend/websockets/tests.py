@@ -72,7 +72,7 @@ class WebsocketTestCases(AuthMixin, TestCase):
             }
         })
 
-    async def test_queue_creation_notification(self):
+    async def test_queue_create_delete_notifications(self):
         application = URLRouter([
             re_path(r'^ws/notifications/?$', CommonNotificationsConsumer.as_asgi()),
         ])
@@ -86,11 +86,28 @@ class WebsocketTestCases(AuthMixin, TestCase):
             content_type='application/json',
             HTTP_AUTHORIZATION=self.access_header
         )
+        response = response.json()
 
         message = await communicator.receive_json_from()
         self.assertEqual(message, {
             'type': 'queue_operation',
             'text': {
-                'create_queue': response.json()['id']
+                'create_queue': response['id']
+            }
+        })
+
+        await sync_to_async(self.client.delete)(
+            reverse(
+                'api_queue_retrieve_update_destroy_api_view',
+                kwargs={'pk': response['id']}
+            ),
+            HTTP_AUTHORIZATION=self.access_header
+        )
+
+        message = await communicator.receive_json_from()
+        self.assertEqual(message, {
+            'type': 'queue_operation',
+            'text': {
+                'delete_queue': response['id']
             }
         })

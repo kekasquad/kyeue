@@ -1,6 +1,6 @@
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 
 from queue_module import signals as queue_signals
@@ -53,3 +53,10 @@ def create_queue_receiver(created, instance, **_):
         send_message({
             'create_queue': str(instance.id)
         }, 'queue_operation', 'common_notifications')
+
+
+@receiver(post_delete, sender=Queue)
+def delete_queue_receiver(instance, **_):
+    send_message({
+        'delete_queue': str(instance.id)
+    }, 'queue_operation', 'common_notifications')
