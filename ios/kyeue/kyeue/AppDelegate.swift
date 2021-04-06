@@ -31,6 +31,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
 
+    func applicationWillTerminate(_ application: UIApplication) {
+        QueuesWebSocketsService.shared.disconnect()
+    }
+
     // MARK: - Core Data stack
 
     lazy var persistentContainer: NSPersistentContainer = {

@@ -30,6 +30,28 @@ class MainVC: UIViewController {
         
         tableView.register(UINib(nibName: String(describing: QueueCell.self), bundle: Bundle.main), forCellReuseIdentifier: String(describing: QueueCell.self))
         
+        QueuesWebSocketsService.shared.connect()
+        QueuesWebSocketsService.shared.set { [weak self] (queueId) in
+            guard let self = self, let key = Authentication.shared.user?.key else { return }
+            for queue in self.queues {
+                if queue.id == queueId { return }
+            }
+            QueuesService.shared.getBy(id: queueId, key: key) { (_) in
+                print("cannot get queue")
+            } completion: { [weak self] (newQueue) in
+                guard let self = self else { return }
+                let index = 0
+                self.queues.insert(newQueue, at: index)
+                self.tableView.beginUpdates()
+                self.tableView.insertRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+                self.tableView.endUpdates()
+            }
+
+        } delete: { [weak self] (queueId) in
+            print("deleted " + queueId)
+        }
+
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -64,6 +86,7 @@ class MainVC: UIViewController {
             self.errorAlert(with: err, action: self.logout)
             self.activityIndicator.stopAnimating()
         } completion: {
+            QueuesWebSocketsService.shared.disconnect()
             self.dismiss(animated: true)
         }
     }

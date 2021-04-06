@@ -13,6 +13,7 @@ class QueueVC: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     
     var queue: Queue?
+    lazy var socket = MembersWebSocketsService(queueId: queue!.id)
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -51,9 +52,14 @@ class QueueVC: UIViewController {
             self?.add()
         }
         
+        let skip = UIAlertAction(title: "Skip the turn", style: .default) { [weak self] _ in
+            self?.skip()
+        }
+        
         let remove = UIAlertAction(title: "Leave the queue", style: .default) { [weak self] _ in
             self?.remove()
         }
+        
         
         let cancel = UIAlertAction(title: "Cancel", style: .cancel)
         
@@ -67,6 +73,7 @@ class QueueVC: UIViewController {
         
         if !isTeacher {
             if queue.inQueue(userId: userId) {
+                actionSheet.addAction(skip)
                 actionSheet.addAction(remove)
             } else {
                 actionSheet.addAction(add)
@@ -83,6 +90,7 @@ class QueueVC: UIViewController {
         if !isTeacher {
             removeWithLeave()
         } else {
+            socket.disconnect()
             navigationController?.popViewController(animated: true)
         }
     }
@@ -102,9 +110,43 @@ class QueueVC: UIViewController {
             self.errorAlert(with: error, action: self.getQueue)
         } completion: { [weak self] (queue) in
             self?.queue = queue // try to insert new
+            self?.configureSocket()
             self?.tableView.reloadData()
             self?.activityIndicator.stopAnimating()
         }
+    }
+    
+    func configureSocket() {
+        socket.connect()
+        socket.set(push: { [weak self] (userId) in
+            guard
+                let self = self,
+                let queue = self.queue,
+                let key = Authentication.shared.user?.key
+            else { return }
+            for user in queue.members {
+                if user.id == userId {
+                    return
+                }
+            }
+            UsersService.shared.getBy(id: userId, key: key) { (_) in
+                print("cannot get user")
+            } completion: { [weak self] (user) in
+                guard let self = self else { return }
+                let index = queue.members.count
+                self.queue?.members.insert(user, at: 0)
+                self.tableView.beginUpdates()
+                self.tableView.insertRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+                self.tableView.endUpdates()
+            }
+
+        }, pop: { [weak self] (userId) in
+            print()
+        }, move: { [weak self] (userId) in
+            print()
+        }, skip: { [weak self] (userId) in
+            print()
+        })
     }
     
     func add() {
@@ -129,6 +171,28 @@ class QueueVC: UIViewController {
         }
     }
     
+    func skip() {
+        guard
+            let userId = Authentication.shared.user?.user.id,
+            let key = Authentication.shared.user?.key,
+            let queueId = self.queue?.id
+        else  { return }
+        
+        self.activityIndicator.startAnimating()
+        
+        let member = QueueMember(userId: userId)
+
+        QueuesService.shared.skip(member: member, key: key, queueID: queueId) { [weak self] (error) in
+            guard let self = self else { return }
+            self.activityIndicator.stopAnimating()
+            self.errorAlert(with: error, action: self.skip)
+        } completion: { [weak self] (queue) in
+            self?.queue = queue // try to insert new
+            self?.tableView.reloadData()
+            self?.activityIndicator.stopAnimating()
+        }
+    }
+    
     func removeWithLeave() {
         guard
             let userId = Authentication.shared.user?.user.id,
@@ -145,6 +209,7 @@ class QueueVC: UIViewController {
             self.activityIndicator.stopAnimating()
             self.errorAlert(with: error, action: self.removeWithLeave)
         } completion: { [weak self] (queue) in
+            self?.socket.disconnect()
             self?.navigationController?.popViewController(animated: true)
         }
     }

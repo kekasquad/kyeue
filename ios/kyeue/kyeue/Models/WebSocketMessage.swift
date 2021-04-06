@@ -9,7 +9,7 @@ import Foundation
 
 struct WebSocketMessage: Codable {
     let type: MessageType
-    let message: Message
+    let text: Message
 }
 
 enum MessageType: String, Codable {

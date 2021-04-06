@@ -24,7 +24,7 @@ struct Queue: Codable {
     let id: String
     let name: String
     let isPrivate: Bool
-    let members: [User]
+    var members: [User]
     let creator: User
 }
 

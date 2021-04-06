@@ -33,17 +33,20 @@ class MembersWebSocketsService {
     
     private lazy var webSocketTask =
         URLSession(configuration: .default)
-        .webSocketTask(with: URL(string: "ws://127.0.0.1:8080/ws/queue/\(self.queueId)/")!)
+        .webSocketTask(with: URL(string: "ws://127.0.0.1:8000/ws/queue/\(self.queueId)/")!)
     
     public func connect() {
         webSocketTask.resume()
+        ping()
+        receiveData()
+        print("connected to queue")
     }
     
     public func disconnect(){
-        webSocketTask.cancel(with: .goingAway, reason: nil)
+        webSocketTask.cancel()
     }
     
-    func ping() {
+    private func ping() {
         webSocketTask.sendPing { (error) in
             if let error = error {
                 print("Ping failed: \(error)")
@@ -72,11 +75,9 @@ class MembersWebSocketsService {
                 switch message {
                 case .string(let text):
                     print("Received text: \(text)")
-                case .data(let data):
-                    print("Received data: \(data)")
-                    
+                    guard let data = text.data(using: .utf8) else { return }
                     if let message = try? JSONDecoder().decode(WebSocketMessage.self, from: data) {
-                        switch message.message {
+                        switch message.text {
                         case let .popMember(value):
                             DispatchQueue.main.async { [weak self] in
                                 self?.pop?(value)
@@ -97,7 +98,8 @@ class MembersWebSocketsService {
                             break
                         }
                     }
-                    
+                case .data(let data):
+                    print("Received data: \(data)")
                 @unknown default:
                     debugPrint("Unknown message")
                 }
@@ -123,17 +125,20 @@ class QueuesWebSocketsService {
     
     private let webSocketTask =
         URLSession(configuration: .default)
-        .webSocketTask(with: URL(string: "ws://127.0.0.1:8080/ws/notifications/")!)
+        .webSocketTask(with: URL(string: "ws://127.0.0.1:8000/ws/notifications/")!)
     
     public func connect() {
         webSocketTask.resume()
+        ping()
+        receiveData()
+        print("connected to queues")
     }
     
     public func disconnect(){
-        webSocketTask.cancel(with: .goingAway, reason: nil)
+        webSocketTask.cancel()
     }
     
-    public func ping() {
+    private func ping() {
         webSocketTask.sendPing { (error) in
             if let error = error {
                 print("Ping failed: \(error)")
@@ -152,7 +157,7 @@ class QueuesWebSocketsService {
     public func create(queueID: String) {
         webSocketTask.resume()
         
-        let message = WebSocketMessage(type: .queueOperation, message: .createQueue(queueID))
+        let message = WebSocketMessage(type: .queueOperation, text: .createQueue(queueID))
         if let messageData = try? JSONEncoder().encode(message) {
             webSocketTask.send(URLSessionWebSocketTask.Message.data(messageData)) { (error) in
                 if let error = error {
@@ -165,7 +170,7 @@ class QueuesWebSocketsService {
     public func delete(queueID: String) {
         webSocketTask.resume()
         
-        let message = WebSocketMessage(type: .queueOperation, message: .deleteQueue(queueID))
+        let message = WebSocketMessage(type: .queueOperation, text: .deleteQueue(queueID))
         if let messageData = try? JSONEncoder().encode(message) {
             webSocketTask.send(URLSessionWebSocketTask.Message.data(messageData)) { (error) in
                 if let error = error {
@@ -186,11 +191,9 @@ class QueuesWebSocketsService {
                 switch message {
                 case .string(let text):
                     print("Received text: \(text)")
-                case .data(let data):
-                    print("Received data: \(data)")
-                    
+                    guard let data = text.data(using: .utf8) else { return }
                     if let message = try? JSONDecoder().decode(WebSocketMessage.self, from: data) {
-                        switch message.message {
+                        switch message.text {
                         case let .createQueue(value):
                             DispatchQueue.main.async { [weak self] in
                                 self?.create?(value)
@@ -203,6 +206,8 @@ class QueuesWebSocketsService {
                             break
                         }
                     }
+                case .data(let data):
+                    print("Received data: \(data)")
                     
                 @unknown default:
                     debugPrint("Unknown message")
