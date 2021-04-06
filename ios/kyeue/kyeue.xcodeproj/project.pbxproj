@@ -27,6 +27,7 @@
 		8F92F03B25FFAAFA0083E188 /* Authentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F92F03A25FFAAFA0083E188 /* Authentication.swift */; };
 		8F92F04325FFAE540083E188 /* UsersService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F92F04225FFAE540083E188 /* UsersService.swift */; };
 		8FAA995826173B6400D905DE /* NewQueueVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FAA995726173B6400D905DE /* NewQueueVC.swift */; };
+		8FD2E517261CD1920064219E /* WebSocketsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FD2E516261CD1920064219E /* WebSocketsService.swift */; };
 		8FD53D092614BE5300E995BC /* MainVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FD53D082614BE5300E995BC /* MainVC.swift */; };
 		8FD53D102614E2A500E995BC /* UserStorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FD53D0F2614E2A500E995BC /* UserStorageManager.swift */; };
 		8FD53D142614E41300E995BC /* UserObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FD53D132614E41300E995BC /* UserObject.swift */; };
@@ -57,6 +58,7 @@
 		8F92F03A25FFAAFA0083E188 /* Authentication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Authentication.swift; sourceTree = "<group>"; };
 		8F92F04225FFAE540083E188 /* UsersService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersService.swift; sourceTree = "<group>"; };
 		8FAA995726173B6400D905DE /* NewQueueVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewQueueVC.swift; sourceTree = "<group>"; };
+		8FD2E516261CD1920064219E /* WebSocketsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocketsService.swift; sourceTree = "<group>"; };
 		8FD53D082614BE5300E995BC /* MainVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainVC.swift; sourceTree = "<group>"; };
 		8FD53D0F2614E2A500E995BC /* UserStorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserStorageManager.swift; sourceTree = "<group>"; };
 		8FD53D132614E41300E995BC /* UserObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserObject.swift; sourceTree = "<group>"; };
@@ -144,6 +146,7 @@
 				8F92F04225FFAE540083E188 /* UsersService.swift */,
 				8F1FDAAA2616A90300BA6159 /* QueuesService.swift */,
 				8F1FDAAE2616A91300BA6159 /* AuthService.swift */,
+				8FD2E516261CD1920064219E /* WebSocketsService.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -257,6 +260,7 @@
 				8F1FDAAB2616A90300BA6159 /* QueuesService.swift in Sources */,
 				8F1FDABB2616AF7000BA6159 /* QueueVC.swift in Sources */,
 				8FD53D092614BE5300E995BC /* MainVC.swift in Sources */,
+				8FD2E517261CD1920064219E /* WebSocketsService.swift in Sources */,
 				8F25380925FDA09E00B99A45 /* kyeue.xcdatamodeld in Sources */,
 				8F92F03B25FFAAFA0083E188 /* Authentication.swift in Sources */,
 				8F1FDAB32616A9BF00BA6159 /* Utils.swift in Sources */,
