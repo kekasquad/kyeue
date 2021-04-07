@@ -48,7 +48,7 @@ class QueueAPITestCases(AuthMixin, TestCase):
         queue_list = response.json()
         self.assertEqual(len(queue_list), count)
         for ind, queue in enumerate(queue_list):
-            self.assertEqual(queue['name'], str(count-ind-1))
+            self.assertEqual(queue['name'], str(count - ind - 1))
 
     def test_get_queue_details(self):
         queue = QueueFactory(creator=self.user)
@@ -275,6 +275,36 @@ class QueueAPITestCases(AuthMixin, TestCase):
             )
             self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
 
+        user_1, user_2 = UserFactory(), UserFactory()
+        queue.push_member(str(user_1.id))
+        queue.push_member(str(user_2.id))
+        queue.save()
+        queue.refresh_from_db()
+        self.assertEqual(queue.members, [str(user_2.id), str(user_1.id)])
+
+        res = self.client.put(
+            reverse('api_queue_skip_turn_api_view', kwargs={'pk': str(queue.id)}),
+            data={
+                'userId': str(user_1.id)
+            },
+            content_type='application/json',
+            HTTP_AUTHORIZATION=self._get_auth_header(key)
+        )
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        queue.refresh_from_db()
+        self.assertEqual(queue.members, [str(user_1.id), str(user_2.id)])
+
+        res = self.client.put(
+            reverse(
+                'api_queue_remove_member_api_view',
+                kwargs={'pk': str(queue.id)}
+            ), data={'userId': str(user_2.id)}, content_type='application/json',
+            HTTP_AUTHORIZATION=self._get_auth_header(key)
+        )
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        queue.refresh_from_db()
+        self.assertEqual(queue.members, [str(user_1.id)])
+
     def test_pagination(self):
         count = 50
         QueueFactory.create_batch(count, creator=self.user)
@@ -287,7 +317,7 @@ class QueueAPITestCases(AuthMixin, TestCase):
             self.assertEqual(res.status_code, status.HTTP_200_OK)
             self.assertEqual(len(res.json()['results']), min(limit, count))
 
-        for offset in range(count+1):
+        for offset in range(count + 1):
             res = self.client.get(
                 reverse('api_queue_list_create_api_view'),
                 data={'limit': count, 'offset': offset},
@@ -302,18 +332,18 @@ class QueueAPITestCases(AuthMixin, TestCase):
         queue_2 = QueueFactory(creator=user)
 
         for filters, queue in (
-            ({
-                'id': str(queue_1.id),
-                'name': queue_1.name,
-                'creatorId': str(self.user.id),
-                'creatorUsername': self.user.username
-            }, queue_1),
-            ({
-                'id': str(queue_2.id),
-                'name': queue_2.name,
-                'creatorId': str(user.id),
-                'creatorUsername': user.username
-            }, queue_2)
+                ({
+                     'id': str(queue_1.id),
+                     'name': queue_1.name,
+                     'creatorId': str(self.user.id),
+                     'creatorUsername': self.user.username
+                 }, queue_1),
+                ({
+                     'id': str(queue_2.id),
+                     'name': queue_2.name,
+                     'creatorId': str(user.id),
+                     'creatorUsername': user.username
+                 }, queue_2)
         ):
             res = self.client.get(
                 reverse('api_queue_list_create_api_view'),

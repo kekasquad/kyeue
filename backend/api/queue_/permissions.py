@@ -18,7 +18,7 @@ class BaseQueueMemberOperationAPIPermission(BasePermission):
             return not request.user.is_teacher
 
         try:
-            return request.user.id == view.get_object().creator.id and \
-                not User.objects.get(pk=request.data.get('userId', None)).is_teacher
+            return (request.user.id == view.get_object().creator.id or request.user.is_teacher) and \
+                   not User.objects.get(pk=request.data.get('userId', None)).is_teacher
         except ObjectDoesNotExist:
             return True
