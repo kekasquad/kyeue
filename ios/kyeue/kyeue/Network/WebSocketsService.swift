@@ -154,32 +154,6 @@ class QueuesWebSocketsService {
         }
     }
     
-    public func create(queueID: String) {
-        webSocketTask.resume()
-        
-        let message = WebSocketMessage(type: .queueOperation, text: .createQueue(queueID))
-        if let messageData = try? JSONEncoder().encode(message) {
-            webSocketTask.send(URLSessionWebSocketTask.Message.data(messageData)) { (error) in
-                if let error = error {
-                    print("cannot send message because of \(error.localizedDescription)")
-                }
-            }
-        }
-    }
-    
-    public func delete(queueID: String) {
-        webSocketTask.resume()
-        
-        let message = WebSocketMessage(type: .queueOperation, text: .deleteQueue(queueID))
-        if let messageData = try? JSONEncoder().encode(message) {
-            webSocketTask.send(URLSessionWebSocketTask.Message.data(messageData)) { (error) in
-                if let error = error {
-                    print("cannot send message because of \(error.localizedDescription)")
-                }
-            }
-        }
-    }
-    
     func receiveData() {
         
         webSocketTask.receive { result in

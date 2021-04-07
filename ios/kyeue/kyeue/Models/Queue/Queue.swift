@@ -37,5 +37,15 @@ extension Queue {
         }
         return false
     }
+    
+    func indexOf(userId: String) -> Int? {
+        for i in 0..<members.count {
+            let user = members[i]
+            if userId == user.id {
+                return i
+            }
+        }
+        return nil
+    }
 }
 

@@ -31,6 +31,16 @@ extension MemberCell: ConfigurableView {
     func configure(with model: QueueUser) {
         user = model
         nameLabel.text = "\(model.position). " +  model.getFullName()
+        
+        layer.masksToBounds = true
+        layer.shadowOffset = CGSize(width: -1, height: 1)
+        if user?.id == Authentication.shared.user?.user.id {
+            let color: UIColor = #colorLiteral(red: 0.721568644, green: 0.8862745166, blue: 0.5921568871, alpha: 1).withAlphaComponent(0.5)
+            contentView.backgroundColor = color
+        } else {
+            let color: UIColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+            contentView.backgroundColor = color
+        }
     }
     
 }

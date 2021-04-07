@@ -60,6 +60,10 @@ class QueueVC: UIViewController {
             self?.remove()
         }
         
+        let move = UIAlertAction(title: "Move to the end", style: .default) { [weak self] _ in
+            self?.move()
+        }
+        
         
         let cancel = UIAlertAction(title: "Cancel", style: .cancel)
         
@@ -73,7 +77,10 @@ class QueueVC: UIViewController {
         
         if !isTeacher {
             if queue.inQueue(userId: userId) {
-                actionSheet.addAction(skip)
+                if let index = queue.indexOf(userId: userId), index != 0 {
+                    actionSheet.addAction(skip)
+                    actionSheet.addAction(move)
+                }
                 actionSheet.addAction(remove)
             } else {
                 actionSheet.addAction(add)
@@ -118,35 +125,66 @@ class QueueVC: UIViewController {
     
     func configureSocket() {
         socket.connect()
-        socket.set(push: { [weak self] (userId) in
-            guard
-                let self = self,
-                let queue = self.queue,
-                let key = Authentication.shared.user?.key
-            else { return }
-            for user in queue.members {
-                if user.id == userId {
-                    return
+        socket.set(
+            push: { [weak self] (userId) in
+                guard
+                    let self = self,
+                    let queue = self.queue,
+                    let key = Authentication.shared.user?.key
+                else { return }
+                UsersService.shared.getBy(id: userId, key: key) { (_) in
+                    print("cannot get user")
+                } completion: { [weak self] (user) in
+                    print(user)
+                    guard let self = self else { return }
+                    let index = queue.members.count
+                    self.queue?.members.insert(user, at: 0)
+                    self.tableView.beginUpdates()
+                    self.tableView.insertRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+                    self.tableView.endUpdates()
+                }
+            },
+            pop: { [weak self] (userId) in
+                guard
+                    let self = self,
+                    let queue = self.queue
+                else { return }
+                let index = queue.indexOf(userId: userId)
+                if let index = index {
+                    self.queue?.members.remove(at: index)
+                    self.tableView.beginUpdates()
+                    self.tableView.deleteRows(at: [IndexPath(row: queue.members.count - 1 - index, section: 0)], with: .automatic)
+                    self.tableView.endUpdates()
+                }
+            },
+            move: { [weak self] (userId) in
+                guard
+                    let self = self,
+                    let queue = self.queue
+                else { return }
+                let index = queue.indexOf(userId: userId)
+                if let index = index,  let user = self.queue?.members.remove(at: index)  {
+                    self.queue?.members.insert(user, at: 0)
+                    self.tableView.beginUpdates()
+                    self.tableView.reloadSections(IndexSet(integer: 0), with: .automatic)
+                    self.tableView.endUpdates()
+                }
+            },
+            skip: { [weak self] (userId) in
+                guard
+                    let self = self,
+                    let queue = self.queue
+                else { return }
+                let index = queue.indexOf(userId: userId)
+                if let index = index,  let user = self.queue?.members.remove(at: index)  {
+                    print("index to remove: \(index)")
+                    self.queue?.members.insert(user, at: index - 1)
+                    self.tableView.beginUpdates()
+                    self.tableView.reloadRows(at: [IndexPath(row: queue.members.count - 1 - index, section: 0), IndexPath(row: queue.members.count - index, section: 0)], with: .automatic)
+                    self.tableView.endUpdates()
                 }
             }
-            UsersService.shared.getBy(id: userId, key: key) { (_) in
-                print("cannot get user")
-            } completion: { [weak self] (user) in
-                guard let self = self else { return }
-                let index = queue.members.count
-                self.queue?.members.insert(user, at: 0)
-                self.tableView.beginUpdates()
-                self.tableView.insertRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
-                self.tableView.endUpdates()
-            }
-
-        }, pop: { [weak self] (userId) in
-            print()
-        }, move: { [weak self] (userId) in
-            print()
-        }, skip: { [weak self] (userId) in
-            print()
-        })
+        )
     }
     
     func add() {
@@ -165,8 +203,7 @@ class QueueVC: UIViewController {
             self.activityIndicator.stopAnimating()
             self.errorAlert(with: error, action: self.add)
         } completion: { [weak self] (queue) in
-            self?.queue = queue // try to insert new
-            self?.tableView.reloadData()
+            print("add new member")
             self?.activityIndicator.stopAnimating()
         }
     }
@@ -174,6 +211,7 @@ class QueueVC: UIViewController {
     func skip() {
         guard
             let userId = Authentication.shared.user?.user.id,
+            let name = Authentication.shared.user?.user.getFullName(),
             let key = Authentication.shared.user?.key,
             let queueId = self.queue?.id
         else  { return }
@@ -187,8 +225,29 @@ class QueueVC: UIViewController {
             self.activityIndicator.stopAnimating()
             self.errorAlert(with: error, action: self.skip)
         } completion: { [weak self] (queue) in
-            self?.queue = queue // try to insert new
-            self?.tableView.reloadData()
+            print("\(name) skipped turn")
+            self?.activityIndicator.stopAnimating()
+        }
+    }
+    
+    func move() {
+        guard
+            let userId = Authentication.shared.user?.user.id,
+            let name = Authentication.shared.user?.user.getFullName(),
+            let key = Authentication.shared.user?.key,
+            let queueId = self.queue?.id
+        else  { return }
+        
+        self.activityIndicator.startAnimating()
+        
+        let member = QueueMember(userId: userId)
+
+        QueuesService.shared.move(member: member, key: key, queueID: queueId) { [weak self] (error) in
+            guard let self = self else { return }
+            self.activityIndicator.stopAnimating()
+            self.errorAlert(with: error, action: self.skip)
+        } completion: { [weak self] (queue) in
+            print("\(name) move to the end")
             self?.activityIndicator.stopAnimating()
         }
     }
@@ -217,6 +276,7 @@ class QueueVC: UIViewController {
     func remove() {
         guard
             let userId = Authentication.shared.user?.user.id,
+            let name = Authentication.shared.user?.user.getFullName(),
             let key = Authentication.shared.user?.key,
             let queueId = self.queue?.id
         else  { return }
@@ -230,8 +290,7 @@ class QueueVC: UIViewController {
             self.activityIndicator.stopAnimating()
             self.errorAlert(with: error, action: self.removeWithLeave)
         } completion: { [weak self] (queue) in
-            self?.queue = queue // try to insert new
-            self?.tableView.reloadData()
+            print("\(name) leave queue")
             self?.activityIndicator.stopAnimating()
         }
     }

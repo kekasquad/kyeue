@@ -135,7 +135,7 @@
 			children = (
 				8F1FDAA92616A75A00BA6159 /* Queue */,
 				8F92F03225FFA9170083E188 /* User */,
-				8F3966A2261908420070E771 /* WebSocketMessage.swift */,
+				8F6B8805261DD82000674D4D /* Message */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -163,6 +163,14 @@
 				8F1FDAB22616A9BF00BA6159 /* Utils.swift */,
 			);
 			path = SupportFiles;
+			sourceTree = "<group>";
+		};
+		8F6B8805261DD82000674D4D /* Message */ = {
+			isa = PBXGroup;
+			children = (
+				8F3966A2261908420070E771 /* WebSocketMessage.swift */,
+			);
+			path = Message;
 			sourceTree = "<group>";
 		};
 		8F92F03225FFA9170083E188 /* User */ = {
