@@ -7,21 +7,15 @@
 
 import Foundation
 
-class AuthService {
+class AuthService: BaseService {
     
     public static let shared = AuthService() // создаем Синглтон
-    private init() {}
+    private override init() {}
     
-    private let scheme = Utils.scheme
-    private let host = Utils.host
-    private let port = Utils.port
-    private let api = "/api"
     private let auth = "/auth"
     private let login = "/login"
     private let logout = "/logout"
     private let signup = "/signup"
-
-    private let badMessage = Utils.badMessage
     
     //MARK: POST
     
@@ -62,7 +56,9 @@ class AuthService {
                     }
                 } else if let httpResponse = response as? HTTPURLResponse {
                     print(httpResponse.statusCode)
-                    if httpResponse.statusCode == 201 {
+                    let status = httpResponse.statusCode
+                    switch status {
+                    case 201:
                         if let data = data {
                             let user = try? JSONDecoder().decode(User.self, from: data)
                             if let user = user {
@@ -71,14 +67,12 @@ class AuthService {
                                 }
                             }
                         }
-                    } else {
-                        if let data = data {
-                            let message = try? JSONSerialization.jsonObject(with: data) as? [String: [String]]
-                            print(message?.values.first?.first ?? self.badMessage)
-                            DispatchQueue.main.async {
-                                errCompletion(message?.values.first?.first ?? self.badMessage)
-                            }
-                        }
+                    case 400:
+                        self.code400(errCompletion: errCompletion, data: data)
+                    case 401:
+                        self.code401(errCompletion: errCompletion, data: data)
+                    default:
+                        self.codeDefault(errCompletion: errCompletion, data: data)
                     }
                 }
             }
@@ -140,32 +134,11 @@ class AuthService {
                             }
                         }
                     case 400:
-                        if let data = data {
-                            let message = try? JSONSerialization.jsonObject(with: data) as? [String: [String]]
-                            print(message?.values.first?.first ?? self.badMessage)
-                            DispatchQueue.main.async {
-                                errCompletion(self.badMessage)
-                            }
-                        }
+                        self.code400(errCompletion: errCompletion, data: data)
                     case 401:
-                        if let data = data {
-                            let message = try? JSONSerialization.jsonObject(with: data) as? [String: String]
-                            print(message?["error"] ?? self.badMessage)
-                            DispatchQueue.main.async {
-                                errCompletion(message?["error"] ?? self.badMessage)
-                            }
-                        }
+                        self.code401(errCompletion: errCompletion, data: data)
                     default:
-                        if let data = data {
-                            let message = try? JSONSerialization.jsonObject(with: data) as? [String: Any]
-                            if let message = message {
-                                print(message)
-                            }
-                            DispatchQueue.main.async {
-                                errCompletion(self.badMessage)
-                            }
-                        }
-                        break
+                        self.codeDefault(errCompletion: errCompletion, data: data)
                     }
                 }
             }
@@ -207,18 +180,18 @@ class AuthService {
                     }
                 } else if let httpResponse = response as? HTTPURLResponse {
                     print(httpResponse.statusCode)
-                    if httpResponse.statusCode == 205 {
+                    let status = httpResponse.statusCode
+                    switch status {
+                    case 205:
                         DispatchQueue.main.async {
                             completion()
                         }
-                    } else {
-                        if let data = data {
-                            let message = try? JSONSerialization.jsonObject(with: data) as? [String: String]
-                            print(message?.values.first ?? self.badMessage)
-                            DispatchQueue.main.async {
-                                errCompletion(self.badMessage)
-                            }
-                        }
+                    case 400:
+                        self.code400(errCompletion: errCompletion, data: data)
+                    case 401:
+                        self.code401(errCompletion: errCompletion, data: data)
+                    default:
+                        self.codeDefault(errCompletion: errCompletion, data: data)
                     }
                 }
             }

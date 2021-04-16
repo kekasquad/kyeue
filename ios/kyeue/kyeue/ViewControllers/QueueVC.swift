@@ -198,7 +198,7 @@ class QueueVC: UIViewController {
         
         let member = QueueMember(userId: userId)
 
-        QueuesService.shared.add(member: member, key: key, queueID: queueId) { [weak self] (error) in
+        QueueService.shared.add(member: member, key: key, queueID: queueId) { [weak self] (error) in
             guard let self = self else { return }
             self.activityIndicator.stopAnimating()
             self.errorAlert(with: error, action: self.add)
@@ -220,7 +220,7 @@ class QueueVC: UIViewController {
         
         let member = QueueMember(userId: userId)
 
-        QueuesService.shared.skip(member: member, key: key, queueID: queueId) { [weak self] (error) in
+        QueueService.shared.skip(member: member, key: key, queueID: queueId) { [weak self] (error) in
             guard let self = self else { return }
             self.activityIndicator.stopAnimating()
             self.errorAlert(with: error, action: self.skip)
@@ -242,7 +242,7 @@ class QueueVC: UIViewController {
         
         let member = QueueMember(userId: userId)
 
-        QueuesService.shared.move(member: member, key: key, queueID: queueId) { [weak self] (error) in
+        QueueService.shared.move(member: member, key: key, queueID: queueId) { [weak self] (error) in
             guard let self = self else { return }
             self.activityIndicator.stopAnimating()
             self.errorAlert(with: error, action: self.skip)
@@ -263,7 +263,7 @@ class QueueVC: UIViewController {
         
         let member = QueueMember(userId: userId)
 
-        QueuesService.shared.remove(member: member, key: key, queueID: queueId) { [weak self] (error) in
+        QueueService.shared.remove(member: member, key: key, queueID: queueId) { [weak self] (error) in
             guard let self = self else { return }
             self.activityIndicator.stopAnimating()
             self.errorAlert(with: error, action: self.removeWithLeave)
@@ -285,7 +285,7 @@ class QueueVC: UIViewController {
         
         let member = QueueMember(userId: userId)
 
-        QueuesService.shared.remove(member: member, key: key, queueID: queueId) { [weak self] (error) in
+        QueueService.shared.remove(member: member, key: key, queueID: queueId) { [weak self] (error) in
             guard let self = self else { return }
             self.activityIndicator.stopAnimating()
             self.errorAlert(with: error, action: self.removeWithLeave)

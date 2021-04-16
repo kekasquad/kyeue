@@ -7,18 +7,12 @@
 
 import Foundation
 
-class UsersService {
+class UsersService: BaseService {
     
     public static let shared = UsersService() // создаем Синглтон
-    private init() {}
+    private override init() {}
     
-    private let scheme = Utils.scheme
-    private let host = Utils.host
-    private let port = Utils.port
-    private let api = "/api"
     private let userPath = "/user/"
-
-    private let badMessage = Utils.badMessage
     
     func getBy(id: String, key: String, errCompletion: @escaping (String) -> (),  completion: @escaping (User) -> ()) {
         
@@ -58,36 +52,12 @@ class UsersService {
                                 }
                             }
                         }
-                        break
                     case 400:
-                        if let data = data {
-                            let message = try? JSONSerialization.jsonObject(with: data) as? [String: [String]]
-                            print(message?.values.first?.first ?? self.badMessage)
-                            DispatchQueue.main.async {
-                                errCompletion(self.badMessage)
-                            }
-                        }
-                        break
+                        self.code400(errCompletion: errCompletion, data: data)
                     case 401:
-                        if let data = data {
-                            let message = try? JSONSerialization.jsonObject(with: data) as? [String: String]
-                            print(message?["detail"] ?? self.badMessage)
-                            DispatchQueue.main.async {
-                                errCompletion(message?["detail"] ?? self.badMessage)
-                            }
-                        }
-                        break
+                        self.code401(errCompletion: errCompletion, data: data)
                     default:
-                        if let data = data {
-                            let message = try? JSONSerialization.jsonObject(with: data) as? [String: Any]
-                            if let message = message {
-                                print(message)
-                            }
-                            DispatchQueue.main.async {
-                                errCompletion(self.badMessage)
-                            }
-                        }
-                        break
+                        self.codeDefault(errCompletion: errCompletion, data: data)
                     }
                 }
             }

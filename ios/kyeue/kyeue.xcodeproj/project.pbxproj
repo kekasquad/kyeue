@@ -20,6 +20,8 @@
 		8F25380925FDA09E00B99A45 /* kyeue.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 8F25380725FDA09E00B99A45 /* kyeue.xcdatamodeld */; };
 		8F25380B25FDA09F00B99A45 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8F25380A25FDA09F00B99A45 /* Assets.xcassets */; };
 		8F25380E25FDA09F00B99A45 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8F25380C25FDA09F00B99A45 /* LaunchScreen.storyboard */; };
+		8F3609032629C8FD00E858B8 /* QueueService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F3609022629C8FD00E858B8 /* QueueService.swift */; };
+		8F3609062629CBEB00E858B8 /* BaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F3609052629CBEB00E858B8 /* BaseService.swift */; };
 		8F3966A3261908420070E771 /* WebSocketMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F3966A2261908420070E771 /* WebSocketMessage.swift */; };
 		8F6D83D925FEBEB20012AB65 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F6D83D825FEBEB20012AB65 /* Extensions.swift */; };
 		8F92F02F25FF9ECB0083E188 /* BaseProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F92F02E25FF9ECB0083E188 /* BaseProtocols.swift */; };
@@ -51,6 +53,8 @@
 		8F25380A25FDA09F00B99A45 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8F25380D25FDA09F00B99A45 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8F25380F25FDA09F00B99A45 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8F3609022629C8FD00E858B8 /* QueueService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueService.swift; sourceTree = "<group>"; };
+		8F3609052629CBEB00E858B8 /* BaseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseService.swift; sourceTree = "<group>"; };
 		8F3966A2261908420070E771 /* WebSocketMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocketMessage.swift; sourceTree = "<group>"; };
 		8F6D83D825FEBEB20012AB65 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		8F92F02E25FF9ECB0083E188 /* BaseProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseProtocols.swift; sourceTree = "<group>"; };
@@ -145,8 +149,10 @@
 			children = (
 				8F92F04225FFAE540083E188 /* UsersService.swift */,
 				8F1FDAAA2616A90300BA6159 /* QueuesService.swift */,
+				8F3609022629C8FD00E858B8 /* QueueService.swift */,
 				8F1FDAAE2616A91300BA6159 /* AuthService.swift */,
 				8FD2E516261CD1920064219E /* WebSocketsService.swift */,
+				8F3609052629CBEB00E858B8 /* BaseService.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -267,7 +273,9 @@
 				8F3966A3261908420070E771 /* WebSocketMessage.swift in Sources */,
 				8F1FDAAB2616A90300BA6159 /* QueuesService.swift in Sources */,
 				8F1FDABB2616AF7000BA6159 /* QueueVC.swift in Sources */,
+				8F3609062629CBEB00E858B8 /* BaseService.swift in Sources */,
 				8FD53D092614BE5300E995BC /* MainVC.swift in Sources */,
+				8F3609032629C8FD00E858B8 /* QueueService.swift in Sources */,
 				8FD2E517261CD1920064219E /* WebSocketsService.swift in Sources */,
 				8F25380925FDA09E00B99A45 /* kyeue.xcdatamodeld in Sources */,
 				8F92F03B25FFAAFA0083E188 /* Authentication.swift in Sources */,
