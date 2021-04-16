@@ -187,6 +187,82 @@ class QueuesService {
         }
     }
     
+    func delete(queueID: String, key: String, errCompletion: @escaping (String) -> (),  completion: @escaping () -> ()) {
+        
+        var components = URLComponents()
+        components.scheme = scheme
+        components.host = host
+        components.port = port
+        components.path = api + queuePath + queueID
+        
+        let url = components.url
+        
+        if  let url = url {
+            
+            var request = URLRequest(url: url)
+            request.httpMethod = "DELETE"
+            request.addValue("Token " + key, forHTTPHeaderField: "Authorization")
+            
+            let session = URLSession.shared
+            
+            let task = session.dataTask(with: request) { (data, response, error) in
+                
+                if let error = error {
+                    print(error.localizedDescription)
+                    DispatchQueue.main.async {
+                        errCompletion(error.localizedDescription)
+                    }
+                } else if let httpResponse = response as? HTTPURLResponse {
+                    print(httpResponse.statusCode)
+                    let status = httpResponse.statusCode
+                    switch status {
+                    case 204:
+                        DispatchQueue.main.async {
+                            completion()
+                        }
+                        break
+                    case 400:
+                        if let data = data {
+                            let message = try? JSONSerialization.jsonObject(with: data) as? [String: [String]]
+                            print(message?.values.first?.first ?? self.badMessage)
+                            DispatchQueue.main.async {
+                                errCompletion(self.badMessage)
+                            }
+                        }
+                        break
+                    case 401:
+                        if let data = data {
+                            let message = try? JSONSerialization.jsonObject(with: data) as? [String: String]
+                            print(message?["detail"] ?? self.badMessage)
+                            DispatchQueue.main.async {
+                                errCompletion(message?["detail"] ?? self.badMessage)
+                            }
+                        }
+                        break
+                    default:
+                        if let data = data {
+                            let message = try? JSONSerialization.jsonObject(with: data) as? [String: Any]
+                            if let message = message {
+                                print(message)
+                            }
+                            DispatchQueue.main.async {
+                                errCompletion(self.badMessage)
+                            }
+                        }
+                        break
+                    }
+                }
+            }
+            task.resume()
+            
+        } else {
+            print("Wrong URL of deleting queue")
+            DispatchQueue.main.async {
+                errCompletion(self.badMessage)
+            }
+        }
+    }
+    
     func create(queue: PostingQueue, with key: String, errCompletion: @escaping (String) -> (),  completion: @escaping (CreatedQueue) -> ()) {
         
         var components = URLComponents()

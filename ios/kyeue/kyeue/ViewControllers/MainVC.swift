@@ -49,6 +49,14 @@ class MainVC: UIViewController {
 
         } delete: { [weak self] (queueId) in
             print("deleted " + queueId)
+            guard let self = self else { return }
+            for i in 0..<self.queues.count {
+                if self.queues[i].id == queueId {
+                    self.queues.remove(at: i)
+                    self.tableView.deleteRows(at: [IndexPath(row: i, section: 0)], with: .automatic)
+                    break
+                }
+            }
         }
 
         
@@ -160,5 +168,26 @@ extension MainVC: UITableViewDelegate, UITableViewDataSource {
         return cell
     }
     
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let queue = queues[indexPath.row]
+        
+        if
+            let userId = Authentication.shared.user?.user.id,
+            queue.creator.id == userId,
+            let key = Authentication.shared.user?.key
+        {
+            let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { [weak self]  (_, _, _) in
+                self?.activityIndicator.startAnimating()
+                QueuesService.shared.delete(queueID: queue.id, key: key) { [weak self] (err) in
+                    self?.activityIndicator.stopAnimating()
+                } completion: {
+                    self?.activityIndicator.stopAnimating()
+                }
+            }
+            return UISwipeActionsConfiguration(actions: [deleteAction])
+        } else {
+            return nil
+        }
+    }
     
 }
