@@ -68,6 +68,17 @@ extension UIViewController {
         present(allert, animated: true)
     }
     
+    func attentionAlert(with message: String, action: @escaping () -> () = {}) {
+        
+        let allert = UIAlertController(title: "Attention!", message: message, preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "OK", style: .default) { _ in
+            action()
+        }
+        
+        allert.addAction(okAction)
+        present(allert, animated: true)
+    }
+    
     func errorAlert(with message: String, action: Optional<() -> ()> = nil ){
         
         let allert = UIAlertController(title: "Error occurred", message: message, preferredStyle: .alert)

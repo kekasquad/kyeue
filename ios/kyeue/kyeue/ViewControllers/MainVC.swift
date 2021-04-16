@@ -50,11 +50,18 @@ class MainVC: UIViewController {
         } delete: { [weak self] (queueId) in
             print("deleted " + queueId)
             guard let self = self else { return }
-            for i in 0..<self.queues.count {
-                if self.queues[i].id == queueId {
-                    self.queues.remove(at: i)
-                    self.tableView.deleteRows(at: [IndexPath(row: i, section: 0)], with: .automatic)
-                    break
+            if let vc = self.navigationController?.topViewController as? QueueVC {
+                if vc.queue?.id == queueId {
+                    self.navigationController?.popViewController(animated: true)
+                    self.attentionAlert(with: "The owner of the queue has deleted it")
+                }
+            } else {
+                for i in 0..<self.queues.count {
+                    if self.queues[i].id == queueId {
+                        self.queues.remove(at: i)
+                        self.tableView.deleteRows(at: [IndexPath(row: i, section: 0)], with: .automatic)
+                        break
+                    }
                 }
             }
         }
