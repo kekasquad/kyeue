@@ -26,12 +26,15 @@ class QueueVC: UIViewController {
         
         tableView.register(UINib(nibName: String(describing: MemberCell.self), bundle: Bundle.main), forCellReuseIdentifier: String(describing: MemberCell.self))
         
-        navigationItem.rightBarButtonItem = UIBarButtonItem(
-            image: UIImage.init(systemName: "arrow.down.left"),
-            style: .plain,
-            target: self,
-            action: #selector(showActionsSheet)
-        )
+        if !(Authentication.shared.user?.user.isTeacher ?? false) {
+            navigationItem.rightBarButtonItem = UIBarButtonItem(
+                image: UIImage.init(systemName: "arrow.down.left"),
+                style: .plain,
+                target: self,
+                action: #selector(showActionsSheet)
+            )
+            
+        }
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(
             image: UIImage.init(systemName: "chevron.backward"),
@@ -321,7 +324,7 @@ extension QueueVC: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-
+        
         tableView.deselectRow(at: indexPath, animated: true)
         
     }
@@ -340,5 +343,103 @@ extension QueueVC: UITableViewDelegate, UITableViewDataSource {
         return cell
     }
     
-}
+    func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        
+        guard let isTeacher = Authentication.shared.user?.user.isTeacher else { return nil }
+        
+        if !isTeacher {
+            return nil
+        }
+        
+        let index = indexPath.row
+        guard let queue = queue else { return nil }
+        let member =  queue.members[queue.members.count - 1 - index]
+        let memberId = member.id
+        let identifier = "\(index)" as NSString
+        
+        return UIContextMenuConfiguration(
+            identifier: identifier,
+            previewProvider: nil) { _ in
+            
+            var children = [UIAction]()
+            
+            let moveAction = UIAction(title: "Move to the end") { _ in
+                guard
+                    let key = Authentication.shared.user?.key,
+                    let queueId = self.queue?.id
+                else  { return }
+                
+                let name = member.getFullName()
+                
+                self.activityIndicator.startAnimating()
+                
+                let member = QueueMember(userId: memberId)
 
+                QueueService.shared.move(member: member, key: key, queueID: queueId) { [weak self] (error) in
+                    guard let self = self else { return }
+                    self.activityIndicator.stopAnimating()
+                    self.errorAlert(with: error)
+                } completion: { [weak self] (queue) in
+                    print("\(name) move to the end")
+                    self?.activityIndicator.stopAnimating()
+                }
+            }
+            
+            let skipAction = UIAction(title: "Skip turn") { _ in
+                guard
+                    let key = Authentication.shared.user?.key,
+                    let queueId = self.queue?.id
+                else  { return }
+                
+                let name = member.getFullName()
+                
+                self.activityIndicator.startAnimating()
+                
+                let member = QueueMember(userId: memberId)
+                
+                QueueService.shared.skip(member: member, key: key, queueID: queueId) { [weak self] (error) in
+                    guard let self = self else { return }
+                    self.activityIndicator.stopAnimating()
+                    self.errorAlert(with: error)
+                } completion: { [weak self] (queue) in
+                    print("\(name) skipped turn")
+                    self?.activityIndicator.stopAnimating()
+                }
+            }
+            
+            let removeAction = UIAction(
+                title: "Remove from queue",
+                image: UIImage(systemName: "multiply"),
+                attributes: UIMenuElement.Attributes.destructive) { _ in
+                
+                guard
+                    let key = Authentication.shared.user?.key,
+                    let queueId = self.queue?.id
+                else  { return }
+                
+                let name = member.getFullName()
+                
+                self.activityIndicator.startAnimating()
+                
+                let member = QueueMember(userId: memberId)
+                QueueService.shared.remove(member: member, key: key, queueID: queueId) { [weak self] (error) in
+                    guard let self = self else { return }
+                    self.activityIndicator.stopAnimating()
+                    self.errorAlert(with: error)
+                } completion: { [weak self] (queue) in
+                    print("\(name) leave queue")
+                    self?.activityIndicator.stopAnimating()
+                }
+            }
+                
+            if let index = queue.indexOf(userId: memberId), index != 0 {
+                children.append(skipAction)
+                children.append(moveAction)
+            }
+            children.append(removeAction)
+            
+            return UIMenu(title: "", image: nil, children: children)
+        }
+    }
+
+}
