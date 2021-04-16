@@ -40,7 +40,8 @@ extension QueueCell: ConfigurableView {
         else { return }
         if userID == creatorID {
             contentView.backgroundColor =  #colorLiteral(red: 0.337272197, green: 0.8930700421, blue: 0, alpha: 1).withAlphaComponent(0.4)
+        } else {
+            contentView.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         }
     }
-    
 }
