@@ -33,6 +33,14 @@ extension QueueCell: ConfigurableView {
         queue = model
         
         nameLabel.text = model.name
+        
+        guard
+            let userID = Authentication.shared.user?.user.id,
+            let creatorID = queue?.creator.id
+        else { return }
+        if userID == creatorID {
+            contentView.backgroundColor =  #colorLiteral(red: 0.337272197, green: 0.8930700421, blue: 0, alpha: 1).withAlphaComponent(0.4)
+        }
     }
     
 }
