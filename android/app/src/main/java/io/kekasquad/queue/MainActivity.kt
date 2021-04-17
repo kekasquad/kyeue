@@ -7,14 +7,48 @@ import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import dagger.hilt.android.AndroidEntryPoint
+import io.kekasquad.queue.login.LoginFragment
+import io.kekasquad.queue.nav.Coordinator
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+    @Inject
+    lateinit var coordinator: Coordinator
+
+    private val bottomNavigationViewVisibilityCallback =
+        object : FragmentManager.FragmentLifecycleCallbacks() {
+            override fun onFragmentViewCreated(
+                fm: FragmentManager,
+                f: Fragment,
+                v: View,
+                savedInstanceState: Bundle?
+            ) {
+                if (Build.VERSION.SDK_INT in Build.VERSION_CODES.M..Build.VERSION_CODES.R) {
+                    if (!darkStatusBarFragments.contains(f::class)) {
+                        window.decorView.systemUiVisibility =
+                            window.decorView.systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+                    } else {
+                        window.decorView.systemUiVisibility =
+                            window.decorView.systemUiVisibility and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()
+                    }
+                }
+            }
+        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         makeStatusBarTransparent()
+    }
+
+    companion object {
+        private val darkStatusBarFragments = setOf(
+            LoginFragment::class
+        )
     }
 }
 

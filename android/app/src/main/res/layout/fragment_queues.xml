@@ -30,28 +30,6 @@
                 android:textAlignment="center"
                 tools:text="Kekas queue" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/arrow_back"
-                style="@style/Theme.Qeyeu.Button.OutlinedButton.IconOnly"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_marginStart="16dp"
-                android:layout_gravity="center_vertical|start"
-                app:icon="@drawable/ic_baseline_arrow_back_24"
-                app:iconTint="@color/colorOnPrimary"
-                app:rippleColor="@color/colorOnPrimary"/>
-
-            <com.google.android.material.button.MaterialButton
-                style="@style/Theme.Qeyeu.Button.OutlinedButton.IconOnly"
-                android:id="@+id/menu"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_marginEnd="16dp"
-                android:layout_gravity="center_vertical|end"
-                app:icon="@drawable/ic_baseline_more_vert_24"
-                app:iconTint="@color/colorOnPrimary"
-                app:rippleColor="@color/colorOnPrimary"/>
-
         </FrameLayout>
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -61,6 +39,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
-        tools:listitem="@layout/item_person"/>
+        tools:listitem="@layout/item_queue"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_create_queue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        app:rippleColor="@color/colorOnPrimary"
+        app:srcCompat="@drawable/ic_baseline_add_24"
+        app:tint="@color/colorOnPrimary"
+        app:backgroundTint="@color/colorPrimary" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

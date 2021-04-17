@@ -3,13 +3,10 @@ package io.kekasquad.queue.login
 import io.kekasquad.queue.base.MviViewState
 
 data class LoginViewState(
-    val username: String = "",
-    val password: String = "",
-    val name: String = "",
-    val group: String = "",
+    val isLoading: Boolean = false,
     val isLogin: Boolean = true,
-    val usernameError: String? = null,
-    val passwordError: String? = null
+    val error: Throwable? = null,
+    val isRegistered: Boolean = false
 ) : MviViewState {
     override fun log(): String = this.toString()
 }

@@ -1,19 +1,19 @@
-package io.kekasquad.queue.queue
+package io.kekasquad.queue.queues
 
 import io.kekasquad.queue.base.MviViewState
-import io.kekasquad.queue.vo.User
+import io.kekasquad.queue.vo.Queue
 
-data class QueueViewState(
+data class QueuesViewState(
     val isInitialLoading: Boolean,
     val initialError: Throwable?,
-    val data: List<User>,
+    val data: List<Queue>,
     val isPagingLoading: Boolean,
     val pagingLoadingError: Throwable?
 ) : MviViewState {
     override fun log(): String = this.toString()
 
     companion object {
-        val initialState = QueueViewState(
+        val initialState = QueuesViewState(
             isInitialLoading = false,
             initialError = null,
             data = emptyList(),
@@ -21,7 +21,7 @@ data class QueueViewState(
             pagingLoadingError = null
         )
 
-        val initialLoadingState = QueueViewState(
+        val initialLoadingState = QueuesViewState(
             isInitialLoading = true,
             initialError = null,
             data = emptyList(),
@@ -29,7 +29,7 @@ data class QueueViewState(
             pagingLoadingError = null
         )
 
-        fun initialErrorState(initialError: Throwable?) = QueueViewState(
+        fun initialErrorState(initialError: Throwable?) = QueuesViewState(
             isInitialLoading = false,
             initialError = initialError,
             data = emptyList(),
@@ -37,8 +37,8 @@ data class QueueViewState(
             pagingLoadingError = null
         )
 
-        fun dataLoadedState(data: List<User>) =
-            QueueViewState(
+        fun dataLoadedState(data: List<Queue>) =
+            QueuesViewState(
                 isInitialLoading = false,
                 initialError = null,
                 data = data,
@@ -46,7 +46,7 @@ data class QueueViewState(
                 pagingLoadingError = null
             )
 
-        fun pagingLoadingState(data: List<User>) = QueueViewState(
+        fun pagingLoadingState(data: List<Queue>) = QueuesViewState(
             isInitialLoading = false,
             initialError = null,
             data = data,
@@ -54,8 +54,8 @@ data class QueueViewState(
             pagingLoadingError = null
         )
 
-        fun pagingLoadingErrorState(data: List<User>, pagingLoadingError: Throwable?) =
-            QueueViewState(
+        fun pagingLoadingErrorState(data: List<Queue>, pagingLoadingError: Throwable?) =
+            QueuesViewState(
                 isInitialLoading = false,
                 initialError = null,
                 data = data,

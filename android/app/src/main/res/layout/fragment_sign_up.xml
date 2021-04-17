@@ -17,43 +17,45 @@
 
     <com.google.android.material.textfield.TextInputLayout
         style="@style/Theme.Qeyeu.InputField"
-        android:id="@+id/input_layout_name"
+        android:id="@+id/input_layout_first_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
         android:layout_marginBottom="16dp"
-        android:hint="@string/text_hint_name"
-        app:layout_constraintBottom_toTopOf="@+id/input_layout_group"
+        android:hint="@string/text_hint_first_name"
+        app:layout_constraintBottom_toTopOf="@+id/input_layout_last_name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:shapeAppearanceOverlay="@style/Theme.Qeyeu.SmoothCornerView">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/input_edit_name"
+            android:id="@+id/input_edit_first_name"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.Theme.Qeyeu.Login"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         style="@style/Theme.Qeyeu.InputField"
-        android:id="@+id/input_layout_group"
+        android:id="@+id/input_layout_last_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
         android:layout_marginBottom="16dp"
-        android:hint="@string/text_hint_group"
+        android:hint="@string/text_hint_last_name"
         app:layout_constraintBottom_toTopOf="@+id/input_layout_login"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:shapeAppearanceOverlay="@style/Theme.Qeyeu.SmoothCornerView">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/input_edit_group"
+            android:id="@+id/input_edit_last_name"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.Theme.Qeyeu.Login" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -74,7 +76,8 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/input_edit_login"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.Theme.Qeyeu.Login" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -95,7 +98,8 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/input_edit_password"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.Theme.Qeyeu.Login"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
