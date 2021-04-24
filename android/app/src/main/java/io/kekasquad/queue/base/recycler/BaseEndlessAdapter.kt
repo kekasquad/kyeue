@@ -16,7 +16,8 @@ enum class RecyclerEndlessState(val viewType: Int) {
 }
 
 abstract class BaseEndlessAdapter<T, VH : DataViewHolder<T>>(
-    private val onRetry: () -> Unit
+    private val onRetry: () -> Unit,
+    private val onPagingRetry: () -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     protected val dataList: MutableList<T> = mutableListOf()
     private var state = RecyclerEndlessState.LOADING
@@ -80,41 +81,54 @@ abstract class BaseEndlessAdapter<T, VH : DataViewHolder<T>>(
             parent,
             false
         ),
-        onRetry
+        onPagingRetry
     )
 
     fun updateData(newData: List<T>, state: RecyclerEndlessState) {
+        val prevSize = itemCount
         dataList.clear()
         dataList.addAll(newData)
         this.state = state
-        notifyDataSetChanged()
+        if (state == RecyclerEndlessState.ITEM) {
+            notifyItemRemoved(prevSize - 1)
+            if (itemCount >= prevSize) {
+                notifyItemRangeInserted(prevSize - 1, itemCount - prevSize)
+            }
+        } else {
+            if (itemCount == prevSize) {
+                notifyItemChanged(prevSize - 1)
+            } else {
+                notifyItemInserted(prevSize)
+            }
+        }
     }
 
     override fun getItemViewType(position: Int): Int =
-        when (state) {
-            RecyclerEndlessState.ITEM -> position
-            else -> state.viewType
-        }
+        if (position == this.itemCount - 1 && this.state != RecyclerEndlessState.ITEM) this.state.viewType
+        else position
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
-        return when (state) {
-            RecyclerEndlessState.LOADING -> getLoadingViewHolder(layoutInflater, parent)
-            RecyclerEndlessState.ERROR -> getErrorViewHolder(layoutInflater, parent)
-            RecyclerEndlessState.EMPTY -> getEmptyViewHolder(layoutInflater, parent)
-            RecyclerEndlessState.ITEM -> getDataViewHolder(layoutInflater, parent)
-            RecyclerEndlessState.PAGING_LOADING -> getPagingLoadingViewHolder(
+        return when (viewType) {
+            RecyclerEndlessState.LOADING.viewType -> getLoadingViewHolder(layoutInflater, parent)
+            RecyclerEndlessState.ERROR.viewType -> getErrorViewHolder(layoutInflater, parent)
+            RecyclerEndlessState.EMPTY.viewType -> getEmptyViewHolder(layoutInflater, parent)
+            RecyclerEndlessState.PAGING_LOADING.viewType -> getPagingLoadingViewHolder(
                 layoutInflater,
                 parent
             )
-            RecyclerEndlessState.PAGING_ERROR -> getPagingErrorViewHolder(layoutInflater, parent)
+            RecyclerEndlessState.PAGING_ERROR.viewType -> getPagingErrorViewHolder(
+                layoutInflater,
+                parent
+            )
+            else -> getDataViewHolder(layoutInflater, parent)
         }
     }
 
     override fun getItemCount() = dataList.size + if (state != RecyclerEndlessState.ITEM) 1 else 0
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if (dataList.isNotEmpty()) {
+        if (getItemViewType(position) < RecyclerEndlessState.LOADING.viewType) {
             (holder as VH).bindData(dataList[position])
         } else {
             if (holder.itemView.layoutParams is StaggeredGridLayoutManager.LayoutParams) {

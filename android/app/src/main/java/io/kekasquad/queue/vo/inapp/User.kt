@@ -1,9 +1,9 @@
-package io.kekasquad.queue.vo
+package io.kekasquad.queue.vo.inapp
 
 data class User(
     val id: String,
     val username: String,
-    val password: String,
     val firstName: String,
-    val lastName: String
+    val lastName: String,
+    val isTeacher: Boolean
 )

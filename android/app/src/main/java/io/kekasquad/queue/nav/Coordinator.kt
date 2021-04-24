@@ -5,6 +5,7 @@ import dagger.hilt.android.scopes.ActivityScoped
 import io.kekasquad.queue.R
 import io.kekasquad.queue.data.usecase.AuthUseCase
 import io.kekasquad.queue.login.LoginFragment
+import io.kekasquad.queue.queues.QueuesFragment
 import javax.inject.Inject
 
 interface Coordinator {
@@ -24,12 +25,26 @@ class CoordinatorImpl @Inject constructor(
 
     override fun navigateToLogin() {
         fragmentManager.beginTransaction()
+            .setCustomAnimations(
+                R.anim.slide_out,
+                R.anim.fade_out,
+                R.anim.fade_out,
+                R.anim.slide_out
+            )
             .replace(R.id.fragment_container, LoginFragment())
             .commitAllowingStateLoss()
     }
 
     override fun navigateToQueues() {
-
+        fragmentManager.beginTransaction()
+            .setCustomAnimations(
+                R.anim.slide_in,
+                R.anim.fade_out,
+                R.anim.fade_in,
+                R.anim.slide_out
+            )
+            .replace(R.id.fragment_container, QueuesFragment())
+            .commitAllowingStateLoss()
     }
 
     override fun navigateToQueue(queueId: String) {

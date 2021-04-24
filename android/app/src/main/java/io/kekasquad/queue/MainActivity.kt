@@ -12,6 +12,8 @@ import androidx.fragment.app.FragmentManager
 import dagger.hilt.android.AndroidEntryPoint
 import io.kekasquad.queue.login.LoginFragment
 import io.kekasquad.queue.nav.Coordinator
+import io.kekasquad.queue.queue.QueueFragment
+import io.kekasquad.queue.queues.QueuesFragment
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -19,7 +21,7 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var coordinator: Coordinator
 
-    private val bottomNavigationViewVisibilityCallback =
+    private val changeStyleCallback =
         object : FragmentManager.FragmentLifecycleCallbacks() {
             override fun onFragmentViewCreated(
                 fm: FragmentManager,
@@ -43,11 +45,22 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         makeStatusBarTransparent()
+        if (savedInstanceState == null) {
+            coordinator.start()
+        }
+        supportFragmentManager.registerFragmentLifecycleCallbacks(changeStyleCallback, false)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        supportFragmentManager.unregisterFragmentLifecycleCallbacks(changeStyleCallback)
     }
 
     companion object {
         private val darkStatusBarFragments = setOf(
-            LoginFragment::class
+            LoginFragment::class,
+            QueuesFragment::class,
+            QueueFragment::class
         )
     }
 }

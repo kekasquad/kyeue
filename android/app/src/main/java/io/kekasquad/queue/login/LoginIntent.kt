@@ -20,7 +20,8 @@ sealed class LoginIntent : MviIntent {
         val username: String,
         val password: String,
         val firstName: String,
-        val lastName: String
+        val lastName: String,
+        val isTeacher: Boolean
     ) : LoginIntent()
 
 }

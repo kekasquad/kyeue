@@ -1,12 +1,14 @@
 package io.kekasquad.queue.queues
 
 import io.kekasquad.queue.base.MviViewState
-import io.kekasquad.queue.vo.Queue
+import io.kekasquad.queue.vo.inapp.Queue
 
 data class QueuesViewState(
     val isInitialLoading: Boolean,
     val initialError: Throwable?,
     val data: List<Queue>,
+    val offset: Int?,
+    val searchString: String?,
     val isPagingLoading: Boolean,
     val pagingLoadingError: Throwable?
 ) : MviViewState {
@@ -17,6 +19,8 @@ data class QueuesViewState(
             isInitialLoading = false,
             initialError = null,
             data = emptyList(),
+            offset = 0,
+            searchString = null,
             isPagingLoading = false,
             pagingLoadingError = null
         )
@@ -25,6 +29,8 @@ data class QueuesViewState(
             isInitialLoading = true,
             initialError = null,
             data = emptyList(),
+            offset = 0,
+            searchString = null,
             isPagingLoading = false,
             pagingLoadingError = null
         )
@@ -33,32 +39,44 @@ data class QueuesViewState(
             isInitialLoading = false,
             initialError = initialError,
             data = emptyList(),
+            offset = 0,
+            searchString = null,
             isPagingLoading = false,
             pagingLoadingError = null
         )
 
-        fun dataLoadedState(data: List<Queue>) =
+        fun dataLoadedState(data: List<Queue>, nextOffset: Int?) =
             QueuesViewState(
                 isInitialLoading = false,
                 initialError = null,
                 data = data,
+                offset = nextOffset,
+                searchString = null,
                 isPagingLoading = false,
                 pagingLoadingError = null
             )
 
-        fun pagingLoadingState(data: List<Queue>) = QueuesViewState(
+        fun pagingLoadingState(data: List<Queue>, nextOffset: Int?) = QueuesViewState(
             isInitialLoading = false,
             initialError = null,
             data = data,
+            offset = nextOffset,
+            searchString = null,
             isPagingLoading = true,
             pagingLoadingError = null
         )
 
-        fun pagingLoadingErrorState(data: List<Queue>, pagingLoadingError: Throwable?) =
+        fun pagingLoadingErrorState(
+            data: List<Queue>,
+            pagingLoadingError: Throwable?,
+            nextOffset: Int?
+        ) =
             QueuesViewState(
                 isInitialLoading = false,
                 initialError = null,
                 data = data,
+                offset = nextOffset,
+                searchString = null,
                 isPagingLoading = false,
                 pagingLoadingError = pagingLoadingError
             )

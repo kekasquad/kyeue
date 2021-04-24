@@ -22,7 +22,7 @@ object NetworkModule {
     @Singleton
     fun provideOntoApiService(moshi: Moshi): Api =
         Retrofit.Builder()
-            .baseUrl("http://localhost:8000/")
+            .baseUrl("http://10.0.2.2:8080/api/")
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
             .create(Api::class.java)

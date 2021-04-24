@@ -23,7 +23,8 @@ class LoginViewModel @ViewModelInject constructor(
                 intent.username,
                 intent.password,
                 intent.firstName,
-                intent.lastName
+                intent.lastName,
+                intent.isTeacher
             )
             LoginIntent.SwitchToLoginUserIntent -> LoginAction.ChangeStateAction(true)
             LoginIntent.SwitchToRegisterUserIntent -> LoginAction.ChangeStateAction(false)
@@ -51,7 +52,7 @@ class LoginViewModel @ViewModelInject constructor(
                     action.password,
                     action.firstName,
                     action.lastName,
-                    false
+                    action.isTeacher
                 )) {
                     is Result.Error -> LoginEffect.AuthProceedingErrorEffect(result.throwable)
                     is Result.Success -> {

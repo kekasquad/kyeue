@@ -13,14 +13,6 @@ sealed class QueueIntent : MviIntent {
         val id: String
     ) : QueueIntent()
 
-    data class PagingLoadingIntent(
-        val id: String
-    ) : QueueIntent()
-
-    data class PagingRetryLoadingIntent(
-        val id: String
-    ) : QueueIntent()
-
     object ArrowBackClickIntent : QueueIntent()
 
     object QueueNothingIntent : QueueIntent(), NothingIntent

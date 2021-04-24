@@ -1,14 +1,13 @@
 package io.kekasquad.queue.queue
 
 import io.kekasquad.queue.base.MviViewState
-import io.kekasquad.queue.vo.User
+import io.kekasquad.queue.vo.inapp.User
+import io.kekasquad.queue.vo.remote.UserRemote
 
 data class QueueViewState(
     val isInitialLoading: Boolean,
     val initialError: Throwable?,
-    val data: List<User>,
-    val isPagingLoading: Boolean,
-    val pagingLoadingError: Throwable?
+    val data: List<User>
 ) : MviViewState {
     override fun log(): String = this.toString()
 
@@ -16,51 +15,26 @@ data class QueueViewState(
         val initialState = QueueViewState(
             isInitialLoading = false,
             initialError = null,
-            data = emptyList(),
-            isPagingLoading = false,
-            pagingLoadingError = null
+            data = emptyList()
         )
 
         val initialLoadingState = QueueViewState(
             isInitialLoading = true,
             initialError = null,
-            data = emptyList(),
-            isPagingLoading = false,
-            pagingLoadingError = null
+            data = emptyList()
         )
 
         fun initialErrorState(initialError: Throwable?) = QueueViewState(
             isInitialLoading = false,
             initialError = initialError,
-            data = emptyList(),
-            isPagingLoading = false,
-            pagingLoadingError = null
+            data = emptyList()
         )
 
         fun dataLoadedState(data: List<User>) =
             QueueViewState(
                 isInitialLoading = false,
                 initialError = null,
-                data = data,
-                isPagingLoading = false,
-                pagingLoadingError = null
-            )
-
-        fun pagingLoadingState(data: List<User>) = QueueViewState(
-            isInitialLoading = false,
-            initialError = null,
-            data = data,
-            isPagingLoading = true,
-            pagingLoadingError = null
-        )
-
-        fun pagingLoadingErrorState(data: List<User>, pagingLoadingError: Throwable?) =
-            QueueViewState(
-                isInitialLoading = false,
-                initialError = null,
-                data = data,
-                isPagingLoading = false,
-                pagingLoadingError = pagingLoadingError
+                data = data
             )
 
     }

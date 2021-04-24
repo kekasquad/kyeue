@@ -8,10 +8,6 @@ sealed class QueueAction : MviAction {
         val id: String
     ) : QueueAction()
 
-    data class PagingLoadingAction(
-        val id: String
-    ) : QueueAction()
-
     object NavigateBackAction : QueueAction()
 
 }

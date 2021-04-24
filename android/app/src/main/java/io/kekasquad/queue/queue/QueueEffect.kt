@@ -1,7 +1,7 @@
 package io.kekasquad.queue.queue
 
 import io.kekasquad.queue.base.MviEffect
-import io.kekasquad.queue.vo.User
+import io.kekasquad.queue.vo.inapp.User
 
 sealed class QueueEffect : MviEffect {
 
@@ -10,12 +10,6 @@ sealed class QueueEffect : MviEffect {
     object InitialLoadingEffect : QueueEffect()
 
     data class InitialLoadingErrorEffect(
-        val throwable: Throwable
-    ) : QueueEffect()
-
-    object PagingLoadingEffect : QueueEffect()
-
-    data class PagingLoadingErrorEffect(
         val throwable: Throwable
     ) : QueueEffect()
 

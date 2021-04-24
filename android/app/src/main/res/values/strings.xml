@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Queue</string>
+    <string name="app_name">Kyeue</string>
     <string name="text_item_empty">No data</string>
     <string name="text_item_loading_error">Loading error</string>
     <string name="text_btn_item_loading_retry">Retry</string>
@@ -11,4 +11,6 @@
     <string name="text_hint_group">Group</string>
     <string name="text_hint_first_name">First name</string>
     <string name="text_hint_last_name">Last name</string>
+    <string name="text_sign_up_student">Student</string>
+    <string name="text_sign_up_teacher">Teacher</string>
 </resources>

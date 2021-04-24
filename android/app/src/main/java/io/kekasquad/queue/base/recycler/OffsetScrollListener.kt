@@ -9,7 +9,7 @@ class OffsetScrollListener internal constructor(
     private val mLayoutManager: RecyclerView.LayoutManager,
     private val mOffset: Int,
     private val mPageSize: Int,
-    private val offsetListener: (() -> Unit)
+    private val offsetListener: () -> Unit
 ) : RecyclerView.OnScrollListener() {
     private var lastTotalItemCount = 0
     private var loading: Boolean = false

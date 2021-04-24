@@ -28,7 +28,7 @@
                 android:textAppearance="@style/TextAppearance.Theme.Qeyeu.Headline2"
                 android:textColor="@color/colorOnPrimary"
                 android:textAlignment="center"
-                tools:text="Kekas queue" />
+                android:text="@string/app_name" />
 
         </FrameLayout>
 
@@ -37,7 +37,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/queue_recycler"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
         tools:listitem="@layout/item_queue"/>
 

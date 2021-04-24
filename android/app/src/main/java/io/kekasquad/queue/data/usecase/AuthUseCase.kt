@@ -32,7 +32,8 @@ class AuthUseCaseImpl @Inject constructor(
 
     override suspend fun loginWithCredentials(username: String, password: String): Result<Boolean> {
         val response = api.login(username, password)
-        return if (response.isSuccessful) {
+        return if (response.isSuccessful && response.body() != null) {
+            saveUserToken(response.body()!!.key)
             Result.Success(true)
         } else {
             Result.Error(Throwable(response.message()))

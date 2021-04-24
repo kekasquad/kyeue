@@ -16,9 +16,8 @@ class QueueViewModel @ViewModelInject constructor(
         when (intent) {
             QueueIntent.ArrowBackClickIntent -> QueueAction.NavigateBackAction
             is QueueIntent.InitialIntent -> QueueAction.InitialLoadingAction(intent.id)
-            is QueueIntent.PagingLoadingIntent -> QueueAction.PagingLoadingAction(intent.id)
-            is QueueIntent.PagingRetryLoadingIntent -> QueueAction.PagingLoadingAction(intent.id)
             is QueueIntent.RetryInitialIntent -> QueueAction.InitialLoadingAction(intent.id)
+            QueueIntent.QueueNothingIntent -> throw IllegalArgumentException("nothing intent interpreting")
         }
 
     override suspend fun performAction(action: QueueAction): QueueEffect =
@@ -34,14 +33,6 @@ class QueueViewModel @ViewModelInject constructor(
                 coordinator.pop()
                 QueueEffect.NothingEffect
             }
-            is QueueAction.PagingLoadingAction -> {
-                addIntermediateEffect(QueueEffect.PagingLoadingEffect)
-                when (val result =
-                    queueUseCase.getQueueById(action.id, null)) { //TODO: whatever for paging
-                    is Result.Error -> QueueEffect.PagingLoadingErrorEffect(result.throwable)
-                    is Result.Success -> QueueEffect.DataLoadedEffect(result.data.members)
-                }
-            }
         }
 
     override fun stateReducer(oldState: QueueViewState, effect: QueueEffect): QueueViewState =
@@ -50,11 +41,6 @@ class QueueViewModel @ViewModelInject constructor(
             QueueEffect.InitialLoadingEffect -> QueueViewState.initialLoadingState
             is QueueEffect.InitialLoadingErrorEffect -> QueueViewState.initialErrorState(effect.throwable)
             QueueEffect.NothingEffect -> oldState
-            QueueEffect.PagingLoadingEffect -> QueueViewState.pagingLoadingState(oldState.data)
-            is QueueEffect.PagingLoadingErrorEffect -> QueueViewState.pagingLoadingErrorState(
-                oldState.data,
-                effect.throwable
-            )
         }
 
 }

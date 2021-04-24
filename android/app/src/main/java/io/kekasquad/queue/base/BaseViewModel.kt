@@ -33,7 +33,7 @@ abstract class BaseViewModel<
     private var clearLastIntentSource: (() -> Unit)? = null
 
     protected fun addIntermediateEffect(effect: E) {
-        _effectLiveData.value = effect
+        _effectLiveData.postValue(effect)
     }
 
     override fun states(): LiveData<VS> = viewStateLiveData.distinctUntilChanged()

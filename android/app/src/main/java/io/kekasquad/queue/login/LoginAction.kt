@@ -17,7 +17,8 @@ sealed class LoginAction : MviAction {
         val username: String,
         val password: String,
         val firstName: String,
-        val lastName: String
+        val lastName: String,
+        val isTeacher: Boolean
     ) : LoginAction()
 
 }
