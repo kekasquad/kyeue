@@ -15,7 +15,7 @@ class QueueFragment : BaseFragment<QueueViewState, QueueIntent>() {
     override fun initialIntent(): QueueIntent = QueueIntent.InitialLoadingIntent
 
     override val render: @Composable ((QueueViewState) -> Unit) = { viewState ->
-        QueueContent(
+        QueuesContent(
             modifier = Modifier,
             viewState = viewState,
             onQueueCreate = { _intentLiveData.value = QueueIntent.CreateQueueIntent },

@@ -8,22 +8,18 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.kekasquad.kyeue.R
 import io.kekasquad.kyeue.ui.components.KyeueAppBar
-import io.kekasquad.kyeue.ui.theme.KyeueTheme
 import io.kekasquad.kyeue.vo.inapp.Queue
-import io.kekasquad.kyeue.vo.inapp.User
 
 
 @Composable
-fun QueueContent(
+fun QueuesContent(
     modifier: Modifier = Modifier,
     viewState: QueueViewState,
     onQueueCreate: () -> Unit,
@@ -121,20 +117,4 @@ fun QueueAppBar() {
             )
         }
     )
-}
-
-@Preview
-@Composable
-fun ItemQueueCreatorPreview() {
-    val currentUser = User.generate()
-    val queue = Queue.generate(currentUser)
-    KyeueTheme {
-        QueueListItem(
-            queue = queue,
-            currentUser = currentUser,
-            onClick = { /*TODO*/ },
-            onQueueRenameClick = { /*TODO*/ },
-            onQueueDeleteClick = { }
-        )
-    }
 }

@@ -1,15 +1,20 @@
 package io.kekasquad.kyeue.data.usecase
 
+import io.kekasquad.kyeue.data.remote.Api
 import io.kekasquad.kyeue.vo.inapp.Queue
 import io.kekasquad.kyeue.vo.inapp.QueuePage
 import io.kekasquad.kyeue.vo.inapp.Result
 import io.kekasquad.kyeue.vo.inapp.User
+import io.kekasquad.kyeue.vo.mapper.QueueCreateMapper
+import io.kekasquad.kyeue.vo.mapper.QueueMapper
+import io.kekasquad.kyeue.vo.mapper.QueuePageMapper
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 interface QueueUseCase {
     suspend fun getQueuePage(offset: Int): Result<QueuePage>
+    suspend fun getQueueById(queueId: String): Result<Queue>
     suspend fun createQueue(name: String): Result<Boolean>
     suspend fun renameQueue(queue: Queue, name: String): Result<Boolean>
     suspend fun deleteQueue(queue: Queue): Result<Boolean>
@@ -17,35 +22,20 @@ interface QueueUseCase {
     suspend fun queueDeletionFlow(): Flow<String>
 }
 
-class FakeQueueUseCase @Inject constructor(
-    private val authUseCase: AuthUseCase
+class QueueUseCaseImpl @Inject constructor(
+    private val queuePageMapper: QueuePageMapper,
+    private val queueCreateMapper: QueueCreateMapper,
+    private val queueMapper: QueueMapper,
+    private val authUseCase: AuthUseCase,
+    private val api: Api
 ) : QueueUseCase {
-    override suspend fun getQueuePage(offset: Int): Result<QueuePage> =
-        when (offset) {
-            0 -> {
-                Result.Success(
-                    QueuePage(
-                        nextOffset = 20,
-                        queues = List(20) {
-                            if (it % 6 == 2) Queue.generate(authUseCase.getCurrentUser())
-                            else Queue.generate(User.generate())
-                        })
-                )
-            }
-            20 -> {
-                Result.Success(
-                    QueuePage(
-                        nextOffset = -1,
-                        queues = List(10) { Queue.generate(User.generate()) })
-                )
-            }
-            -1 -> {
-                Result.Error(Throwable())
-            }
-            else -> {
-                Result.Error(Throwable())
-            }
-        }.also { delay(3000L) }
+    override suspend fun getQueuePage(offset: Int): Result<QueuePage> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getQueueById(queueId: String): Result<Queue> {
+        TODO("Not yet implemented")
+    }
 
     override suspend fun createQueue(name: String): Result<Boolean> {
         TODO("Not yet implemented")

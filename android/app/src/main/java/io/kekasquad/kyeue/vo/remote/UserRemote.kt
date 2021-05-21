@@ -1,9 +1,6 @@
-package io.kekasquad.kyeue.vo.inapp
+package io.kekasquad.kyeue.vo.remote
 
-import androidx.compose.runtime.Immutable
-
-@Immutable
-data class User(
+data class UserRemote(
     val id: String,
     val username: String,
     val firstName: String,

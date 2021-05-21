@@ -3,6 +3,9 @@ buildscript {
     ext {
         compose_version = '1.0.0-beta06'
         hilt_version = '2.35.1'
+        retrofit_version = '2.9.0'
+        moshi_version = '1.11.0'
+        scarlet_version = '0.1.12'
     }
     repositories {
         google()

@@ -4,6 +4,6 @@ import androidx.compose.runtime.Immutable
 
 @Immutable
 data class QueuePage(
-    val nextOffset: Int?,
+    val nextOffset: Int,
     val queues: List<Queue>
 )

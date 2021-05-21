@@ -1,12 +1,10 @@
 package io.kekasquad.kyeue.utils
 
-import io.kekasquad.kyeue.BuildConfig
+import io.kekasquad.kyeue.vo.inapp.Result
 
-private val ALPHABET = ('a'..'z') + ('A'..'Z')
-
-fun generateRandomString(length: Int): String {
-    if (!BuildConfig.DEBUG) {
-        throw IllegalAccessError("generating models not in debug");
+inline fun <T> safeApiCall(block: () -> Result<T>): Result<T> =
+    try {
+        block()
+    } catch (e: Throwable) {
+        Result.Error(e)
     }
-    return List(length) { ALPHABET.random() }.joinToString("")
-}
