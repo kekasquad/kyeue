@@ -10,6 +10,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -43,6 +44,21 @@ fun QueueList(
 ) {
     val listState = rememberLazyListState()
 
+    when {
+        viewState.isInitialLoading -> {
+            ItemSingleLoading()
+        }
+        viewState.initialLoadingError != null -> {
+            ItemSingleLoadingError(
+                errorMessage = { InitialErrorMessage(throwable = viewState.initialLoadingError) },
+                onRetry = onInitialRetry
+            )
+        }
+        viewState.data.isEmpty() -> {
+            EmptyItem()
+        }
+    }
+
     LazyColumn(
         modifier = modifier,
         state = listState,
@@ -61,19 +77,6 @@ fun QueueList(
             }
         }
 
-        if (viewState.isInitialLoading) {
-            item {
-                ItemSingleLoading()
-            }
-        } else if (viewState.initialLoadingError != null) {
-            item {
-                ItemSingleLoadingError(
-                    errorMessage = { InitialErrorMessage(throwable = viewState.initialLoadingError) },
-                    onRetry = onInitialRetry
-                )
-            }
-        }
-
         if (viewState.isPagingLoading) {
             item {
                 ItemPagingLoading()
@@ -86,7 +89,7 @@ fun QueueList(
                 )
             }
         }
-        
+
         // empty view behind navigation bar
         item {
             Column {
@@ -97,7 +100,8 @@ fun QueueList(
 
     LaunchedEffect(listState) {
         snapshotFlow {
-            listState.layoutInfo.totalItemsCount - (listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0)
+            listState.layoutInfo.totalItemsCount - (listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index
+                ?: 0)
         }
             .map { offset -> offset < 4 && listState.layoutInfo.totalItemsCount >= 20 }
             .distinctUntilChanged()
@@ -208,6 +212,25 @@ fun CreatorQueueMenuIcon(
                 )
             }
         }
+    }
+}
+
+@Composable
+fun EmptyItem() {
+    ConstraintLayout(modifier = Modifier.fillMaxSize()) {
+        val content = createRef()
+
+        Text(
+            modifier = Modifier.constrainAs(content) {
+                top.linkTo(parent.top)
+                bottom.linkTo(parent.bottom)
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
+            },
+            text = "No data",
+            color = MaterialTheme.colors.onSurface,
+            style = MaterialTheme.typography.h6
+        )
     }
 }
 
