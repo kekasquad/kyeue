@@ -8,14 +8,21 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.google.accompanist.insets.navigationBarsHeight
+import com.google.accompanist.insets.navigationBarsPadding
+import com.google.accompanist.insets.statusBarsPadding
 import io.kekasquad.kyeue.R
 import io.kekasquad.kyeue.ui.components.KyeueAppBar
+import io.kekasquad.kyeue.utils.stringResourceOrNull
 import io.kekasquad.kyeue.vo.inapp.Queue
+import kotlinx.coroutines.launch
 
 
 @Composable
@@ -37,12 +44,30 @@ fun QueuesContent(
     onPagingLoading: () -> Unit,
     onPagingRetry: () -> Unit
 ) {
+    val snackbarHostState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
+
     Scaffold(
+        modifier = modifier.fillMaxSize(),
+        scaffoldState = rememberScaffoldState(snackbarHostState = snackbarHostState),
         topBar = { QueueAppBar() },
         floatingActionButton = { FabQueueAdd(onQueueCreateClick = onQueueCreateClick) },
         backgroundColor = MaterialTheme.colors.surface
-    ) {
-        Box(modifier = Modifier.fillMaxSize()) {
+    ) { innerPadding ->
+        val message = stringResourceOrNull(id = viewState.messageText)
+        if (message != null) {
+            coroutineScope.launch {
+                snackbarHostState.showSnackbar(message = message)
+            }
+        } else {
+            snackbarHostState.currentSnackbarData?.dismiss()
+        }
+
+        Box(
+            modifier = Modifier
+                .padding(innerPadding)
+                .fillMaxSize()
+        ) {
 
             QueueList(
                 viewState = viewState,
@@ -59,6 +84,7 @@ fun QueuesContent(
                     CreateQueueDialog(
                         queueName = viewState.queueName,
                         onQueueNameChange = onQueueNameChange,
+                        errorText = viewState.queueNameError,
                         onQueueCreate = onQueueCreate,
                         onQueueCreateDismiss = onQueueCreateDismiss
                     )
@@ -68,6 +94,7 @@ fun QueuesContent(
                         queue = viewState.queueToRename,
                         queueName = viewState.queueName,
                         onQueueNameChange = onQueueNameChange,
+                        errorText = viewState.queueNameError,
                         onQueueRename = onQueueRename,
                         onQueueRenameDismiss = onQueueRenameDismiss
                     )
@@ -91,6 +118,7 @@ fun FabQueueAdd(
     onQueueCreateClick: () -> Unit
 ) {
     FloatingActionButton(
+        modifier = modifier.navigationBarsPadding(),
         backgroundColor = MaterialTheme.colors.primary,
         onClick = { onQueueCreateClick() }
     ) {

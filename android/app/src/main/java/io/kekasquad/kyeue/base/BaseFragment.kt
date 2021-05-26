@@ -14,8 +14,9 @@ import io.kekasquad.kyeue.ui.theme.KyeueTheme
 
 abstract class BaseFragment<
         VS : MviViewState,
-        I : MviIntent> : Fragment(), MviView<VS, I> {
-    protected abstract val viewModel: MviViewModel<VS, I>
+        I  : MviIntent,
+        NE : MviNavigationEvent> : Fragment(), MviView<VS, I, NE> {
+    protected abstract val viewModel: MviViewModel<VS, I, NE>
 
     protected abstract fun backStackIntent(): I?
     protected abstract fun initialIntent(): I?
@@ -37,6 +38,11 @@ abstract class BaseFragment<
                 }
             }
         }
+        viewModel.navigationEvents().observe(viewLifecycleOwner, {
+            if (it != null) {
+                navigator(it)
+            }
+        })
         viewModel.processIntents(intents())
         if (savedInstanceState == null && _intentLiveData.value == null) {
             _intentLiveData.value = initialIntent()

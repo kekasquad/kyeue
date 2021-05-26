@@ -1,5 +1,6 @@
 package io.kekasquad.kyeue.ui.queue
 
+import androidx.annotation.StringRes
 import androidx.compose.runtime.Immutable
 import io.kekasquad.kyeue.base.MviViewState
 import io.kekasquad.kyeue.vo.inapp.Queue
@@ -16,7 +17,10 @@ data class QueueViewState(
     val isCreateDialogOpened: Boolean,
     val queueToRename: Queue?,
     val queueToDelete: Queue?,
-    val queueName: String
+    val queueName: String,
+    val isActionPerforming: Boolean,
+    @StringRes val queueNameError: Int,
+    @StringRes val messageText: Int
 ) : MviViewState {
     companion object {
         fun initialState(currentUser: User) = QueueViewState(
@@ -29,7 +33,10 @@ data class QueueViewState(
             isCreateDialogOpened = false,
             queueToRename = null,
             queueToDelete = null,
-            queueName = ""
+            queueName = "",
+            isActionPerforming = false,
+            queueNameError = 0,
+            messageText = 0
         )
 
         fun initialLoadingState(currentUser: User) = QueueViewState(
@@ -42,7 +49,10 @@ data class QueueViewState(
             isCreateDialogOpened = false,
             queueToRename = null,
             queueToDelete = null,
-            queueName = ""
+            queueName = "",
+            isActionPerforming = false,
+            queueNameError = 0,
+            messageText = 0
         )
 
         fun initialLoadingErrorState(
@@ -58,7 +68,10 @@ data class QueueViewState(
             isCreateDialogOpened = false,
             queueToRename = null,
             queueToDelete = null,
-            queueName = ""
+            queueName = "",
+            isActionPerforming = false,
+            queueNameError = 0,
+            messageText = 0
         )
 
         fun loadedState(
@@ -67,7 +80,9 @@ data class QueueViewState(
             isCreateDialogOpened: Boolean,
             queueToRename: Queue?,
             queueToDelete: Queue?,
-            queueName: String
+            queueName: String,
+            isActionPerforming: Boolean,
+            messageText: Int
         ) = QueueViewState(
             isInitialLoading = false,
             initialLoadingError = null,
@@ -78,12 +93,16 @@ data class QueueViewState(
             isCreateDialogOpened = isCreateDialogOpened,
             queueToRename = queueToRename,
             queueToDelete = queueToDelete,
-            queueName = queueName
+            queueName = queueName,
+            isActionPerforming = isActionPerforming,
+            queueNameError = 0,
+            messageText = messageText
         )
 
         fun pagingLoadingState(
             currentUser: User,
-            data: List<Queue>
+            data: List<Queue>,
+            messageText: Int
         ) = QueueViewState(
             isInitialLoading = false,
             initialLoadingError = null,
@@ -94,7 +113,10 @@ data class QueueViewState(
             isCreateDialogOpened = false,
             queueToRename = null,
             queueToDelete = null,
-            queueName = ""
+            queueName = "",
+            isActionPerforming = false,
+            queueNameError = 0,
+            messageText = messageText
         )
 
         fun pagingLoadingErrorState(
@@ -104,7 +126,9 @@ data class QueueViewState(
             isCreateDialogOpened: Boolean,
             queueToDelete: Queue?,
             queueToRename: Queue?,
-            queueName: String
+            queueName: String,
+            isActionPerforming: Boolean,
+            messageText: Int
         ) = QueueViewState(
             isInitialLoading = false,
             initialLoadingError = null,
@@ -115,7 +139,10 @@ data class QueueViewState(
             isCreateDialogOpened = isCreateDialogOpened,
             queueToRename = queueToRename,
             queueToDelete = queueToDelete,
-            queueName = queueName
+            queueName = queueName,
+            isActionPerforming = isActionPerforming,
+            queueNameError = 0,
+            messageText = messageText
         )
 
         fun openCreateDialogState(
@@ -133,7 +160,10 @@ data class QueueViewState(
             isCreateDialogOpened = true,
             queueToRename = null,
             queueToDelete = null,
-            queueName = ""
+            queueName = "",
+            isActionPerforming = false,
+            queueNameError = 0,
+            messageText = 0
         )
 
         fun openRenameDialogState(
@@ -152,7 +182,10 @@ data class QueueViewState(
             isCreateDialogOpened = false,
             queueToRename = queueToRename,
             queueToDelete = null,
-            queueName = queueToRename.name
+            queueName = queueToRename.name,
+            isActionPerforming = false,
+            queueNameError = 0,
+            messageText = 0
         )
 
         fun openDeleteDialogState(
@@ -171,7 +204,10 @@ data class QueueViewState(
             isCreateDialogOpened = false,
             queueToRename = null,
             queueToDelete = queueToDelete,
-            queueName = ""
+            queueName = "",
+            isActionPerforming = false,
+            queueNameError = 0,
+            messageText = 0
         )
 
         fun inputQueueNameState(
@@ -180,8 +216,9 @@ data class QueueViewState(
             isPagingLoading: Boolean,
             pagingLoadingError: Throwable?,
             queueToRename: Queue?,
-            queueToDelete: Queue?,
-            queueName: String
+            isCreateDialogOpened: Boolean,
+            queueName: String,
+            queueNameError: Int
         ) = QueueViewState(
             isInitialLoading = false,
             initialLoadingError = null,
@@ -189,10 +226,13 @@ data class QueueViewState(
             currentUser = currentUser,
             isPagingLoading = isPagingLoading,
             pagingLoadingError = pagingLoadingError,
-            isCreateDialogOpened = false,
+            queueToDelete = null,
             queueToRename = queueToRename,
-            queueToDelete = queueToDelete,
-            queueName = queueName
+            isCreateDialogOpened = isCreateDialogOpened,
+            queueName = queueName,
+            isActionPerforming = false,
+            queueNameError = queueNameError,
+            messageText = 0
         )
 
         fun closeDialogState(
@@ -210,7 +250,105 @@ data class QueueViewState(
             isCreateDialogOpened = false,
             queueToRename = null,
             queueToDelete = null,
-            queueName = ""
+            queueName = "",
+            isActionPerforming = false,
+            queueNameError = 0,
+            messageText = 0
+        )
+
+        fun performActionState(
+            currentUser: User,
+            data: List<Queue>,
+            isPagingLoading: Boolean,
+            pagingLoadingError: Throwable?
+        ) = QueueViewState(
+            isInitialLoading = false,
+            initialLoadingError = null,
+            data = data,
+            currentUser = currentUser,
+            isPagingLoading = isPagingLoading,
+            pagingLoadingError = pagingLoadingError,
+            isCreateDialogOpened = false,
+            queueToRename = null,
+            queueToDelete = null,
+            queueName = "",
+            isActionPerforming = true,
+            queueNameError = 0,
+            messageText = 0
+        )
+
+        fun queueNameErrorState(
+            currentUser: User,
+            data: List<Queue>,
+            isPagingLoading: Boolean,
+            pagingLoadingError: Throwable?,
+            isCreateDialogOpened: Boolean,
+            queueToRename: Queue?,
+            queueName: String,
+            queueNameError: Int
+        ) = QueueViewState(
+            isInitialLoading = false,
+            initialLoadingError = null,
+            data = data,
+            currentUser = currentUser,
+            isPagingLoading = isPagingLoading,
+            pagingLoadingError = pagingLoadingError,
+            isCreateDialogOpened = isCreateDialogOpened,
+            queueToRename = queueToRename,
+            queueToDelete = null,
+            queueName = queueName,
+            isActionPerforming = false,
+            queueNameError = queueNameError,
+            messageText = 0
+        )
+
+        fun messageState(
+            currentUser: User,
+            data: List<Queue>,
+            isPagingLoading: Boolean,
+            pagingLoadingError: Throwable?,
+            messageText: Int
+        ) = QueueViewState(
+            isInitialLoading = false,
+            initialLoadingError = null,
+            data = data,
+            currentUser = currentUser,
+            isPagingLoading = isPagingLoading,
+            pagingLoadingError = pagingLoadingError,
+            isCreateDialogOpened = false,
+            queueToRename = null,
+            queueToDelete = null,
+            queueName = "",
+            isActionPerforming = false,
+            queueNameError = 0,
+            messageText = messageText
+        )
+
+        fun dismissMessageState(
+            currentUser: User,
+            data: List<Queue>,
+            isPagingLoading: Boolean,
+            pagingLoadingError: Throwable?,
+            isCreateDialogOpened: Boolean,
+            queueToRename: Queue?,
+            queueToDelete: Queue?,
+            queueName: String,
+            isActionPerforming: Boolean,
+            queueNameError: Int
+        ) = QueueViewState(
+            isInitialLoading = false,
+            initialLoadingError = null,
+            data = data,
+            currentUser = currentUser,
+            isPagingLoading = isPagingLoading,
+            pagingLoadingError = pagingLoadingError,
+            isCreateDialogOpened = isCreateDialogOpened,
+            queueToRename = queueToRename,
+            queueToDelete = queueToDelete,
+            queueName = queueName,
+            isActionPerforming = isActionPerforming,
+            queueNameError = queueNameError,
+            messageText = 0
         )
 
     }

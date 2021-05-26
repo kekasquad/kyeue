@@ -5,7 +5,9 @@ import androidx.lifecycle.LiveData
 
 interface MviView<
         VS : MviViewState,
-        I : MviIntent> {
+        I  : MviIntent,
+        NE : MviNavigationEvent> {
     val render: @Composable ((VS) -> Unit)
     fun intents(): LiveData<I>
+    fun navigator(navigationEvent: NE)
 }

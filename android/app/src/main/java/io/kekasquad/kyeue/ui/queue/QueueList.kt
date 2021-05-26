@@ -2,10 +2,7 @@ package io.kekasquad.kyeue.ui.queue
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -19,6 +16,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import com.google.accompanist.insets.navigationBarsHeight
+import com.google.accompanist.insets.navigationBarsPadding
 import io.kekasquad.kyeue.ui.components.ItemPagingLoading
 import io.kekasquad.kyeue.ui.components.ItemPagingLoadingError
 import io.kekasquad.kyeue.ui.components.ItemSingleLoading
@@ -87,13 +86,20 @@ fun QueueList(
                 )
             }
         }
+        
+        // empty view behind navigation bar
+        item {
+            Column {
+                Spacer(modifier = Modifier.navigationBarsHeight())
+            }
+        }
     }
 
     LaunchedEffect(listState) {
         snapshotFlow {
             listState.layoutInfo.totalItemsCount - (listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0)
         }
-            .map { offset -> offset < 4 && listState.layoutInfo.totalItemsCount != 1 }
+            .map { offset -> offset < 4 && listState.layoutInfo.totalItemsCount >= 20 }
             .distinctUntilChanged()
             .filter { it == true }
             .collect { onPagingLoading() }

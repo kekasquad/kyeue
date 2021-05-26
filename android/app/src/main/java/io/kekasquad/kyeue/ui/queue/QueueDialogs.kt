@@ -12,7 +12,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import io.kekasquad.kyeue.ui.components.KyueuTextField
 import io.kekasquad.kyeue.ui.theme.KyeueTheme
+import io.kekasquad.kyeue.utils.stringResourceOrNull
 import io.kekasquad.kyeue.vo.inapp.Queue
 
 
@@ -20,8 +22,9 @@ import io.kekasquad.kyeue.vo.inapp.Queue
 fun CreateQueueDialog(
     queueName: String,
     onQueueNameChange: (String) -> Unit,
+    errorText: Int,
     onQueueCreate: () -> Unit,
-    onQueueCreateDismiss: () -> Unit
+    onQueueCreateDismiss: () -> Unit,
 ) {
     Dialog(onDismissRequest = { onQueueCreateDismiss() }) {
         Surface(shape = MaterialTheme.shapes.medium) {
@@ -39,14 +42,14 @@ fun CreateQueueDialog(
                     color = MaterialTheme.colors.onSurface
                 )
 
-                OutlinedTextField(
+                KyueuTextField(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 16.dp),
                     value = queueName,
                     onValueChange = onQueueNameChange,
-                    label = { Text(text = "Name", style = MaterialTheme.typography.subtitle1) },
-                    textStyle = MaterialTheme.typography.subtitle1
+                    label = "Name",
+                    error = stringResourceOrNull(id = errorText)
                 )
 
                 Row {
@@ -63,6 +66,7 @@ fun RenameQueueDialog(
     queue: Queue,
     queueName: String,
     onQueueNameChange: (String) -> Unit,
+    errorText: Int,
     onQueueRename: () -> Unit,
     onQueueRenameDismiss: () -> Unit
 ) {
@@ -84,14 +88,14 @@ fun RenameQueueDialog(
                     color = MaterialTheme.colors.onSurface
                 )
 
-                OutlinedTextField(
+                KyueuTextField(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 16.dp),
                     value = queueName,
                     onValueChange = onQueueNameChange,
-                    label = { Text(text = "Name", style = MaterialTheme.typography.caption) },
-                    textStyle = MaterialTheme.typography.subtitle1
+                    label = "Name",
+                    error = stringResourceOrNull(id = errorText)
                 )
 
                 Row {
@@ -159,20 +163,5 @@ private fun DismissButton(onClick: () -> Unit) {
             color = MaterialTheme.colors.primary,
             fontWeight = FontWeight.Bold
         )
-    }
-}
-
-@Preview
-@Composable
-fun CreateQueueDialogPreview() {
-    KyeueTheme {
-        Scaffold {
-            CreateQueueDialog(
-                queueName = "CS 101",
-                onQueueNameChange = { },
-                onQueueCreate = { },
-                onQueueCreateDismiss = { }
-            )
-        }
     }
 }

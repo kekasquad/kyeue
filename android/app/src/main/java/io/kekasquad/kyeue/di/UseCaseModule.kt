@@ -15,12 +15,12 @@ abstract class UseCaseModule {
 
     @Binds
     abstract fun bindAuthUseCase(
-        fakeAuthUseCase: AuthUseCaseImpl
+        authUseCaseImpl: AuthUseCaseImpl
     ): AuthUseCase
 
     @Binds
     abstract fun bindQueueUseCase(
-        fakeQueueUseCase: QueueUseCaseImpl
+        queueUseCaseImpl: QueueUseCaseImpl
     ): QueueUseCase
 
 }

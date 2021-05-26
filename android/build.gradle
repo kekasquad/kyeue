@@ -1,11 +1,13 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
     ext {
-        compose_version = '1.0.0-beta06'
+        compose_version = '1.0.0-beta07'
         hilt_version = '2.35.1'
         retrofit_version = '2.9.0'
         moshi_version = '1.11.0'
         scarlet_version = '0.1.12'
+        nav_version = "2.3.5"
+        accompanist_version = "0.10.0"
     }
     repositories {
         google()

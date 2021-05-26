@@ -4,7 +4,7 @@ import io.kekasquad.kyeue.vo.remote.*
 import retrofit2.Response
 import retrofit2.http.*
 
-interface Api {
+interface QueueApiService {
 
     @FormUrlEncoded
     @POST("auth/login/")
@@ -12,10 +12,6 @@ interface Api {
         @Field("username") username: String,
         @Field("password") password: String
     ): Response<LoginRemote>
-
-    @FormUrlEncoded
-    @POST("auth/logout/")
-    suspend fun logout(): Response<Unit>
 
     @FormUrlEncoded
     @POST("auth/signup/")
@@ -26,6 +22,11 @@ interface Api {
         @Field("lastName") lastName: String,
         @Field("isTeacher") isTeacher: Boolean
     ): Response<UserRemote>
+
+    @POST("auth/logout/")
+    suspend fun logout(
+        @Header("Authorization") token: String
+    ): Response<Unit>
 
     @GET("queue/")
     suspend fun getQueues(
@@ -44,6 +45,20 @@ interface Api {
         @Header("Authorization") token: String,
         @Field("name") name: String
     ): Response<QueueCreateRemote>
+
+    @FormUrlEncoded
+    @PATCH("queue/{queueId}/")
+    suspend fun renameQueue(
+        @Header("Authorization") token: String,
+        @Path("queueId") queueId: String,
+        @Field("name") newName: String
+    ): Response<QueueUpdate>
+
+    @DELETE("queue/{queueId}/")
+    suspend fun deleteQueue(
+        @Header("Authorization") token: String,
+        @Path("queueId") queueId: String
+    ): Response<Void>
 
     @GET("queue/{queueId}/")
     suspend fun getQueue(

@@ -10,41 +10,36 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import io.kekasquad.kyeue.data.remote.Api
-import io.kekasquad.kyeue.data.remote.MessageApi
+import io.kekasquad.kyeue.data.remote.QueueApiService
+import io.kekasquad.kyeue.data.remote.QueueMessageService
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
-import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
     @Provides
-    @Singleton
     fun provideMoshi(): Moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
 
     @Provides
-    @Singleton
     fun provideOkHttpClient(): OkHttpClient = OkHttpClient()
 
     @Provides
-    @Singleton
-    fun provideApiService(moshi: Moshi): Api =
+    fun provideApiService(moshi: Moshi): QueueApiService =
         Retrofit.Builder()
-            .baseUrl("http://192.168.43.104:8080/api/")
+            .baseUrl("http://192.168.43.103:8080/api/")
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
-            .create(Api::class.java)
+            .create(QueueApiService::class.java)
 
     @Provides
-    @Singleton
-    fun provideMessageApiService(moshi: Moshi, okHttpClient: OkHttpClient): MessageApi =
+    fun provideMessageApiService(moshi: Moshi, okHttpClient: OkHttpClient): QueueMessageService =
         Scarlet.Builder()
             .webSocketFactory(okHttpClient.newWebSocketFactory("ws://192.168.43.104:8080/ws/notifications/"))
             .addMessageAdapterFactory(MoshiMessageAdapter.Factory())
             .addStreamAdapterFactory(CoroutinesStreamAdapterFactory())
             .build()
-            .create(MessageApi::class.java)
+            .create(QueueMessageService::class.java)
 
 }

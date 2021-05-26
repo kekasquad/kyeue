@@ -7,12 +7,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.Observer
 import io.kekasquad.kyeue.ui.theme.KyeueTheme
 
 abstract class BaseActivity<
         VS : MviViewState,
-        I : MviIntent> : AppCompatActivity(), MviView<VS, I> {
-    protected abstract val viewModel: MviViewModel<VS, I>
+        I  : MviIntent,
+        NE : MviNavigationEvent> : AppCompatActivity(), MviView<VS, I, NE> {
+    protected abstract val viewModel: MviViewModel<VS, I, NE>
 
     protected abstract fun backStackIntent(): I?
     protected abstract fun initialIntent(): I?
@@ -31,6 +33,11 @@ abstract class BaseActivity<
                 }
             }
         }
+        viewModel.navigationEvents().observe(this, {
+            if (it != null) {
+                navigator(it)
+            }
+        })
         viewModel.processIntents(intents())
         if (savedInstanceState == null && _intentLiveData.value == null) {
             _intentLiveData.value = initialIntent()

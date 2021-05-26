@@ -1,16 +1,13 @@
 package io.kekasquad.kyeue.data.remote
 
 import com.tinder.scarlet.ws.Receive
-import io.kekasquad.kyeue.vo.remote.*
+import io.kekasquad.kyeue.vo.remote.MoveMemberToTheEndMessage
+import io.kekasquad.kyeue.vo.remote.PopMemberMessage
+import io.kekasquad.kyeue.vo.remote.PushMemberMessage
+import io.kekasquad.kyeue.vo.remote.SkipTurnMessage
 import kotlinx.coroutines.channels.ReceiveChannel
 
-interface MessageApi {
-
-    @Receive
-    fun observeQueueCreation(): ReceiveChannel<CreateQueueMessage>
-
-    @Receive
-    fun observeQueueDeletion(): ReceiveChannel<DeleteQueueMessage>
+interface QueueDetailsMessageService {
 
     @Receive
     fun observeMemberPushing(): ReceiveChannel<PushMemberMessage>

@@ -9,3 +9,6 @@ val Shapes = Shapes(
         medium = RoundedCornerShape(4.dp),
         large = RoundedCornerShape(0.dp)
 )
+
+val StudentShape = RoundedCornerShape(topStart = 4.dp, bottomStart = 4.dp)
+val TeacherShape = RoundedCornerShape(topEnd = 4.dp, bottomEnd = 4.dp)

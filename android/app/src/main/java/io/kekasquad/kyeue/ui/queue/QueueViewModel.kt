@@ -1,17 +1,19 @@
 package io.kekasquad.kyeue.ui.queue
 
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.kekasquad.kyeue.R
 import io.kekasquad.kyeue.base.BaseViewModel
 import io.kekasquad.kyeue.data.usecase.AuthUseCase
 import io.kekasquad.kyeue.data.usecase.QueueUseCase
 import io.kekasquad.kyeue.vo.inapp.Result
+import kotlinx.coroutines.delay
 import javax.inject.Inject
 
 @HiltViewModel
 class QueueViewModel @Inject constructor(
     private val authUseCase: AuthUseCase,
     private val queueUseCase: QueueUseCase
-) : BaseViewModel<QueueViewState, QueueEffect, QueueIntent, QueueAction>() {
+) : BaseViewModel<QueueViewState, QueueEffect, QueueIntent, QueueAction, QueueNavigationEvent>() {
     private var offsetData = 0
 
     override fun initialState(): QueueViewState =
@@ -41,10 +43,40 @@ class QueueViewModel @Inject constructor(
         when (action) {
             is QueueAction.ChangeQueueNameAction -> QueueEffect.NameChangedEffect(action.queueName)
             QueueAction.CreateQueueAction -> {
-                QueueEffect.NoEffect
+                if (viewStateLiveData.value?.queueName.isNullOrEmpty()) {
+                    QueueEffect.NameErrorEffect(R.string.error_empty_field)
+                } else {
+                    addIntermediateEffect(QueueEffect.QueueActionPerformingEffect)
+                    when (val result =
+                        queueUseCase.createQueue(viewStateLiveData.value!!.queueName)) {
+                        is Result.Error -> {
+                            addIntermediateEffect(QueueEffect.QueueActionMessageEffect(R.string.error_loading_error_message))
+                            delay(3000L)
+                            QueueEffect.DismissMessageEffect
+                        }
+                        is Result.Success -> {
+                            addIntermediateEffect(QueueEffect.QueueActionMessageEffect(R.string.message_queue_creation_success))
+                            delay(3000L)
+                            QueueEffect.DismissMessageEffect
+                        }
+                    }
+                }
             }
             QueueAction.DeleteQueueAction -> {
-                QueueEffect.NoEffect
+                addIntermediateEffect(QueueEffect.QueueActionPerformingEffect)
+                when (val result =
+                    queueUseCase.deleteQueue(viewStateLiveData.value!!.queueToDelete!!)) {
+                    is Result.Error -> {
+                        addIntermediateEffect(QueueEffect.QueueActionMessageEffect(R.string.error_loading_error_message))
+                        delay(3000L)
+                        QueueEffect.DismissMessageEffect
+                    }
+                    is Result.Success -> {
+                        addIntermediateEffect(QueueEffect.QueueActionMessageEffect(R.string.message_queue_deletion_success))
+                        delay(3000L)
+                        QueueEffect.DismissMessageEffect
+                    }
+                }
             }
             QueueAction.DismissDialogsAction -> QueueEffect.DismissEffect
             QueueAction.InitialLoadingAction -> {
@@ -52,11 +84,12 @@ class QueueViewModel @Inject constructor(
                 when (val result = queueUseCase.getQueuePage(offsetData)) {
                     is Result.Error -> QueueEffect.InitialLoadingErrorEffect(result.throwable)
                     is Result.Success -> QueueEffect.DataLoadedEffect(result.data.queues).also {
-                        offsetData = result.data.nextOffset ?: -1
+                        offsetData = result.data.nextOffset
                     }
                 }
             }
             is QueueAction.NavigateToQueueDetailsAction -> {
+                navigationEventLiveData.postValue(QueueNavigationEvent.NavigateToQueueDetails(action.queue.id))
                 QueueEffect.NoEffect
             }
             QueueAction.OpenCreateQueueDialogAction -> QueueEffect.CreateDialogEffect
@@ -70,13 +103,32 @@ class QueueViewModel @Inject constructor(
                     when (val result = queueUseCase.getQueuePage(offsetData)) {
                         is Result.Error -> QueueEffect.PagingLoadingErrorEffect(result.throwable)
                         is Result.Success -> QueueEffect.DataLoadedEffect(result.data.queues).also {
-                            offsetData = result.data.nextOffset ?: -1
+                            offsetData = result.data.nextOffset
                         }
                     }
                 }
             }
             QueueAction.RenameQueueAction -> {
-                QueueEffect.NoEffect
+                if (viewStateLiveData.value?.queueName.isNullOrEmpty()) {
+                    QueueEffect.NameErrorEffect(R.string.error_empty_field)
+                } else {
+                    addIntermediateEffect(QueueEffect.QueueActionPerformingEffect)
+                    when (val result = queueUseCase.renameQueue(
+                        queue = viewStateLiveData.value!!.queueToRename!!,
+                        name = viewStateLiveData.value!!.queueName
+                    )) {
+                        is Result.Error -> {
+                            addIntermediateEffect(QueueEffect.QueueActionMessageEffect(R.string.error_loading_error_message))
+                            delay(3000L)
+                            QueueEffect.DismissMessageEffect
+                        }
+                        is Result.Success -> {
+                            addIntermediateEffect(QueueEffect.QueueActionMessageEffect(R.string.message_queue_renaming_success))
+                            delay(3000L)
+                            QueueEffect.DismissMessageEffect
+                        }
+                    }
+                }
             }
         }
 
@@ -97,7 +149,9 @@ class QueueViewModel @Inject constructor(
                 isCreateDialogOpened = oldState.isCreateDialogOpened,
                 queueToRename = oldState.queueToRename,
                 queueToDelete = oldState.queueToDelete,
-                queueName = oldState.queueName
+                queueName = oldState.queueName,
+                messageText = oldState.messageText,
+                isActionPerforming = oldState.isActionPerforming
             )
             is QueueEffect.DeleteDialogEffect -> QueueViewState.openDeleteDialogState(
                 currentUser = oldState.currentUser,
@@ -125,13 +179,15 @@ class QueueViewModel @Inject constructor(
                 isPagingLoading = oldState.isPagingLoading,
                 pagingLoadingError = oldState.pagingLoadingError,
                 queueToRename = oldState.queueToRename,
-                queueToDelete = oldState.queueToDelete,
-                queueName = effect.queueName
+                isCreateDialogOpened = oldState.isCreateDialogOpened,
+                queueName = effect.queueName,
+                queueNameError = oldState.queueNameError
             )
             QueueEffect.NoEffect -> oldState
             QueueEffect.PagingLoadingEffect -> QueueViewState.pagingLoadingState(
                 currentUser = oldState.currentUser,
-                data = oldState.data
+                data = oldState.data,
+                messageText = oldState.messageText
             )
             is QueueEffect.PagingLoadingErrorEffect -> QueueViewState.pagingLoadingErrorState(
                 currentUser = oldState.currentUser,
@@ -140,7 +196,9 @@ class QueueViewModel @Inject constructor(
                 isCreateDialogOpened = oldState.isCreateDialogOpened,
                 queueToRename = oldState.queueToRename,
                 queueToDelete = oldState.queueToDelete,
-                queueName = oldState.queueName
+                queueName = oldState.queueName,
+                messageText = oldState.messageText,
+                isActionPerforming = oldState.isActionPerforming
             )
             is QueueEffect.RenameDialogEffect -> QueueViewState.openRenameDialogState(
                 currentUser = oldState.currentUser,
@@ -148,6 +206,41 @@ class QueueViewModel @Inject constructor(
                 isPagingLoading = oldState.isPagingLoading,
                 pagingLoadingError = oldState.pagingLoadingError,
                 queueToRename = effect.queueToRename
+            )
+            QueueEffect.QueueActionPerformingEffect -> QueueViewState.performActionState(
+                currentUser = oldState.currentUser,
+                data = oldState.data,
+                isPagingLoading = oldState.isPagingLoading,
+                pagingLoadingError = oldState.pagingLoadingError
+            )
+            is QueueEffect.NameErrorEffect -> QueueViewState.queueNameErrorState(
+                currentUser = oldState.currentUser,
+                data = oldState.data,
+                isPagingLoading = oldState.isPagingLoading,
+                pagingLoadingError = oldState.pagingLoadingError,
+                isCreateDialogOpened = oldState.isCreateDialogOpened,
+                queueToRename = oldState.queueToRename,
+                queueName = oldState.queueName,
+                queueNameError = effect.error
+            )
+            is QueueEffect.QueueActionMessageEffect -> QueueViewState.messageState(
+                currentUser = oldState.currentUser,
+                data = oldState.data,
+                isPagingLoading = oldState.isPagingLoading,
+                pagingLoadingError = oldState.pagingLoadingError,
+                messageText = effect.message
+            )
+            QueueEffect.DismissMessageEffect -> QueueViewState.dismissMessageState(
+                currentUser = oldState.currentUser,
+                data = oldState.data,
+                isPagingLoading = oldState.isPagingLoading,
+                pagingLoadingError = oldState.pagingLoadingError,
+                isCreateDialogOpened = oldState.isCreateDialogOpened,
+                queueToRename = oldState.queueToRename,
+                queueToDelete = oldState.queueToDelete,
+                queueName = oldState.queueName,
+                queueNameError = oldState.queueNameError,
+                isActionPerforming = oldState.isActionPerforming
             )
         }
 

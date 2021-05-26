@@ -1,9 +1,6 @@
 package io.kekasquad.kyeue.base
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -12,7 +9,8 @@ abstract class BaseViewModel<
         VS : MviViewState,
         E : MviEffect,
         I : MviIntent,
-        A : MviAction> : ViewModel(), MviViewModel<VS, I> {
+        A : MviAction,
+        NE : MviNavigationEvent> : ViewModel(), MviViewModel<VS, I, NE> {
     abstract fun initialState(): VS
     protected abstract fun intentInterpreter(intent: I): A
     protected abstract suspend fun performAction(action: A): E
@@ -35,6 +33,8 @@ abstract class BaseViewModel<
         }
     }
 
+    protected val navigationEventLiveData = MutableLiveData<NE>()
+
     private var clearLastIntentSource: (() -> Unit)? = null
 
     protected fun addIntermediateEffect(effect: E) {
@@ -42,6 +42,8 @@ abstract class BaseViewModel<
     }
 
     override fun states(): LiveData<VS> = viewStateLiveData
+
+    override fun navigationEvents(): LiveData<NE> = navigationEventLiveData
 
     override fun processIntents(intents: LiveData<I>) {
         clearLastIntentSource?.let { it() }
@@ -54,6 +56,8 @@ abstract class BaseViewModel<
                         _effectLiveData.postValue(performAction(action))
                     }
                 }
+            } else {
+                navigationEventLiveData.value = null
             }
         }
 

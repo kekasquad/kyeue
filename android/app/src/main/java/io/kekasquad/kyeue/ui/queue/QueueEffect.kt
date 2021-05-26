@@ -37,6 +37,18 @@ sealed class QueueEffect : MviEffect {
         val queueName: String
     ) : QueueEffect()
 
+    data class NameErrorEffect(
+        val error: Int
+    ) : QueueEffect()
+
     object NoEffect : QueueEffect()
+
+    object QueueActionPerformingEffect : QueueEffect()
+
+    data class QueueActionMessageEffect(
+        val message: Int
+    ) : QueueEffect()
+
+    object DismissMessageEffect : QueueEffect()
 
 }

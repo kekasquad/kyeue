@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">Kyeue</string>
+
+    <string name="message_signup_success">Account created</string>
+    <string name="message_queue_creation_success">Queue created</string>
+    <string name="message_queue_renaming_success">Queue renamed</string>
+    <string name="message_queue_deletion_success">Queue deleted</string>
+
+    <string name="error_empty_field">Empty field</string>
+    <string name="error_username_in_use">Username already exists</string>
+    <string name="error_wrong_password">Wrong password</string>
+    <string name="error_loading_error_message">Loading error</string>
+
 </resources>

@@ -8,18 +8,23 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.compose.ConstraintLayout
 import io.kekasquad.kyeue.ui.theme.KyeueTheme
 
 @Composable
 fun ItemSingleLoading() {
-    Row(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(32.dp),
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        CircularProgressIndicator(color = MaterialTheme.colors.primary)
+    ConstraintLayout(modifier = Modifier.fillMaxSize()) {
+        val content = createRef()
+
+        CircularProgressIndicator(
+            modifier = Modifier.constrainAs(content) {
+                top.linkTo(parent.top)
+                bottom.linkTo(parent.bottom)
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
+            },
+            color = MaterialTheme.colors.primary
+        )
     }
 }
 
