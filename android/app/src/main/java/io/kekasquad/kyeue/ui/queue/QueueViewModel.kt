@@ -1,12 +1,18 @@
 package io.kekasquad.kyeue.ui.queue
 
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.kekasquad.kyeue.R
 import io.kekasquad.kyeue.base.BaseViewModel
 import io.kekasquad.kyeue.data.usecase.AuthUseCase
 import io.kekasquad.kyeue.data.usecase.QueueUseCase
+import io.kekasquad.kyeue.vo.inapp.QueueMessage
 import io.kekasquad.kyeue.vo.inapp.Result
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -16,8 +22,50 @@ class QueueViewModel @Inject constructor(
 ) : BaseViewModel<QueueViewState, QueueEffect, QueueIntent, QueueAction, QueueNavigationEvent>() {
     private var offsetData = 0
 
+    init {
+        startListening()
+    }
+
     override fun initialState(): QueueViewState =
         QueueViewState.initialState(authUseCase.getCurrentUser())
+
+    private fun startListening() {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                queueUseCase.queueMessageFlow().collect {
+                    when (it) {
+                        is QueueMessage.CreateQueueMessage -> {
+                            when (val result = queueUseCase.getQueueById(it.queueId)) {
+                                is Result.Error -> {
+                                    addIntermediateEffect(QueueEffect.AddQueueErrorEffect(R.string.message_queue_creation_error_uploading))
+                                    delay(3000L)
+                                    addIntermediateEffect(QueueEffect.DismissMessageEffect)
+                                }
+                                is Result.Success -> addIntermediateEffect(
+                                    QueueEffect.AddQueueEffect(result.data)
+                                )
+                            }
+                        }
+                        is QueueMessage.DeleteQueueMessage -> addIntermediateEffect(
+                            QueueEffect.DeleteQueueEffect(it.queueId)
+                        )
+                        is QueueMessage.RenameQueueMessage -> {
+                            when (val result = queueUseCase.getQueueById(it.queueId)) {
+                                is Result.Error -> {
+                                    addIntermediateEffect(QueueEffect.RenameQueueErrorEffect(R.string.message_queue_renaming_error_uploading))
+                                    delay(3000L)
+                                    addIntermediateEffect(QueueEffect.DismissMessageEffect)
+                                }
+                                is Result.Success -> addIntermediateEffect(
+                                    QueueEffect.RenameQueueEffect(result.data)
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     override fun intentInterpreter(intent: QueueIntent): QueueAction =
         when (intent) {
@@ -150,6 +198,7 @@ class QueueViewModel @Inject constructor(
                 queueToRename = oldState.queueToRename,
                 queueToDelete = oldState.queueToDelete,
                 queueName = oldState.queueName,
+                queueNameError = oldState.queueNameError,
                 messageText = oldState.messageText,
                 isActionPerforming = oldState.isActionPerforming
             )
@@ -240,6 +289,88 @@ class QueueViewModel @Inject constructor(
                 queueToDelete = oldState.queueToDelete,
                 queueName = oldState.queueName,
                 queueNameError = oldState.queueNameError,
+                isActionPerforming = oldState.isActionPerforming
+            )
+            is QueueEffect.AddQueueEffect -> QueueViewState.messageUpdateState(
+                currentUser = oldState.currentUser,
+                data = oldState.data.toMutableList().apply {
+                    add(0, effect.queue)
+                },
+                isPagingLoading = oldState.isPagingLoading,
+                pagingLoadingError = oldState.pagingLoadingError,
+                isCreateDialogOpened = oldState.isCreateDialogOpened,
+                queueToRename = oldState.queueToRename,
+                queueToDelete = oldState.queueToDelete,
+                queueName = oldState.queueName,
+                queueNameError = oldState.queueNameError,
+                messageText = oldState.messageText,
+                isActionPerforming = oldState.isActionPerforming
+            )
+            is QueueEffect.DeleteQueueEffect -> QueueViewState.messageUpdateState(
+                currentUser = oldState.currentUser,
+                data = oldState.data.toMutableList().apply {
+                    for (i in indices) {
+                        if (this[i].id == effect.queueId) {
+                            this.removeAt(i)
+                            break
+                        }
+                    }
+                },
+                isPagingLoading = oldState.isPagingLoading,
+                pagingLoadingError = oldState.pagingLoadingError,
+                isCreateDialogOpened = oldState.isCreateDialogOpened,
+                queueToRename = oldState.queueToRename,
+                queueToDelete = oldState.queueToDelete,
+                queueName = oldState.queueName,
+                queueNameError = oldState.queueNameError,
+                messageText = oldState.messageText,
+                isActionPerforming = oldState.isActionPerforming
+            )
+            is QueueEffect.AddQueueErrorEffect -> QueueViewState.messageUpdateState(
+                currentUser = oldState.currentUser,
+                data = oldState.data,
+                isPagingLoading = oldState.isPagingLoading,
+                pagingLoadingError = oldState.pagingLoadingError,
+                isCreateDialogOpened = oldState.isCreateDialogOpened,
+                queueToRename = oldState.queueToRename,
+                queueToDelete = oldState.queueToDelete,
+                queueName = oldState.queueName,
+                queueNameError = oldState.queueNameError,
+                messageText = effect.message,
+                isActionPerforming = oldState.isActionPerforming
+            )
+            is QueueEffect.RenameQueueEffect -> QueueViewState.messageUpdateState(
+                currentUser = oldState.currentUser,
+                data = oldState.data.toMutableList().apply {
+                    for (i in indices) {
+                        if (this[i].id == effect.queue.id) {
+                            this.removeAt(i)
+                            this.add(i, effect.queue)
+                            break
+                        }
+                    }
+                },
+                isPagingLoading = oldState.isPagingLoading,
+                pagingLoadingError = oldState.pagingLoadingError,
+                isCreateDialogOpened = oldState.isCreateDialogOpened,
+                queueToRename = oldState.queueToRename,
+                queueToDelete = oldState.queueToDelete,
+                queueName = oldState.queueName,
+                queueNameError = oldState.queueNameError,
+                messageText = oldState.messageText,
+                isActionPerforming = oldState.isActionPerforming
+            )
+            is QueueEffect.RenameQueueErrorEffect -> QueueViewState.messageUpdateState(
+                currentUser = oldState.currentUser,
+                data = oldState.data,
+                isPagingLoading = oldState.isPagingLoading,
+                pagingLoadingError = oldState.pagingLoadingError,
+                isCreateDialogOpened = oldState.isCreateDialogOpened,
+                queueToRename = oldState.queueToRename,
+                queueToDelete = oldState.queueToDelete,
+                queueName = oldState.queueName,
+                queueNameError = oldState.queueNameError,
+                messageText = effect.message,
                 isActionPerforming = oldState.isActionPerforming
             )
         }

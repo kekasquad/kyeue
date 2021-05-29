@@ -24,7 +24,7 @@ data class QueueViewState(
 ) : MviViewState {
     companion object {
         fun initialState(currentUser: User) = QueueViewState(
-            isInitialLoading = false,
+            isInitialLoading = true,
             initialLoadingError = null,
             data = emptyList(),
             currentUser = currentUser,
@@ -82,6 +82,7 @@ data class QueueViewState(
             queueToDelete: Queue?,
             queueName: String,
             isActionPerforming: Boolean,
+            queueNameError: Int,
             messageText: Int
         ) = QueueViewState(
             isInitialLoading = false,
@@ -95,7 +96,7 @@ data class QueueViewState(
             queueToDelete = queueToDelete,
             queueName = queueName,
             isActionPerforming = isActionPerforming,
-            queueNameError = 0,
+            queueNameError = queueNameError,
             messageText = messageText
         )
 
@@ -349,6 +350,34 @@ data class QueueViewState(
             isActionPerforming = isActionPerforming,
             queueNameError = queueNameError,
             messageText = 0
+        )
+
+        fun messageUpdateState(
+            currentUser: User,
+            data: List<Queue>,
+            isPagingLoading: Boolean,
+            pagingLoadingError: Throwable?,
+            isCreateDialogOpened: Boolean,
+            queueToRename: Queue?,
+            queueToDelete: Queue?,
+            queueName: String,
+            isActionPerforming: Boolean,
+            queueNameError: Int,
+            messageText: Int
+        ) = QueueViewState(
+            isInitialLoading = false,
+            initialLoadingError = null,
+            data = data,
+            currentUser = currentUser,
+            isPagingLoading = isPagingLoading,
+            pagingLoadingError = pagingLoadingError,
+            isCreateDialogOpened = isCreateDialogOpened,
+            queueToRename = queueToRename,
+            queueToDelete = queueToDelete,
+            queueName = queueName,
+            isActionPerforming = isActionPerforming,
+            queueNameError = queueNameError,
+            messageText = messageText
         )
 
     }

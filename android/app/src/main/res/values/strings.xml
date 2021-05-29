@@ -5,6 +5,8 @@
     <string name="message_queue_creation_success">Queue created</string>
     <string name="message_queue_renaming_success">Queue renamed</string>
     <string name="message_queue_deletion_success">Queue deleted</string>
+    <string name="message_queue_creation_error_uploading">Cannot receive created queue</string>
+    <string name="message_queue_renaming_error_uploading">Cannot receive renamed queue</string>
 
     <string name="error_empty_field">Empty field</string>
     <string name="error_username_in_use">Username already exists</string>

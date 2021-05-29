@@ -2,10 +2,12 @@ package io.kekasquad.kyeue.vo.mapper
 
 import android.net.Uri
 import io.kekasquad.kyeue.vo.inapp.Queue
+import io.kekasquad.kyeue.vo.inapp.QueueMessage
 import io.kekasquad.kyeue.vo.inapp.QueuePage
 import io.kekasquad.kyeue.vo.remote.QueueCreateRemote
 import io.kekasquad.kyeue.vo.remote.QueueRemote
 import io.kekasquad.kyeue.vo.remote.QueueResponseRemote
+import io.kekasquad.kyeue.vo.remote.RemoteQueueMessage
 import javax.inject.Inject
 
 class QueueMapper @Inject constructor(
@@ -64,4 +66,20 @@ class QueuePageMapper @Inject constructor(
     override fun fromInappToRemote(data: QueuePage): QueueResponseRemote {
         throw IllegalStateException("We will not use it!")
     }
+}
+
+class QueueMessageMapper @Inject constructor() : Mapper<QueueMessage, RemoteQueueMessage> {
+    override fun fromInappToRemote(data: QueueMessage): RemoteQueueMessage =
+        when (data) {
+            is QueueMessage.CreateQueueMessage -> RemoteQueueMessage.CreateQueueMessage(data.queueId)
+            is QueueMessage.DeleteQueueMessage -> RemoteQueueMessage.DeleteQueueMessage(data.queueId)
+            is QueueMessage.RenameQueueMessage -> RemoteQueueMessage.RenameQueueMessage(data.queueId)
+        }
+
+    override fun fromRemoteToInapp(data: RemoteQueueMessage): QueueMessage =
+        when (data) {
+            is RemoteQueueMessage.CreateQueueMessage -> QueueMessage.CreateQueueMessage(data.createdId)
+            is RemoteQueueMessage.DeleteQueueMessage -> QueueMessage.DeleteQueueMessage(data.deletedId)
+            is RemoteQueueMessage.RenameQueueMessage -> QueueMessage.RenameQueueMessage(data.renamedId)
+        }
 }

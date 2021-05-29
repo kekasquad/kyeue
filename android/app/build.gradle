@@ -81,12 +81,6 @@ dependencies {
     implementation "com.squareup.moshi:moshi-kotlin:$moshi_version"
     kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshi_version"
 
-    implementation "com.tinder.scarlet:scarlet:$scarlet_version"
-    implementation "com.tinder.scarlet:websocket-okhttp:$scarlet_version"
-    implementation "com.tinder.scarlet:message-adapter-moshi:$scarlet_version"
-    implementation "com.tinder.scarlet:stream-adapter-coroutines:$scarlet_version"
-    implementation "com.tinder.scarlet:lifecycle-android:$scarlet_version"
-
     implementation "androidx.datastore:datastore:1.0.0-beta01"
     implementation "androidx.datastore:datastore-core:1.0.0-beta01"
     implementation  "com.google.protobuf:protobuf-javalite:3.11.0"

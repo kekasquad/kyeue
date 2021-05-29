@@ -55,7 +55,10 @@ fun LoginContent(
         val message = stringResourceOrNull(id = viewState.messageText)
         if (message != null) {
             coroutineScope.launch {
-                snackbarHostState.showSnackbar(message = message)
+                snackbarHostState.showSnackbar(
+                    message = message,
+                    duration = SnackbarDuration.Indefinite
+                )
             }
         } else {
             snackbarHostState.currentSnackbarData?.dismiss()
@@ -299,5 +302,3 @@ private enum class ViewId(val id: String) {
     LOGIN("login"),
     SIGN_UP("sign_up");
 }
-
-private fun ViewId.isPassword(): Boolean = this == ViewId.PASSWORD

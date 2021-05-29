@@ -10,7 +10,6 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -18,7 +17,6 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.google.accompanist.insets.navigationBarsHeight
-import com.google.accompanist.insets.navigationBarsPadding
 import io.kekasquad.kyeue.ui.components.ItemPagingLoading
 import io.kekasquad.kyeue.ui.components.ItemPagingLoadingError
 import io.kekasquad.kyeue.ui.components.ItemSingleLoading
@@ -197,14 +195,20 @@ fun CreatorQueueMenuIcon(
             modifier = Modifier.background(MaterialTheme.colors.surface),
             onDismissRequest = { isMenuOpened = false }
         ) {
-            DropdownMenuItem(onClick = { onQueueRenameClick(queue) }) {
+            DropdownMenuItem(onClick = {
+                isMenuOpened = false
+                onQueueRenameClick(queue)
+            }) {
                 Text(
                     text = "Rename",
                     style = MaterialTheme.typography.body1,
                     color = MaterialTheme.colors.onSurface
                 )
             }
-            DropdownMenuItem(onClick = { onQueueDeleteClick(queue) }) {
+            DropdownMenuItem(onClick = {
+                isMenuOpened = false
+                onQueueDeleteClick(queue)
+            }) {
                 Text(
                     text = "Delete",
                     style = MaterialTheme.typography.body1,
