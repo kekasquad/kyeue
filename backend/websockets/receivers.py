@@ -53,6 +53,10 @@ def create_queue_receiver(created, instance, **_):
         send_message({
             'create_queue': str(instance.id)
         }, 'queue_operation', 'common_notifications')
+    else:
+        send_message({
+            'rename_queue': str(instance.id)
+        }, 'queue_operation', 'common_notifications')
 
 
 @receiver(post_delete, sender=Queue)
