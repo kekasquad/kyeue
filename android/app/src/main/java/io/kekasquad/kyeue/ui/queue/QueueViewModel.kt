@@ -5,6 +5,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.kekasquad.kyeue.R
 import io.kekasquad.kyeue.base.BaseViewModel
 import io.kekasquad.kyeue.data.usecase.AuthUseCase
+import io.kekasquad.kyeue.data.usecase.QueueDetailsUseCase
 import io.kekasquad.kyeue.data.usecase.QueueUseCase
 import io.kekasquad.kyeue.vo.inapp.QueueMessage
 import io.kekasquad.kyeue.vo.inapp.Result
@@ -18,13 +19,10 @@ import javax.inject.Inject
 @HiltViewModel
 class QueueViewModel @Inject constructor(
     private val authUseCase: AuthUseCase,
-    private val queueUseCase: QueueUseCase
+    private val queueUseCase: QueueUseCase,
+    private val queueDetailsUseCase: QueueDetailsUseCase
 ) : BaseViewModel<QueueViewState, QueueEffect, QueueIntent, QueueAction, QueueNavigationEvent>() {
     private var offsetData = 0
-
-    init {
-        startListening()
-    }
 
     override fun initialState(): QueueViewState =
         QueueViewState.initialState(authUseCase.getCurrentUser())
@@ -35,7 +33,7 @@ class QueueViewModel @Inject constructor(
                 queueUseCase.queueMessageFlow().collect {
                     when (it) {
                         is QueueMessage.CreateQueueMessage -> {
-                            when (val result = queueUseCase.getQueueById(it.queueId)) {
+                            when (val result = queueDetailsUseCase.getQueueById(it.queueId)) {
                                 is Result.Error -> {
                                     addIntermediateEffect(QueueEffect.AddQueueErrorEffect(R.string.message_queue_creation_error_uploading))
                                     delay(3000L)
@@ -50,7 +48,7 @@ class QueueViewModel @Inject constructor(
                             QueueEffect.DeleteQueueEffect(it.queueId)
                         )
                         is QueueMessage.RenameQueueMessage -> {
-                            when (val result = queueUseCase.getQueueById(it.queueId)) {
+                            when (val result = queueDetailsUseCase.getQueueById(it.queueId)) {
                                 is Result.Error -> {
                                     addIntermediateEffect(QueueEffect.RenameQueueErrorEffect(R.string.message_queue_renaming_error_uploading))
                                     delay(3000L)
@@ -98,7 +96,7 @@ class QueueViewModel @Inject constructor(
                     when (val result =
                         queueUseCase.createQueue(viewStateLiveData.value!!.queueName)) {
                         is Result.Error -> {
-                            addIntermediateEffect(QueueEffect.QueueActionMessageEffect(R.string.error_loading_error_message))
+                            addIntermediateEffect(QueueEffect.QueueActionMessageEffect(R.string.error_queue_loading_error_message))
                             delay(3000L)
                             QueueEffect.DismissMessageEffect
                         }
@@ -113,9 +111,9 @@ class QueueViewModel @Inject constructor(
             QueueAction.DeleteQueueAction -> {
                 addIntermediateEffect(QueueEffect.QueueActionPerformingEffect)
                 when (val result =
-                    queueUseCase.deleteQueue(viewStateLiveData.value!!.queueToDelete!!)) {
+                    queueUseCase.deleteQueue(viewStateLiveData.value!!.queueToDelete!!.id)) {
                     is Result.Error -> {
-                        addIntermediateEffect(QueueEffect.QueueActionMessageEffect(R.string.error_loading_error_message))
+                        addIntermediateEffect(QueueEffect.QueueActionMessageEffect(R.string.error_queue_loading_error_message))
                         delay(3000L)
                         QueueEffect.DismissMessageEffect
                     }
@@ -133,6 +131,7 @@ class QueueViewModel @Inject constructor(
                     is Result.Error -> QueueEffect.InitialLoadingErrorEffect(result.throwable)
                     is Result.Success -> QueueEffect.DataLoadedEffect(result.data.queues).also {
                         offsetData = result.data.nextOffset
+                        startListening()
                     }
                 }
             }
@@ -166,7 +165,7 @@ class QueueViewModel @Inject constructor(
                         name = viewStateLiveData.value!!.queueName
                     )) {
                         is Result.Error -> {
-                            addIntermediateEffect(QueueEffect.QueueActionMessageEffect(R.string.error_loading_error_message))
+                            addIntermediateEffect(QueueEffect.QueueActionMessageEffect(R.string.error_queue_loading_error_message))
                             delay(3000L)
                             QueueEffect.DismissMessageEffect
                         }

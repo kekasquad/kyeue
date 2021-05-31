@@ -3,15 +3,18 @@ package io.kekasquad.kyeue.ui.queue
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.fragment.app.viewModels
-import androidx.navigation.Navigation
 import com.google.accompanist.insets.ProvideWindowInsets
 import dagger.hilt.android.AndroidEntryPoint
-import io.kekasquad.kyeue.R
 import io.kekasquad.kyeue.base.BaseFragment
+import io.kekasquad.kyeue.nav.Coordinator
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class QueueFragment : BaseFragment<QueueViewState, QueueIntent, QueueNavigationEvent>() {
     override val viewModel: QueueViewModel by viewModels()
+
+    @Inject
+    lateinit var coordinator: Coordinator
 
     override fun backStackIntent(): QueueIntent = QueueIntent.QueueNothingIntent
 
@@ -55,7 +58,7 @@ class QueueFragment : BaseFragment<QueueViewState, QueueIntent, QueueNavigationE
     override fun navigator(navigationEvent: QueueNavigationEvent) {
         when (navigationEvent) {
             is QueueNavigationEvent.NavigateToQueueDetails ->
-                Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
+                coordinator.navigateToQueueDetails(navigationEvent.queueId)
         }
     }
 }

@@ -3,10 +3,7 @@ package io.kekasquad.kyeue.data.usecase
 import io.kekasquad.kyeue.data.remote.QueueApiService
 import io.kekasquad.kyeue.data.remote.QueueMessageService
 import io.kekasquad.kyeue.utils.safeApiCall
-import io.kekasquad.kyeue.vo.inapp.Queue
-import io.kekasquad.kyeue.vo.inapp.QueueMessage
-import io.kekasquad.kyeue.vo.inapp.QueuePage
-import io.kekasquad.kyeue.vo.inapp.Result
+import io.kekasquad.kyeue.vo.inapp.*
 import io.kekasquad.kyeue.vo.mapper.QueueCreateMapper
 import io.kekasquad.kyeue.vo.mapper.QueueMapper
 import io.kekasquad.kyeue.vo.mapper.QueueMessageMapper
@@ -17,10 +14,9 @@ import javax.inject.Inject
 
 interface QueueUseCase {
     suspend fun getQueuePage(offset: Int): Result<QueuePage>
-    suspend fun getQueueById(queueId: String): Result<Queue>
     suspend fun createQueue(name: String): Result<Queue>
     suspend fun renameQueue(queue: Queue, name: String): Result<Queue>
-    suspend fun deleteQueue(queue: Queue): Result<Boolean>
+    suspend fun deleteQueue(queueId: String): Result<Boolean>
     fun queueMessageFlow(): Flow<QueueMessage>
 }
 
@@ -47,19 +43,6 @@ class QueueUseCaseImpl @Inject constructor(
             )
             if (response.isSuccessful && response.body() != null) {
                 Result.Success(queuePageMapper.fromRemoteToInapp(response.body()!!))
-            } else {
-                Result.Error(Throwable(response.message()))
-            }
-        }
-
-    override suspend fun getQueueById(queueId: String): Result<Queue> =
-        safeApiCall {
-            val response = queueApiService.getQueue(
-                token = authUseCase.getToken(),
-                queueId = queueId
-            )
-            if (response.isSuccessful && response.body() != null) {
-                Result.Success(queueMapper.fromRemoteToInapp(response.body()!!))
             } else {
                 Result.Error(Throwable(response.message()))
             }
@@ -100,11 +83,11 @@ class QueueUseCaseImpl @Inject constructor(
             }
         }
 
-    override suspend fun deleteQueue(queue: Queue): Result<Boolean> =
+    override suspend fun deleteQueue(queueId: String): Result<Boolean> =
         safeApiCall {
             val response = queueApiService.deleteQueue(
                 token = authUseCase.getToken(),
-                queueId = queue.id
+                queueId = queueId
             )
             if (response.isSuccessful) {
                 Result.Success(true)

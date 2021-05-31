@@ -5,12 +5,17 @@
     <string name="message_queue_creation_success">Queue created</string>
     <string name="message_queue_renaming_success">Queue renamed</string>
     <string name="message_queue_deletion_success">Queue deleted</string>
+    <string name="message_member_added_success">You are in the queue!</string>
+    <string name="message_member_leave_success">You\'ve left the queue</string>
+    <string name="message_member_skip_turn_success">You\'ve skipped the turn</string>
+    <string name="message_member_to_the_end_success">You\'ve been moved to the end</string>
     <string name="message_queue_creation_error_uploading">Cannot receive created queue</string>
     <string name="message_queue_renaming_error_uploading">Cannot receive renamed queue</string>
 
     <string name="error_empty_field">Empty field</string>
     <string name="error_username_in_use">Username already exists</string>
     <string name="error_wrong_password">Wrong password</string>
-    <string name="error_loading_error_message">Loading error</string>
+    <string name="error_queue_loading_error_message">Loading error</string>
+    <string name="error_member_loading_error_message">Loading error</string>
 
 </resources>

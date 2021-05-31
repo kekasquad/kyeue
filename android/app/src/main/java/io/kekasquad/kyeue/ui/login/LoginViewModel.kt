@@ -50,7 +50,7 @@ class LoginViewModel @Inject constructor(
                             password = viewStateLiveData.value!!.password
                         )) {
                             is Result.Error -> {
-                                addIntermediateEffect(LoginEffect.MessageEffect(R.string.error_loading_error_message))
+                                addIntermediateEffect(LoginEffect.MessageEffect(R.string.error_queue_loading_error_message))
                                 delay(3000L)
                                 LoginEffect.DismissErrorMessageEffect
                             }
@@ -82,7 +82,7 @@ class LoginViewModel @Inject constructor(
                             isTeacher = viewStateLiveData.value!!.isTeacher
                         )) {
                             is Result.Error -> {
-                                addIntermediateEffect(LoginEffect.MessageEffect(R.string.error_loading_error_message))
+                                addIntermediateEffect(LoginEffect.MessageEffect(R.string.error_queue_loading_error_message))
                                 delay(3000L)
                                 LoginEffect.DismissErrorMessageEffect
                             }

@@ -12,12 +12,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.google.accompanist.insets.navigationBarsHeight
 import com.google.accompanist.insets.navigationBarsPadding
-import com.google.accompanist.insets.statusBarsPadding
 import io.kekasquad.kyeue.R
 import io.kekasquad.kyeue.ui.components.KyeueAppBar
 import io.kekasquad.kyeue.utils.stringResourceOrNull
@@ -139,9 +136,9 @@ fun QueueAppBar() {
                     .fillMaxWidth()
                     .padding(end = 16.dp),
                 text = stringResource(id = R.string.app_name),
-                fontWeight = FontWeight.Bold,
+                style = MaterialTheme.typography.h6,
                 color = MaterialTheme.colors.onPrimary,
-                textAlign = TextAlign.Center
+                maxLines = 1
             )
         }
     )
