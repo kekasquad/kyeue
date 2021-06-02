@@ -23,9 +23,12 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.google.accompanist.insets.navigationBarsHeight
+import com.google.accompanist.insets.statusBarsPadding
+import io.kekasquad.kyeue.R
 import io.kekasquad.kyeue.ui.components.ItemSingleLoading
 import io.kekasquad.kyeue.ui.components.ItemSingleLoadingError
 import io.kekasquad.kyeue.ui.components.KyeueAppBar
+import io.kekasquad.kyeue.ui.theme.ChipShape
 import io.kekasquad.kyeue.ui.theme.colorGray
 import io.kekasquad.kyeue.vo.inapp.User
 
@@ -78,12 +81,15 @@ fun QueueDetailsAppBar(
     KyeueAppBar(
         modifier = modifier,
         navigation = {
-            IconButton(onClick = onNavigateBack) {
+            IconButton(
+                modifier = Modifier.statusBarsPadding(),
+                onClick = onNavigateBack
+            ) {
                 Icon(
                     modifier = modifier
                         .requiredWidth(24.dp)
                         .requiredHeight(24.dp),
-                    tint = MaterialTheme.colors.onPrimary,
+                    tint = MaterialTheme.colors.onPrimary.copy(alpha = 0.6F),
                     imageVector = Icons.Outlined.ArrowBack,
                     contentDescription = ""
                 )
@@ -93,6 +99,7 @@ fun QueueDetailsAppBar(
             Text(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .statusBarsPadding()
                     .padding(end = 16.dp),
                 text = viewState.queue?.name ?: "",
                 style = MaterialTheme.typography.h6,
@@ -103,23 +110,29 @@ fun QueueDetailsAppBar(
         actions = {
             if (isActionButtonsVisible) {
                 if (isAddToQueue == false) {
-                    IconButton(onClick = onUserEnterQueue) {
+                    IconButton(
+                        modifier = Modifier.statusBarsPadding(),
+                        onClick = onUserEnterQueue
+                    ) {
                         Icon(
                             modifier = modifier
                                 .requiredWidth(24.dp)
                                 .requiredHeight(24.dp),
-                            tint = MaterialTheme.colors.onPrimary,
+                            tint = MaterialTheme.colors.onPrimary.copy(alpha = 0.6F),
                             imageVector = Icons.Outlined.PersonAdd,
                             contentDescription = ""
                         )
                     }
                 } else {
-                    IconButton(onClick = { onUserLeaveQueue(viewState.currentUser) }) {
+                    IconButton(
+                        modifier = Modifier.statusBarsPadding(),
+                        onClick = { onUserLeaveQueue(viewState.currentUser) }
+                    ) {
                         Icon(
                             modifier = modifier
                                 .requiredWidth(24.dp)
                                 .requiredHeight(24.dp),
-                            tint = MaterialTheme.colors.onPrimary,
+                            tint = MaterialTheme.colors.onPrimary.copy(alpha = 0.6F),
                             imageVector = Icons.Outlined.Logout,
                             contentDescription = ""
                         )
@@ -163,7 +176,7 @@ fun QueueDetailsMemberList(
     ) {
         if (viewState.queue?.members?.isNotEmpty() == true) {
             stickyHeader {
-                HeaderItem(name = "Current")
+                HeaderItem(name = stringResource(R.string.text_header_current))
             }
             item {
                 MemberItem(
@@ -178,7 +191,7 @@ fun QueueDetailsMemberList(
         }
         if (viewState.queue?.members?.size ?: 0 > 1) {
             stickyHeader {
-                HeaderItem(name = "Ongoing")
+                HeaderItem(name = stringResource(R.string.text_header_ongoing))
             }
             items(viewState.queue!!.members.reversed().drop(1)) { member ->
                 MemberItem(
@@ -223,7 +236,7 @@ fun EmptyItem(modifier: Modifier = Modifier) {
                 .fillMaxWidth()
                 .padding(16.dp)
                 .align(Alignment.Center),
-            text = "This queue is empty",
+            text = stringResource(R.string.text_queue_members_empty_list),
             color = MaterialTheme.colors.onSurface,
             style = MaterialTheme.typography.h6,
             textAlign = TextAlign.Center
@@ -244,11 +257,19 @@ fun HeaderItem(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
-        Text(
-            text = name,
-            color = MaterialTheme.colors.onSurface,
-            style = MaterialTheme.typography.subtitle2
-        )
+        Surface(
+            elevation = 8.dp,
+            shape = ChipShape,
+            color = MaterialTheme.colors.primary
+        ) {
+            Row(modifier = Modifier.padding(8.dp)) {
+                Text(
+                    text = name,
+                    color = MaterialTheme.colors.onPrimary,
+                    style = MaterialTheme.typography.body2
+                )
+            }
+        }
     }
 }
 
@@ -267,9 +288,9 @@ fun MemberItem(
             || member.id == currentUser.id
     val (backgroundColor, onBackgroundColor) =
         if (currentUser.id == member.id) {
-            MaterialTheme.colors.primaryVariant to MaterialTheme.colors.onSecondary
+            MaterialTheme.colors.primaryVariant to MaterialTheme.colors.onSecondary.copy(alpha = 0.6F)
         } else {
-            MaterialTheme.colors.background to MaterialTheme.colors.onBackground
+            MaterialTheme.colors.background to MaterialTheme.colors.onBackground.copy(alpha = 0.6F)
         }
 
     Card(
@@ -350,7 +371,7 @@ fun MemberActionIcon(
                 onUserSkipTurn(member)
             }) {
                 Text(
-                    text = "Skip turn",
+                    text = stringResource(R.string.text_member_menu_skip_turn),
                     style = MaterialTheme.typography.body1,
                     color = MaterialTheme.colors.onSurface
                 )
@@ -360,7 +381,7 @@ fun MemberActionIcon(
                 onUserMoveToTheEnd(member)
             }) {
                 Text(
-                    text = "Go to the End",
+                    text = stringResource(R.string.text_member_menu_to_the_end),
                     style = MaterialTheme.typography.body1,
                     color = MaterialTheme.colors.onSurface
                 )
@@ -370,7 +391,7 @@ fun MemberActionIcon(
                 onUserLeaveQueue(member)
             }) {
                 Text(
-                    text = "Leave",
+                    text = stringResource(R.string.text_member_menu_leave),
                     style = MaterialTheme.typography.body1,
                     color = MaterialTheme.colors.onSurface
                 )

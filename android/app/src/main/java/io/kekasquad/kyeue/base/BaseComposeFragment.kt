@@ -4,18 +4,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
+import io.kekasquad.kyeue.ui.theme.KyeueTheme
 
-abstract class BaseFragment<
+abstract class BaseComposeFragment<
         VS : MviViewState,
-        I : MviIntent,
-        NE : MviNavigationEvent> : Fragment(), MviView<VS, I, NE> {
-    protected abstract val layoutResourceId: Int
+        I  : MviIntent,
+        NE : MviNavigationEvent> : Fragment(), MviComposeView<VS, I, NE> {
     protected abstract val viewModel: MviViewModel<VS, I, NE>
-
-    protected abstract fun initViews()
 
     protected abstract fun backStackIntent(): I?
     protected abstract fun initialIntent(): I?
@@ -28,23 +29,18 @@ abstract class BaseFragment<
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View = inflater.inflate(
-        layoutResourceId,
-        container,
-        false
-    )
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        initViews()
+    ): View = ComposeView(inflater.context).apply {
+        setContent {
+            val viewState: VS? by viewModel.states().observeAsState()
+            KyeueTheme {
+                if (viewState != null) {
+                    render(viewState!!)
+                }
+            }
+        }
         viewModel.navigationEvents().observe(viewLifecycleOwner, {
             if (it != null) {
                 navigator(it)
-            }
-        })
-        viewModel.states().observe(viewLifecycleOwner, {
-            if (it != null) {
-                render(it)
             }
         })
         viewModel.processIntents(intents())

@@ -22,6 +22,7 @@ class CoordinatorImpl @Inject constructor(
     private val fragmentManager = activityContext.supportFragmentManager
 
     override fun navigateToLogin() {
+        clear()
         fragmentManager.beginTransaction()
             .replace(R.id.fragment_container, LoginFragment())
             .commit()
@@ -42,6 +43,12 @@ class CoordinatorImpl @Inject constructor(
 
     override fun pop() {
         fragmentManager.popBackStack()
+    }
+
+    private fun clear() {
+        repeat(fragmentManager.backStackEntryCount) {
+            fragmentManager.popBackStack()
+        }
     }
 
 }

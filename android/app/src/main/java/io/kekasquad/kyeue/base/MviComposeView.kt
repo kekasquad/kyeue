@@ -1,12 +1,13 @@
 package io.kekasquad.kyeue.base
 
+import androidx.compose.runtime.Composable
 import androidx.lifecycle.LiveData
 
-interface MviView<
+interface MviComposeView<
         VS : MviViewState,
-        I : MviIntent,
+        I  : MviIntent,
         NE : MviNavigationEvent> {
-    fun render(viewState: VS)
+    val render: @Composable ((VS) -> Unit)
     fun intents(): LiveData<I>
     fun navigator(navigationEvent: NE)
 }

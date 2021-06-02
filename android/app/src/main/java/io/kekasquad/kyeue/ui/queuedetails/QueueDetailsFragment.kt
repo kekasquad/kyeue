@@ -5,13 +5,13 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import com.google.accompanist.insets.ProvideWindowInsets
 import dagger.hilt.android.AndroidEntryPoint
-import io.kekasquad.kyeue.base.BaseFragment
+import io.kekasquad.kyeue.base.BaseComposeFragment
 import io.kekasquad.kyeue.nav.Coordinator
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class QueueDetailsFragment :
-    BaseFragment<QueueDetailsViewState, QueueDetailsIntent, QueueDetailsNavigationEvent>() {
+    BaseComposeFragment<QueueDetailsViewState, QueueDetailsIntent, QueueDetailsNavigationEvent>() {
     override val viewModel: QueueDetailsViewModel by viewModels()
 
     @Inject

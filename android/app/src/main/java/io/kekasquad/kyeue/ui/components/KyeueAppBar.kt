@@ -13,6 +13,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.statusBarsHeight
+import com.google.accompanist.insets.statusBarsPadding
 import io.kekasquad.kyeue.ui.theme.KyeueTheme
 
 @Composable
@@ -23,14 +24,8 @@ fun KyeueAppBar(
     navigation: @Composable (() -> Unit)? = null
 ) {
     Column {
-        Spacer(
-            modifier = modifier
-                .statusBarsHeight()
-                .fillMaxWidth()
-                .background(MaterialTheme.colors.primary)
-        )
         TopAppBar(
-            modifier = modifier,
+            modifier = modifier.statusBarsHeight(additional = 56.dp),
             backgroundColor = MaterialTheme.colors.primary,
             elevation = 16.dp,
             contentColor = MaterialTheme.colors.onPrimary,

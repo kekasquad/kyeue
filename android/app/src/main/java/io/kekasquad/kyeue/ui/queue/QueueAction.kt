@@ -35,4 +35,6 @@ sealed class QueueAction : MviAction {
         val queue: Queue
     ) : QueueAction()
 
+    object LogoutAction : QueueAction()
+
 }

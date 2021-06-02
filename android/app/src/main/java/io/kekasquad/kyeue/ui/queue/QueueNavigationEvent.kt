@@ -4,8 +4,10 @@ import io.kekasquad.kyeue.base.MviNavigationEvent
 
 sealed class QueueNavigationEvent : MviNavigationEvent {
 
-    data class NavigateToQueueDetails(
+    data class NavigateToQueueDetailsEvent(
         val queueId: String
     ) : QueueNavigationEvent()
+
+    object NavigateToLoginEvent : QueueNavigationEvent()
 
 }

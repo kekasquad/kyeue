@@ -50,7 +50,7 @@ class LoginViewModel @Inject constructor(
                             password = viewStateLiveData.value!!.password
                         )) {
                             is Result.Error -> {
-                                addIntermediateEffect(LoginEffect.MessageEffect(R.string.error_queue_loading_error_message))
+                                addIntermediateEffect(LoginEffect.MessageEffect(R.string.error_login))
                                 delay(3000L)
                                 LoginEffect.DismissErrorMessageEffect
                             }
@@ -82,7 +82,7 @@ class LoginViewModel @Inject constructor(
                             isTeacher = viewStateLiveData.value!!.isTeacher
                         )) {
                             is Result.Error -> {
-                                addIntermediateEffect(LoginEffect.MessageEffect(R.string.error_queue_loading_error_message))
+                                addIntermediateEffect(LoginEffect.MessageEffect(R.string.error_sign_up))
                                 delay(3000L)
                                 LoginEffect.DismissErrorMessageEffect
                             }
@@ -100,146 +100,40 @@ class LoginViewModel @Inject constructor(
     override fun stateReducer(oldState: LoginViewState, effect: LoginEffect): LoginViewState =
         when (effect) {
             is LoginEffect.ChangedFormModeEffect ->
-                if (effect.isSignUpMode) LoginViewState.signUpState
+                if (effect.isSignUpMode) oldState.signUpState()
                 else LoginViewState.loginState
-            is LoginEffect.UsernameErrorEffect -> LoginViewState.errorState(
-                isSignUpMode = oldState.isSignUpMode,
-                username = oldState.username,
-                password = oldState.password,
-                firstName = oldState.firstName,
-                lastName = oldState.lastName,
-                isTeacher = oldState.isTeacher,
-                usernameError = effect.message,
-                passwordError = 0,
-                firstNameError = 0,
-                lastNameError = 0
+            is LoginEffect.UsernameErrorEffect -> oldState.usernameErrorState(
+                usernameError = effect.message
             )
-            is LoginEffect.FirstNameChangedEffect -> LoginViewState.inputFieldsState(
-                isSignUpMode = oldState.isSignUpMode,
-                username = oldState.username,
-                password = oldState.password,
-                firstName = effect.firstName,
-                lastName = oldState.lastName,
-                isTeacher = oldState.isTeacher,
-                firstNameError = oldState.firstNameError,
-                usernameError = oldState.usernameError,
-                passwordError = oldState.passwordError,
-                lastNameError = oldState.lastNameError,
-                messageText = oldState.messageText
+            is LoginEffect.FirstNameChangedEffect -> oldState.inputFirstNameState(
+                firstName = effect.firstName
             )
-            is LoginEffect.IsTeacherChangedEffect -> LoginViewState.inputFieldsState(
-                isSignUpMode = oldState.isSignUpMode,
-                username = oldState.username,
-                password = oldState.password,
-                firstName = oldState.firstName,
-                lastName = oldState.lastName,
-                isTeacher = effect.isTeacher,
-                firstNameError = oldState.firstNameError,
-                usernameError = oldState.usernameError,
-                passwordError = oldState.passwordError,
-                lastNameError = oldState.lastNameError,
-                messageText = oldState.messageText
+            is LoginEffect.IsTeacherChangedEffect -> oldState.inputIsTeacherState(
+                isTeacher = effect.isTeacher
             )
-            is LoginEffect.LastNameChangedEffect -> LoginViewState.inputFieldsState(
-                isSignUpMode = oldState.isSignUpMode,
-                username = oldState.username,
-                password = oldState.password,
-                firstName = oldState.firstName,
-                lastName = effect.lastName,
-                isTeacher = oldState.isTeacher,
-                firstNameError = oldState.firstNameError,
-                usernameError = oldState.usernameError,
-                passwordError = oldState.passwordError,
-                lastNameError = oldState.lastNameError,
-                messageText = oldState.messageText
+            is LoginEffect.LastNameChangedEffect -> oldState.inputLastNameState(
+                lastName = effect.lastName
             )
-            LoginEffect.LoadingEffect -> LoginViewState.performActionState(
-                isSignUpMode = oldState.isSignUpMode,
-                username = oldState.username,
-                password = oldState.password,
-                firstName = oldState.firstName,
-                lastName = oldState.lastName,
-                isTeacher = oldState.isTeacher
-            )
+            LoginEffect.LoadingEffect -> oldState.performActionState()
             LoginEffect.NoEffect -> oldState
-            is LoginEffect.PasswordChangedEffect -> LoginViewState.inputFieldsState(
-                isSignUpMode = oldState.isSignUpMode,
-                username = oldState.username,
-                password = effect.password,
-                firstName = oldState.firstName,
-                lastName = oldState.lastName,
-                isTeacher = oldState.isTeacher,
-                firstNameError = oldState.firstNameError,
-                usernameError = oldState.usernameError,
-                passwordError = oldState.passwordError,
-                lastNameError = oldState.lastNameError,
-                messageText = oldState.messageText
+            is LoginEffect.PasswordChangedEffect -> oldState.inputPasswordState(
+                password = effect.password
             )
-            is LoginEffect.UsernameChangedEffect -> LoginViewState.inputFieldsState(
-                isSignUpMode = oldState.isSignUpMode,
-                username = effect.username,
-                password = oldState.password,
-                firstName = oldState.firstName,
-                lastName = oldState.lastName,
-                isTeacher = oldState.isTeacher,
-                firstNameError = oldState.firstNameError,
-                usernameError = oldState.usernameError,
-                passwordError = oldState.passwordError,
-                lastNameError = oldState.lastNameError,
-                messageText = oldState.messageText
+            is LoginEffect.UsernameChangedEffect -> oldState.inputUsernameState(
+                username = effect.username
             )
-            LoginEffect.DismissErrorMessageEffect -> LoginViewState.dismissMessageState(
-                isSignUpMode = oldState.isSignUpMode,
-                username = oldState.username,
-                password = oldState.password,
-                firstName = oldState.firstName,
-                lastName = oldState.lastName,
-                isTeacher = oldState.isTeacher
+            LoginEffect.DismissErrorMessageEffect -> oldState.dismissMessageState()
+            is LoginEffect.FirstNameErrorEffect -> oldState.firstNameErrorState(
+                firstNameError = effect.message
             )
-            is LoginEffect.FirstNameErrorEffect -> LoginViewState.errorState(
-                isSignUpMode = oldState.isSignUpMode,
-                username = oldState.username,
-                password = oldState.password,
-                firstName = oldState.firstName,
-                lastName = oldState.lastName,
-                isTeacher = oldState.isTeacher,
-                firstNameError = effect.message,
-                usernameError = 0,
-                passwordError = 0,
-                lastNameError = 0
-            )
-            is LoginEffect.LastNameErrorEffect -> LoginViewState.errorState(
-                isSignUpMode = oldState.isSignUpMode,
-                username = oldState.username,
-                password = oldState.password,
-                firstName = oldState.firstName,
-                lastName = oldState.lastName,
-                isTeacher = oldState.isTeacher,
-                firstNameError = 0,
-                usernameError = 0,
-                passwordError = 0,
+            is LoginEffect.LastNameErrorEffect -> oldState.lastNameErrorState(
                 lastNameError = effect.message
             )
-            is LoginEffect.MessageEffect -> LoginViewState.messageState(
-                isSignUpMode = oldState.isSignUpMode,
-                username = oldState.username,
-                password = oldState.password,
-                firstName = oldState.firstName,
-                lastName = oldState.lastName,
-                isTeacher = oldState.isTeacher,
+            is LoginEffect.MessageEffect -> oldState.messageState(
                 messageText = effect.message
             )
-            is LoginEffect.PasswordErrorEffect -> LoginViewState.errorState(
-                isSignUpMode = oldState.isSignUpMode,
-                username = oldState.username,
-                password = oldState.password,
-                firstName = oldState.firstName,
-                lastName = oldState.lastName,
-                isTeacher = oldState.isTeacher,
-                firstNameError = 0,
-                usernameError = 0,
-                passwordError = effect.message,
-                lastNameError = 0
+            is LoginEffect.PasswordErrorEffect -> oldState.passwordErrorState(
+                passwordError = effect.message
             )
         }
 }

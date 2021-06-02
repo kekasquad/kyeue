@@ -12,3 +12,4 @@ val Shapes = Shapes(
 
 val StudentShape = RoundedCornerShape(topStart = 4.dp, bottomStart = 4.dp)
 val TeacherShape = RoundedCornerShape(topEnd = 4.dp, bottomEnd = 4.dp)
+val ChipShape = RoundedCornerShape(16.dp)

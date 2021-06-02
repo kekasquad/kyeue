@@ -12,11 +12,13 @@ import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.google.accompanist.insets.navigationBarsHeight
+import io.kekasquad.kyeue.R
 import io.kekasquad.kyeue.ui.components.ItemPagingLoading
 import io.kekasquad.kyeue.ui.components.ItemPagingLoadingError
 import io.kekasquad.kyeue.ui.components.ItemSingleLoading
@@ -46,9 +48,9 @@ fun QueueList(
         viewState.isInitialLoading -> {
             ItemSingleLoading()
         }
-        viewState.initialLoadingError != null -> {
+        viewState.initialLoadingError != 0 -> {
             ItemSingleLoadingError(
-                errorMessage = { InitialErrorMessage(throwable = viewState.initialLoadingError) },
+                errorMessage = { InitialErrorMessage(errorMessage = viewState.initialLoadingError) },
                 onRetry = onInitialRetry
             )
         }
@@ -79,10 +81,10 @@ fun QueueList(
             item {
                 ItemPagingLoading()
             }
-        } else if (viewState.pagingLoadingError != null) {
+        } else if (viewState.pagingLoadingError != 0) {
             item {
                 ItemPagingLoadingError(
-                    errorMessage = { PagingErrorMessage(throwable = viewState.pagingLoadingError) },
+                    errorMessage = { PagingErrorMessage(errorMessage = viewState.pagingLoadingError) },
                     onRetry = onPagingRetry
                 )
             }
@@ -118,9 +120,9 @@ fun QueueListItem(
 ) {
     val (backgroundColor, onBackgroundColor) =
         if (currentUser == queue.creator) {
-            MaterialTheme.colors.primaryVariant to MaterialTheme.colors.onSecondary
+            MaterialTheme.colors.primaryVariant to MaterialTheme.colors.onSecondary.copy(alpha = 0.6F)
         } else {
-            MaterialTheme.colors.background to MaterialTheme.colors.onBackground
+            MaterialTheme.colors.background to MaterialTheme.colors.onBackground.copy(alpha = 0.6F)
         }
 
     Card(
@@ -200,7 +202,7 @@ fun CreatorQueueMenuIcon(
                 onQueueRenameClick(queue)
             }) {
                 Text(
-                    text = "Rename",
+                    text = stringResource(R.string.text_queue_menu_rename),
                     style = MaterialTheme.typography.body1,
                     color = MaterialTheme.colors.onSurface
                 )
@@ -210,7 +212,7 @@ fun CreatorQueueMenuIcon(
                 onQueueDeleteClick(queue)
             }) {
                 Text(
-                    text = "Delete",
+                    text = stringResource(R.string.text_queue_menu_delete),
                     style = MaterialTheme.typography.body1,
                     color = MaterialTheme.colors.onSurface
                 )
@@ -231,7 +233,7 @@ fun EmptyItem() {
                 start.linkTo(parent.start)
                 end.linkTo(parent.end)
             },
-            text = "No data",
+            text = stringResource(R.string.text_queue_empty_list),
             color = MaterialTheme.colors.onSurface,
             style = MaterialTheme.typography.h6
         )
@@ -239,18 +241,18 @@ fun EmptyItem() {
 }
 
 @Composable
-fun InitialErrorMessage(throwable: Throwable) {
+fun InitialErrorMessage(errorMessage: Int) {
     Text(
-        text = "Error loading",
+        text = stringResource(id = errorMessage),
         color = MaterialTheme.colors.onSurface,
         style = MaterialTheme.typography.h6
     )
 }
 
 @Composable
-fun PagingErrorMessage(throwable: Throwable) {
+fun PagingErrorMessage(errorMessage: Int) {
     Text(
-        text = "Error loading",
+        text = stringResource(id = errorMessage),
         color = MaterialTheme.colors.onSurface,
         style = MaterialTheme.typography.h6
     )

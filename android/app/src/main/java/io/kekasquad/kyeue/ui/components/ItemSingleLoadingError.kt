@@ -7,9 +7,10 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.ConstraintLayout
+import io.kekasquad.kyeue.R
 import io.kekasquad.kyeue.ui.theme.KyeueTheme
 
 @Composable
@@ -17,16 +18,9 @@ fun ItemSingleLoadingError(
     errorMessage: @Composable () -> Unit,
     onRetry: () -> Unit
 ) {
-    ConstraintLayout(modifier = Modifier.fillMaxSize()) {
-        val content = createRef()
-
+    Box(modifier = Modifier.fillMaxSize()) {
         Row(
-            modifier = Modifier.constrainAs(content) {
-                top.linkTo(parent.top)
-                bottom.linkTo(parent.bottom)
-                start.linkTo(parent.start)
-                end.linkTo(parent.end)
-            },
+            modifier = Modifier.align(Alignment.Center),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -36,7 +30,7 @@ fun ItemSingleLoadingError(
                 onClick = onRetry
             ) {
                 Text(
-                    text = "Retry",
+                    text = stringResource(R.string.text_button_initial_retry),
                     color = MaterialTheme.colors.onPrimary,
                     style = MaterialTheme.typography.button
                 )

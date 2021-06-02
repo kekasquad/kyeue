@@ -46,4 +46,6 @@ sealed class QueueIntent : MviIntent {
         val queue: Queue
     ) : QueueIntent()
 
+    object LogoutIntent : QueueIntent()
+
 }

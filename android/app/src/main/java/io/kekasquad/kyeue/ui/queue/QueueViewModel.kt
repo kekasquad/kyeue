@@ -83,6 +83,7 @@ class QueueViewModel @Inject constructor(
             QueueIntent.RenameQueueIntent -> QueueAction.RenameQueueAction
             QueueIntent.RetryInitialLoadingIntent -> QueueAction.InitialLoadingAction
             QueueIntent.RetryPagingLoadingIntent -> QueueAction.PagingLoadingAction
+            QueueIntent.LogoutIntent -> QueueAction.LogoutAction
         }
 
     override suspend fun performAction(action: QueueAction): QueueEffect =
@@ -96,7 +97,7 @@ class QueueViewModel @Inject constructor(
                     when (val result =
                         queueUseCase.createQueue(viewStateLiveData.value!!.queueName)) {
                         is Result.Error -> {
-                            addIntermediateEffect(QueueEffect.QueueActionMessageEffect(R.string.error_queue_loading_error_message))
+                            addIntermediateEffect(QueueEffect.QueueActionMessageEffect(R.string.error_queue_creation))
                             delay(3000L)
                             QueueEffect.DismissMessageEffect
                         }
@@ -113,7 +114,7 @@ class QueueViewModel @Inject constructor(
                 when (val result =
                     queueUseCase.deleteQueue(viewStateLiveData.value!!.queueToDelete!!.id)) {
                     is Result.Error -> {
-                        addIntermediateEffect(QueueEffect.QueueActionMessageEffect(R.string.error_queue_loading_error_message))
+                        addIntermediateEffect(QueueEffect.QueueActionMessageEffect(R.string.error_queue_deletion))
                         delay(3000L)
                         QueueEffect.DismissMessageEffect
                     }
@@ -128,7 +129,7 @@ class QueueViewModel @Inject constructor(
             QueueAction.InitialLoadingAction -> {
                 addIntermediateEffect(QueueEffect.InitialLoadingEffect)
                 when (val result = queueUseCase.getQueuePage(offsetData)) {
-                    is Result.Error -> QueueEffect.InitialLoadingErrorEffect(result.throwable)
+                    is Result.Error -> QueueEffect.InitialLoadingErrorEffect(R.string.error_queue_initial_loading)
                     is Result.Success -> QueueEffect.DataLoadedEffect(result.data.queues).also {
                         offsetData = result.data.nextOffset
                         startListening()
@@ -136,7 +137,11 @@ class QueueViewModel @Inject constructor(
                 }
             }
             is QueueAction.NavigateToQueueDetailsAction -> {
-                navigationEventLiveData.postValue(QueueNavigationEvent.NavigateToQueueDetails(action.queue.id))
+                navigationEventLiveData.postValue(
+                    QueueNavigationEvent.NavigateToQueueDetailsEvent(
+                        action.queue.id
+                    )
+                )
                 QueueEffect.NoEffect
             }
             QueueAction.OpenCreateQueueDialogAction -> QueueEffect.CreateDialogEffect
@@ -148,7 +153,7 @@ class QueueViewModel @Inject constructor(
                 } else {
                     addIntermediateEffect(QueueEffect.PagingLoadingEffect)
                     when (val result = queueUseCase.getQueuePage(offsetData)) {
-                        is Result.Error -> QueueEffect.PagingLoadingErrorEffect(result.throwable)
+                        is Result.Error -> QueueEffect.PagingLoadingErrorEffect(R.string.error_queue_paging_loading)
                         is Result.Success -> QueueEffect.DataLoadedEffect(result.data.queues).also {
                             offsetData = result.data.nextOffset
                         }
@@ -165,7 +170,7 @@ class QueueViewModel @Inject constructor(
                         name = viewStateLiveData.value!!.queueName
                     )) {
                         is Result.Error -> {
-                            addIntermediateEffect(QueueEffect.QueueActionMessageEffect(R.string.error_queue_loading_error_message))
+                            addIntermediateEffect(QueueEffect.QueueActionMessageEffect(R.string.error_queue_renaming))
                             delay(3000L)
                             QueueEffect.DismissMessageEffect
                         }
@@ -177,6 +182,11 @@ class QueueViewModel @Inject constructor(
                     }
                 }
             }
+            QueueAction.LogoutAction -> {
+                authUseCase.logout()
+                navigationEventLiveData.postValue(QueueNavigationEvent.NavigateToLoginEvent)
+                QueueEffect.NoEffect
+            }
         }
 
     override fun stateReducer(
@@ -184,193 +194,51 @@ class QueueViewModel @Inject constructor(
         effect: QueueEffect
     ): QueueViewState =
         when (effect) {
-            QueueEffect.CreateDialogEffect -> QueueViewState.openCreateDialogState(
-                currentUser = oldState.currentUser,
-                data = oldState.data,
-                isPagingLoading = oldState.isPagingLoading,
-                pagingLoadingError = oldState.pagingLoadingError
+            QueueEffect.CreateDialogEffect -> oldState.openCreateDialogState()
+            is QueueEffect.DataLoadedEffect -> oldState.loadedState(
+                data = effect.data
             )
-            is QueueEffect.DataLoadedEffect -> QueueViewState.loadedState(
-                currentUser = oldState.currentUser,
-                data = oldState.data + effect.data,
-                isCreateDialogOpened = oldState.isCreateDialogOpened,
-                queueToRename = oldState.queueToRename,
-                queueToDelete = oldState.queueToDelete,
-                queueName = oldState.queueName,
-                queueNameError = oldState.queueNameError,
-                messageText = oldState.messageText,
-                isActionPerforming = oldState.isActionPerforming
-            )
-            is QueueEffect.DeleteDialogEffect -> QueueViewState.openDeleteDialogState(
-                currentUser = oldState.currentUser,
-                data = oldState.data,
-                isPagingLoading = oldState.isPagingLoading,
-                pagingLoadingError = oldState.pagingLoadingError,
+            is QueueEffect.DeleteDialogEffect -> oldState.openDeleteDialogState(
                 queueToDelete = effect.queueToDelete
             )
-            QueueEffect.DismissEffect -> QueueViewState.closeDialogState(
-                currentUser = oldState.currentUser,
-                data = oldState.data,
-                isPagingLoading = oldState.isPagingLoading,
-                pagingLoadingError = oldState.pagingLoadingError
+            QueueEffect.DismissEffect -> oldState.closeDialogState()
+            QueueEffect.InitialLoadingEffect -> oldState.initialLoadingState()
+            is QueueEffect.InitialLoadingErrorEffect -> oldState.initialLoadingErrorState(
+                initialLoadingError = effect.message
             )
-            QueueEffect.InitialLoadingEffect -> QueueViewState.initialLoadingState(
-                currentUser = oldState.currentUser
-            )
-            is QueueEffect.InitialLoadingErrorEffect -> QueueViewState.initialLoadingErrorState(
-                currentUser = oldState.currentUser,
-                initialLoadingError = effect.throwable
-            )
-            is QueueEffect.NameChangedEffect -> QueueViewState.inputQueueNameState(
-                currentUser = oldState.currentUser,
-                data = oldState.data,
-                isPagingLoading = oldState.isPagingLoading,
-                pagingLoadingError = oldState.pagingLoadingError,
-                queueToRename = oldState.queueToRename,
-                isCreateDialogOpened = oldState.isCreateDialogOpened,
-                queueName = effect.queueName,
-                queueNameError = oldState.queueNameError
+            is QueueEffect.NameChangedEffect -> oldState.inputQueueNameState(
+                queueName = effect.queueName
             )
             QueueEffect.NoEffect -> oldState
-            QueueEffect.PagingLoadingEffect -> QueueViewState.pagingLoadingState(
-                currentUser = oldState.currentUser,
-                data = oldState.data,
-                messageText = oldState.messageText
+            QueueEffect.PagingLoadingEffect -> oldState.pagingLoadingState()
+            is QueueEffect.PagingLoadingErrorEffect -> oldState.pagingLoadingErrorState(
+                pagingLoadingError = effect.message
             )
-            is QueueEffect.PagingLoadingErrorEffect -> QueueViewState.pagingLoadingErrorState(
-                currentUser = oldState.currentUser,
-                data = oldState.data,
-                pagingLoadingError = effect.throwable,
-                isCreateDialogOpened = oldState.isCreateDialogOpened,
-                queueToRename = oldState.queueToRename,
-                queueToDelete = oldState.queueToDelete,
-                queueName = oldState.queueName,
-                messageText = oldState.messageText,
-                isActionPerforming = oldState.isActionPerforming
-            )
-            is QueueEffect.RenameDialogEffect -> QueueViewState.openRenameDialogState(
-                currentUser = oldState.currentUser,
-                data = oldState.data,
-                isPagingLoading = oldState.isPagingLoading,
-                pagingLoadingError = oldState.pagingLoadingError,
+            is QueueEffect.RenameDialogEffect -> oldState.openRenameDialogState(
                 queueToRename = effect.queueToRename
             )
-            QueueEffect.QueueActionPerformingEffect -> QueueViewState.performActionState(
-                currentUser = oldState.currentUser,
-                data = oldState.data,
-                isPagingLoading = oldState.isPagingLoading,
-                pagingLoadingError = oldState.pagingLoadingError
-            )
-            is QueueEffect.NameErrorEffect -> QueueViewState.queueNameErrorState(
-                currentUser = oldState.currentUser,
-                data = oldState.data,
-                isPagingLoading = oldState.isPagingLoading,
-                pagingLoadingError = oldState.pagingLoadingError,
-                isCreateDialogOpened = oldState.isCreateDialogOpened,
-                queueToRename = oldState.queueToRename,
-                queueName = oldState.queueName,
+            QueueEffect.QueueActionPerformingEffect -> oldState.performActionState()
+            is QueueEffect.NameErrorEffect -> oldState.queueNameErrorState(
                 queueNameError = effect.error
             )
-            is QueueEffect.QueueActionMessageEffect -> QueueViewState.messageState(
-                currentUser = oldState.currentUser,
-                data = oldState.data,
-                isPagingLoading = oldState.isPagingLoading,
-                pagingLoadingError = oldState.pagingLoadingError,
+            is QueueEffect.QueueActionMessageEffect -> oldState.messageState(
                 messageText = effect.message
             )
-            QueueEffect.DismissMessageEffect -> QueueViewState.dismissMessageState(
-                currentUser = oldState.currentUser,
-                data = oldState.data,
-                isPagingLoading = oldState.isPagingLoading,
-                pagingLoadingError = oldState.pagingLoadingError,
-                isCreateDialogOpened = oldState.isCreateDialogOpened,
-                queueToRename = oldState.queueToRename,
-                queueToDelete = oldState.queueToDelete,
-                queueName = oldState.queueName,
-                queueNameError = oldState.queueNameError,
-                isActionPerforming = oldState.isActionPerforming
+            QueueEffect.DismissMessageEffect -> oldState.dismissMessageState()
+            is QueueEffect.AddQueueEffect -> oldState.addQueueToTheTopState(
+                queue = effect.queue
             )
-            is QueueEffect.AddQueueEffect -> QueueViewState.messageUpdateState(
-                currentUser = oldState.currentUser,
-                data = oldState.data.toMutableList().apply {
-                    add(0, effect.queue)
-                },
-                isPagingLoading = oldState.isPagingLoading,
-                pagingLoadingError = oldState.pagingLoadingError,
-                isCreateDialogOpened = oldState.isCreateDialogOpened,
-                queueToRename = oldState.queueToRename,
-                queueToDelete = oldState.queueToDelete,
-                queueName = oldState.queueName,
-                queueNameError = oldState.queueNameError,
-                messageText = oldState.messageText,
-                isActionPerforming = oldState.isActionPerforming
+            is QueueEffect.DeleteQueueEffect -> oldState.deleteQueueState(
+                queueId = effect.queueId
             )
-            is QueueEffect.DeleteQueueEffect -> QueueViewState.messageUpdateState(
-                currentUser = oldState.currentUser,
-                data = oldState.data.toMutableList().apply {
-                    for (i in indices) {
-                        if (this[i].id == effect.queueId) {
-                            this.removeAt(i)
-                            break
-                        }
-                    }
-                },
-                isPagingLoading = oldState.isPagingLoading,
-                pagingLoadingError = oldState.pagingLoadingError,
-                isCreateDialogOpened = oldState.isCreateDialogOpened,
-                queueToRename = oldState.queueToRename,
-                queueToDelete = oldState.queueToDelete,
-                queueName = oldState.queueName,
-                queueNameError = oldState.queueNameError,
-                messageText = oldState.messageText,
-                isActionPerforming = oldState.isActionPerforming
+            is QueueEffect.AddQueueErrorEffect -> oldState.messageState(
+                messageText = effect.message
             )
-            is QueueEffect.AddQueueErrorEffect -> QueueViewState.messageUpdateState(
-                currentUser = oldState.currentUser,
-                data = oldState.data,
-                isPagingLoading = oldState.isPagingLoading,
-                pagingLoadingError = oldState.pagingLoadingError,
-                isCreateDialogOpened = oldState.isCreateDialogOpened,
-                queueToRename = oldState.queueToRename,
-                queueToDelete = oldState.queueToDelete,
-                queueName = oldState.queueName,
-                queueNameError = oldState.queueNameError,
-                messageText = effect.message,
-                isActionPerforming = oldState.isActionPerforming
+            is QueueEffect.RenameQueueEffect -> oldState.renameQueueState(
+                queue = effect.queue
             )
-            is QueueEffect.RenameQueueEffect -> QueueViewState.messageUpdateState(
-                currentUser = oldState.currentUser,
-                data = oldState.data.toMutableList().apply {
-                    for (i in indices) {
-                        if (this[i].id == effect.queue.id) {
-                            this.removeAt(i)
-                            this.add(i, effect.queue)
-                            break
-                        }
-                    }
-                },
-                isPagingLoading = oldState.isPagingLoading,
-                pagingLoadingError = oldState.pagingLoadingError,
-                isCreateDialogOpened = oldState.isCreateDialogOpened,
-                queueToRename = oldState.queueToRename,
-                queueToDelete = oldState.queueToDelete,
-                queueName = oldState.queueName,
-                queueNameError = oldState.queueNameError,
-                messageText = oldState.messageText,
-                isActionPerforming = oldState.isActionPerforming
-            )
-            is QueueEffect.RenameQueueErrorEffect -> QueueViewState.messageUpdateState(
-                currentUser = oldState.currentUser,
-                data = oldState.data,
-                isPagingLoading = oldState.isPagingLoading,
-                pagingLoadingError = oldState.pagingLoadingError,
-                isCreateDialogOpened = oldState.isCreateDialogOpened,
-                queueToRename = oldState.queueToRename,
-                queueToDelete = oldState.queueToDelete,
-                queueName = oldState.queueName,
-                queueNameError = oldState.queueNameError,
-                messageText = effect.message,
-                isActionPerforming = oldState.isActionPerforming
+            is QueueEffect.RenameQueueErrorEffect -> oldState.messageState(
+                messageText = effect.message
             )
         }
 

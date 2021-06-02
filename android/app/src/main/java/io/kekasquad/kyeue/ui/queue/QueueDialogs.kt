@@ -8,15 +8,14 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import io.kekasquad.kyeue.R
 import io.kekasquad.kyeue.ui.components.KyueuTextField
-import io.kekasquad.kyeue.ui.theme.KyeueTheme
 import io.kekasquad.kyeue.utils.stringResourceOrNull
 import io.kekasquad.kyeue.vo.inapp.Queue
-
 
 @Composable
 fun CreateQueueDialog(
@@ -37,7 +36,7 @@ fun CreateQueueDialog(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 16.dp),
-                    text = "Create queue",
+                    text = stringResource(R.string.text_dialog_title_create_queue),
                     style = MaterialTheme.typography.h6,
                     color = MaterialTheme.colors.onSurface
                 )
@@ -48,13 +47,16 @@ fun CreateQueueDialog(
                         .padding(bottom = 16.dp),
                     value = queueName,
                     onValueChange = onQueueNameChange,
-                    label = "Name",
+                    label = stringResource(R.string.hint_queue_name),
                     error = stringResourceOrNull(id = errorText)
                 )
 
                 Row {
                     DismissButton(onQueueCreateDismiss)
-                    ConfirmButton(text = "Create", onClick = onQueueCreate)
+                    ConfirmButton(
+                        text = stringResource(R.string.text_button_create_queue),
+                        onClick = onQueueCreate
+                    )
                 }
             }
         }
@@ -83,7 +85,7 @@ fun RenameQueueDialog(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 16.dp),
-                    text = "Rename queue",
+                    text = stringResource(R.string.text_dialog_title_rename_queue),
                     style = MaterialTheme.typography.h6,
                     color = MaterialTheme.colors.onSurface
                 )
@@ -94,13 +96,16 @@ fun RenameQueueDialog(
                         .padding(bottom = 16.dp),
                     value = queueName,
                     onValueChange = onQueueNameChange,
-                    label = "Name",
+                    label = stringResource(R.string.hint_queue_name),
                     error = stringResourceOrNull(id = errorText)
                 )
 
                 Row {
                     DismissButton(onQueueRenameDismiss)
-                    ConfirmButton(text = "Rename") { onQueueRename() }
+                    ConfirmButton(
+                        text = stringResource(R.string.text_button_rename_queue),
+                        onClick = onQueueRename
+                    )
                 }
             }
         }
@@ -117,19 +122,27 @@ fun DeleteQueueDialog(
         onDismissRequest = { onQueueDeleteDismiss() },
         title = {
             Text(
-                text = "Delete queue",
+                text = stringResource(R.string.text_dialog_title_delete_queue),
                 style = MaterialTheme.typography.h6,
                 color = MaterialTheme.colors.onSurface
             )
         },
         text = {
             Text(
-                text = "Are you sure you want to delete \"${queue.name}\" queue",
+                text = stringResource(
+                    id = R.string.text_dialog_desc_delete_queue,
+                    queue.name
+                ),
                 style = MaterialTheme.typography.body1,
                 color = MaterialTheme.colors.onSurface
             )
         },
-        confirmButton = { ConfirmButton(text = "Delete") { onQueueDelete() } },
+        confirmButton = {
+            ConfirmButton(
+                text = stringResource(R.string.text_button_delete_queue),
+                onClick = onQueueDelete
+            )
+        },
         dismissButton = { DismissButton(onQueueDeleteDismiss) }
     )
 }
@@ -158,7 +171,7 @@ private fun DismissButton(onClick: () -> Unit) {
         onClick = { onClick() }
     ) {
         Text(
-            text = "Dismiss",
+            text = stringResource(R.string.text_button_dismiss_dialog),
             style = MaterialTheme.typography.button,
             color = MaterialTheme.colors.primary,
             fontWeight = FontWeight.Bold

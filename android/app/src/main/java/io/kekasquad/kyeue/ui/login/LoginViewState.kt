@@ -18,6 +18,219 @@ data class LoginViewState(
     @StringRes val messageText: Int
 ) : MviViewState {
 
+    fun signUpState() = LoginViewState(
+        isSignUpMode = true,
+        username = "",
+        password = "",
+        firstName = "",
+        lastName = "",
+        isTeacher = false,
+        isLoginPerforming = false,
+        usernameError = 0,
+        passwordError = 0,
+        firstNameError = 0,
+        lastNameError = 0,
+        messageText = 0
+    )
+
+    fun inputUsernameState(
+        username: String,
+    ) = LoginViewState(
+        isSignUpMode = this.isSignUpMode,
+        username = username,
+        password = this.password,
+        firstName = this.firstName,
+        lastName = this.lastName,
+        isTeacher = this.isTeacher,
+        isLoginPerforming = false,
+        usernameError = this.usernameError,
+        passwordError = this.passwordError,
+        firstNameError = this.firstNameError,
+        lastNameError = this.lastNameError,
+        messageText = this.messageText
+    )
+
+    fun inputPasswordState(
+        password: String,
+    ) = LoginViewState(
+        isSignUpMode = this.isSignUpMode,
+        username = this.username,
+        password = password,
+        firstName = this.firstName,
+        lastName = this.lastName,
+        isTeacher = this.isTeacher,
+        isLoginPerforming = false,
+        usernameError = this.usernameError,
+        passwordError = this.passwordError,
+        firstNameError = this.firstNameError,
+        lastNameError = this.lastNameError,
+        messageText = this.messageText
+    )
+
+    fun inputFirstNameState(
+        firstName: String,
+    ) = LoginViewState(
+        isSignUpMode = this.isSignUpMode,
+        username = this.username,
+        password = this.password,
+        firstName = firstName,
+        lastName = this.lastName,
+        isTeacher = this.isTeacher,
+        isLoginPerforming = false,
+        usernameError = this.usernameError,
+        passwordError = this.passwordError,
+        firstNameError = this.firstNameError,
+        lastNameError = this.lastNameError,
+        messageText = this.messageText
+    )
+
+    fun inputLastNameState(
+        lastName: String,
+    ) = LoginViewState(
+        isSignUpMode = this.isSignUpMode,
+        username = this.username,
+        password = this.password,
+        firstName = this.firstName,
+        lastName = lastName,
+        isTeacher = this.isTeacher,
+        isLoginPerforming = false,
+        usernameError = this.usernameError,
+        passwordError = this.passwordError,
+        firstNameError = this.firstNameError,
+        lastNameError = this.lastNameError,
+        messageText = this.messageText
+    )
+
+    fun inputIsTeacherState(
+        isTeacher: Boolean
+    ) = LoginViewState(
+        isSignUpMode = this.isSignUpMode,
+        username = this.username,
+        password = this.password,
+        firstName = this.firstName,
+        lastName = this.lastName,
+        isTeacher = isTeacher,
+        isLoginPerforming = false,
+        usernameError = this.usernameError,
+        passwordError = this.passwordError,
+        firstNameError = this.firstNameError,
+        lastNameError = this.lastNameError,
+        messageText = this.messageText
+    )
+
+    fun performActionState() = LoginViewState(
+        isSignUpMode = this.isSignUpMode,
+        username = this.username,
+        password = this.password,
+        firstName = this.firstName,
+        lastName = this.lastName,
+        isTeacher = this.isTeacher,
+        isLoginPerforming = true,
+        usernameError = 0,
+        passwordError = 0,
+        firstNameError = 0,
+        lastNameError = 0,
+        messageText = 0
+    )
+
+    fun usernameErrorState(
+        usernameError: Int
+    ) = LoginViewState(
+        isSignUpMode = this.isSignUpMode,
+        username = this.username,
+        password = this.password,
+        firstName = this.firstName,
+        lastName = this.lastName,
+        isTeacher = this.isTeacher,
+        isLoginPerforming = false,
+        usernameError = usernameError,
+        passwordError = 0,
+        firstNameError = 0,
+        lastNameError = 0,
+        messageText = 0
+    )
+
+    fun passwordErrorState(
+        passwordError: Int
+    ) = LoginViewState(
+        isSignUpMode = this.isSignUpMode,
+        username = this.username,
+        password = this.password,
+        firstName = this.firstName,
+        lastName = this.lastName,
+        isTeacher = this.isTeacher,
+        isLoginPerforming = false,
+        usernameError = 0,
+        passwordError = passwordError,
+        firstNameError = 0,
+        lastNameError = 0,
+        messageText = 0
+    )
+
+    fun firstNameErrorState(
+        firstNameError: Int
+    ) = LoginViewState(
+        isSignUpMode = this.isSignUpMode,
+        username = this.username,
+        password = this.password,
+        firstName = this.firstName,
+        lastName = this.lastName,
+        isTeacher = this.isTeacher,
+        isLoginPerforming = false,
+        usernameError = 0,
+        passwordError = 0,
+        firstNameError = firstNameError,
+        lastNameError = 0,
+        messageText = 0
+    )
+
+    fun lastNameErrorState(
+        lastNameError: Int
+    ) = LoginViewState(
+        isSignUpMode = this.isSignUpMode,
+        username = this.username,
+        password = this.password,
+        firstName = this.firstName,
+        lastName = this.lastName,
+        isTeacher = this.isTeacher,
+        isLoginPerforming = false,
+        usernameError = 0,
+        passwordError = 0,
+        firstNameError = 0,
+        lastNameError = lastNameError,
+        messageText = 0
+    )
+
+    fun messageState(messageText: Int) = LoginViewState(
+        isSignUpMode = this.isSignUpMode,
+        username = this.username,
+        password = this.password,
+        firstName = this.firstName,
+        lastName = this.lastName,
+        isTeacher = this.isTeacher,
+        isLoginPerforming = false,
+        usernameError = 0,
+        passwordError = 0,
+        firstNameError = 0,
+        lastNameError = 0,
+        messageText = messageText
+    )
+
+    fun dismissMessageState() = LoginViewState(
+        isSignUpMode = this.isSignUpMode,
+        username = this.username,
+        password = this.password,
+        firstName = this.firstName,
+        lastName = this.lastName,
+        isTeacher = this.isTeacher,
+        isLoginPerforming = this.isLoginPerforming,
+        usernameError = this.usernameError,
+        passwordError = this.passwordError,
+        firstNameError = this.firstNameError,
+        lastNameError = this.lastNameError,
+        messageText = 0
+    )
+
     companion object {
         val loginState = LoginViewState(
             isSignUpMode = false,
@@ -26,141 +239,6 @@ data class LoginViewState(
             firstName = "",
             lastName = "",
             isTeacher = false,
-            isLoginPerforming = false,
-            usernameError = 0,
-            passwordError = 0,
-            firstNameError = 0,
-            lastNameError = 0,
-            messageText = 0
-        )
-
-        val signUpState = LoginViewState(
-            isSignUpMode = true,
-            username = "",
-            password = "",
-            firstName = "",
-            lastName = "",
-            isTeacher = false,
-            isLoginPerforming = false,
-            usernameError = 0,
-            passwordError = 0,
-            firstNameError = 0,
-            lastNameError = 0,
-            messageText = 0
-        )
-
-        fun inputFieldsState(
-            isSignUpMode: Boolean,
-            username: String,
-            password: String,
-            firstName: String,
-            lastName: String,
-            isTeacher: Boolean,
-            usernameError: Int,
-            passwordError: Int,
-            firstNameError: Int,
-            lastNameError: Int,
-            messageText: Int
-        ) = LoginViewState(
-            isSignUpMode = isSignUpMode,
-            username = username,
-            password = password,
-            firstName = firstName,
-            lastName = lastName,
-            isTeacher = isTeacher,
-            isLoginPerforming = false,
-            usernameError = usernameError,
-            passwordError = passwordError,
-            firstNameError = firstNameError,
-            lastNameError = lastNameError,
-            messageText = messageText
-        )
-
-        fun performActionState(
-            isSignUpMode: Boolean,
-            username: String,
-            password: String,
-            firstName: String,
-            lastName: String,
-            isTeacher: Boolean
-        ) = LoginViewState(
-            isSignUpMode = isSignUpMode,
-            username = username,
-            password = password,
-            firstName = firstName,
-            lastName = lastName,
-            isTeacher = isTeacher,
-            isLoginPerforming = true,
-            usernameError = 0,
-            passwordError = 0,
-            firstNameError = 0,
-            lastNameError = 0,
-            messageText = 0
-        )
-
-        fun errorState(
-            isSignUpMode: Boolean,
-            username: String,
-            password: String,
-            firstName: String,
-            lastName: String,
-            isTeacher: Boolean,
-            usernameError: Int,
-            passwordError: Int,
-            firstNameError: Int,
-            lastNameError: Int
-        ) = LoginViewState(
-            isSignUpMode = isSignUpMode,
-            username = username,
-            password = password,
-            firstName = firstName,
-            lastName = lastName,
-            isTeacher = isTeacher,
-            isLoginPerforming = false,
-            usernameError = usernameError,
-            passwordError = passwordError,
-            firstNameError = firstNameError,
-            lastNameError = lastNameError,
-            messageText = 0
-        )
-
-        fun messageState(
-            isSignUpMode: Boolean,
-            username: String,
-            password: String,
-            firstName: String,
-            lastName: String,
-            isTeacher: Boolean,
-            messageText: Int
-        ) = LoginViewState(
-            isSignUpMode = isSignUpMode,
-            username = username,
-            password = password,
-            firstName = firstName,
-            lastName = lastName,
-            isTeacher = isTeacher,
-            isLoginPerforming = false,
-            usernameError = 0,
-            passwordError = 0,
-            firstNameError = 0,
-            lastNameError = 0,
-            messageText = messageText
-        )
-
-        fun dismissMessageState(
-            isSignUpMode: Boolean,
-            username: String,
-            password: String,
-            firstName: String,
-            lastName: String,
-            isTeacher: Boolean
-        ) = LoginViewState(
-            isSignUpMode = isSignUpMode,
-            username = username,
-            password = password,
-            firstName = firstName,
-            lastName = lastName,
-            isTeacher = isTeacher,
             isLoginPerforming = false,
             usernameError = 0,
             passwordError = 0,

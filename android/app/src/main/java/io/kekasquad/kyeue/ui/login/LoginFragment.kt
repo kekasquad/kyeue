@@ -3,12 +3,12 @@ package io.kekasquad.kyeue.ui.login
 import androidx.compose.runtime.Composable
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
-import io.kekasquad.kyeue.base.BaseFragment
+import io.kekasquad.kyeue.base.BaseComposeFragment
 import io.kekasquad.kyeue.nav.Coordinator
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class LoginFragment : BaseFragment<LoginViewState, LoginIntent, LoginNavigationEvent>() {
+class LoginFragment : BaseComposeFragment<LoginViewState, LoginIntent, LoginNavigationEvent>() {
     override val viewModel: LoginViewModel by viewModels()
 
     @Inject

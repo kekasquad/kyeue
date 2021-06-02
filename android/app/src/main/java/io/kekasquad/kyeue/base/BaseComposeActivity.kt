@@ -1,18 +1,19 @@
 package io.kekasquad.kyeue.base
 
 import android.os.Bundle
+import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
+import io.kekasquad.kyeue.ui.theme.KyeueTheme
 
-abstract class BaseActivity<
+abstract class BaseComposeActivity<
         VS : MviViewState,
-        I : MviIntent,
-        NE : MviNavigationEvent> : AppCompatActivity(), MviView<VS, I, NE> {
-    protected abstract val layoutResourceId: Int
+        I  : MviIntent,
+        NE : MviNavigationEvent> : AppCompatActivity(), MviComposeView<VS, I, NE> {
     protected abstract val viewModel: MviViewModel<VS, I, NE>
-
-    protected abstract fun initViews()
 
     protected abstract fun backStackIntent(): I?
     protected abstract fun initialIntent(): I?
@@ -23,15 +24,17 @@ abstract class BaseActivity<
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(layoutResourceId)
+        setContent {
+            val viewState: VS? by viewModel.states().observeAsState()
+            KyeueTheme {
+                if (viewState != null) {
+                    render(viewState!!)
+                }
+            }
+        }
         viewModel.navigationEvents().observe(this, {
             if (it != null) {
                 navigator(it)
-            }
-        })
-        viewModel.states().observe(this, {
-            if (it != null) {
-                render(it)
             }
         })
         viewModel.processIntents(intents())

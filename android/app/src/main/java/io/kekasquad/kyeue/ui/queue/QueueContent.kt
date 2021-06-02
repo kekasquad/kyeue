@@ -1,20 +1,18 @@
 package io.kekasquad.kyeue.ui.queue
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Logout
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.navigationBarsPadding
+import com.google.accompanist.insets.statusBarsPadding
 import io.kekasquad.kyeue.R
 import io.kekasquad.kyeue.ui.components.KyeueAppBar
 import io.kekasquad.kyeue.utils.stringResourceOrNull
@@ -39,7 +37,8 @@ fun QueuesContent(
     onQueueNameChange: (String) -> Unit,
     onInitialRetry: () -> Unit,
     onPagingLoading: () -> Unit,
-    onPagingRetry: () -> Unit
+    onPagingRetry: () -> Unit,
+    onLogout: () -> Unit
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
@@ -47,7 +46,7 @@ fun QueuesContent(
     Scaffold(
         modifier = modifier.fillMaxSize(),
         scaffoldState = rememberScaffoldState(snackbarHostState = snackbarHostState),
-        topBar = { QueueAppBar() },
+        topBar = { QueueAppBar(onLogout = onLogout) },
         floatingActionButton = { FabQueueAdd(onQueueCreateClick = onQueueCreateClick) },
         backgroundColor = MaterialTheme.colors.surface
     ) { innerPadding ->
@@ -128,18 +127,34 @@ fun FabQueueAdd(
 }
 
 @Composable
-fun QueueAppBar() {
+fun QueueAppBar(onLogout: () -> Unit) {
     KyeueAppBar(
         title = {
             Text(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .statusBarsPadding()
                     .padding(end = 16.dp),
                 text = stringResource(id = R.string.app_name),
                 style = MaterialTheme.typography.h6,
                 color = MaterialTheme.colors.onPrimary,
                 maxLines = 1
             )
+        },
+        actions = {
+            IconButton(
+                modifier = Modifier.statusBarsPadding(),
+                onClick = onLogout
+            ) {
+                Icon(
+                    modifier = Modifier
+                        .requiredWidth(24.dp)
+                        .requiredHeight(24.dp),
+                    tint = MaterialTheme.colors.onPrimary.copy(alpha = 0.6F),
+                    imageVector = Icons.Outlined.Logout,
+                    contentDescription = ""
+                )
+            }
         }
     )
 }

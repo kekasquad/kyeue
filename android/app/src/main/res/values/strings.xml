@@ -1,6 +1,40 @@
 <resources>
     <string name="app_name">Kyeue</string>
 
+    <string name="text_header_current">Current</string>
+    <string name="text_header_ongoing">Ongoing</string>
+
+    <string name="text_queue_empty_list">No data</string>
+    <string name="text_queue_members_empty_list">This queue is empty</string>
+
+    <string name="text_dialog_title_create_queue">Create queue</string>
+    <string name="text_dialog_title_rename_queue">Rename queue</string>
+    <string name="text_dialog_title_delete_queue">Delete queue</string>
+    <string name="text_dialog_desc_delete_queue">Are you sure you want to delete %s queue?</string>
+
+    <string name="hint_username">Username</string>
+    <string name="hint_password">Password</string>
+    <string name="hint_first_name">First name</string>
+    <string name="hint_last_name">Last name</string>
+    <string name="hint_queue_name">Name</string>
+
+    <string name="text_button_login">Login</string>
+    <string name="text_button_sign_up">Sign up</string>
+    <string name="text_button_sign_up_student">Student</string>
+    <string name="text_button_sign_up_teacher">Teacher</string>
+    <string name="text_button_create_queue">Create</string>
+    <string name="text_button_rename_queue">Rename</string>
+    <string name="text_button_delete_queue">Delete</string>
+    <string name="text_button_dismiss_dialog">Dismiss</string>
+    <string name="text_button_initial_retry">Retry</string>
+    <string name="text_button_paging_retry">Retry</string>
+
+    <string name="text_queue_menu_rename">Rename</string>
+    <string name="text_queue_menu_delete">Delete</string>
+    <string name="text_member_menu_skip_turn">Skip turn</string>
+    <string name="text_member_menu_to_the_end">Go to the end</string>
+    <string name="text_member_menu_leave">Leave</string>
+
     <string name="message_signup_success">Account created</string>
     <string name="message_queue_creation_success">Queue created</string>
     <string name="message_queue_renaming_success">Queue renamed</string>
@@ -15,7 +49,13 @@
     <string name="error_empty_field">Empty field</string>
     <string name="error_username_in_use">Username already exists</string>
     <string name="error_wrong_password">Wrong password</string>
-    <string name="error_queue_loading_error_message">Loading error</string>
+    <string name="error_login">Login error</string>
+    <string name="error_sign_up">Sign up error</string>
+    <string name="error_queue_initial_loading">Loading error</string>
+    <string name="error_queue_paging_loading">Paging loading</string>
+    <string name="error_queue_creation">Queue haven\'t created</string>
+    <string name="error_queue_renaming">Queue haven\'t renamed</string>
+    <string name="error_queue_deletion">Queue haven\'t deleted</string>
     <string name="error_member_loading_error_message">Loading error</string>
 
 </resources>

@@ -5,12 +5,12 @@ import androidx.compose.ui.Modifier
 import androidx.fragment.app.viewModels
 import com.google.accompanist.insets.ProvideWindowInsets
 import dagger.hilt.android.AndroidEntryPoint
-import io.kekasquad.kyeue.base.BaseFragment
+import io.kekasquad.kyeue.base.BaseComposeFragment
 import io.kekasquad.kyeue.nav.Coordinator
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class QueueFragment : BaseFragment<QueueViewState, QueueIntent, QueueNavigationEvent>() {
+class QueueFragment : BaseComposeFragment<QueueViewState, QueueIntent, QueueNavigationEvent>() {
     override val viewModel: QueueViewModel by viewModels()
 
     @Inject
@@ -50,15 +50,18 @@ class QueueFragment : BaseFragment<QueueViewState, QueueIntent, QueueNavigationE
                 },
                 onInitialRetry = { _intentLiveData.value = QueueIntent.RetryInitialLoadingIntent },
                 onPagingLoading = { _intentLiveData.value = QueueIntent.PagingLoadingIntent },
-                onPagingRetry = { _intentLiveData.value = QueueIntent.RetryPagingLoadingIntent }
+                onPagingRetry = { _intentLiveData.value = QueueIntent.RetryPagingLoadingIntent },
+                onLogout = { _intentLiveData.value = QueueIntent.LogoutIntent }
             )
         }
     }
 
     override fun navigator(navigationEvent: QueueNavigationEvent) {
         when (navigationEvent) {
-            is QueueNavigationEvent.NavigateToQueueDetails ->
+            is QueueNavigationEvent.NavigateToQueueDetailsEvent ->
                 coordinator.navigateToQueueDetails(navigationEvent.queueId)
+            QueueNavigationEvent.NavigateToLoginEvent ->
+                coordinator.navigateToLogin()
         }
     }
 }

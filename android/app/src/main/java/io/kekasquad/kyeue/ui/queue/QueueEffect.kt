@@ -8,7 +8,7 @@ sealed class QueueEffect : MviEffect {
     object InitialLoadingEffect : QueueEffect()
 
     data class InitialLoadingErrorEffect(
-        val throwable: Throwable
+        val message: Int
     ) : QueueEffect()
 
     data class DataLoadedEffect(
@@ -18,7 +18,7 @@ sealed class QueueEffect : MviEffect {
     object PagingLoadingEffect : QueueEffect()
 
     data class PagingLoadingErrorEffect(
-        val throwable: Throwable
+        val message: Int
     ) : QueueEffect()
 
     object CreateDialogEffect : QueueEffect()

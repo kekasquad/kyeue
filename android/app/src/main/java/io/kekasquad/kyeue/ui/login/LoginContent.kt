@@ -19,7 +19,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.Dimension
@@ -29,6 +28,7 @@ import io.kekasquad.kyeue.ui.theme.StudentShape
 import io.kekasquad.kyeue.ui.theme.TeacherShape
 import io.kekasquad.kyeue.utils.stringResourceOrNull
 import kotlinx.coroutines.launch
+import io.kekasquad.kyeue.R
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -86,7 +86,7 @@ fun LoginContent(
                         .layoutId(ViewId.USERNAME.id),
                     value = viewState.username,
                     onValueChange = onUsernameChange,
-                    label = "Username",
+                    label = stringResource(R.string.hint_username),
                     singleLine = true,
                     error = stringResourceOrNull(id = viewState.usernameError)
                 )
@@ -96,7 +96,7 @@ fun LoginContent(
                         .layoutId(ViewId.PASSWORD.id),
                     value = viewState.password,
                     onValueChange = onPasswordChange,
-                    label = "Password",
+                    label = stringResource(R.string.hint_password),
                     singleLine = true,
                     error = stringResourceOrNull(id = viewState.passwordError),
                     visualTransformation = PasswordVisualTransformation(),
@@ -113,7 +113,7 @@ fun LoginContent(
                         modifier = Modifier.fillMaxWidth(),
                         value = viewState.firstName,
                         onValueChange = onFirstNameChange,
-                        label = "Firstname",
+                        label = stringResource(R.string.hint_first_name),
                         singleLine = true,
                         error = stringResourceOrNull(id = viewState.firstNameError)
                     )
@@ -128,7 +128,7 @@ fun LoginContent(
                         modifier = Modifier.fillMaxWidth(),
                         value = viewState.lastName,
                         onValueChange = onLastNameChange,
-                        label = "Lastname",
+                        label = stringResource(R.string.hint_last_name),
                         singleLine = true,
                         error = stringResourceOrNull(id = viewState.lastNameError)
                     )
@@ -145,14 +145,14 @@ fun LoginContent(
 
                 ActionButton(
                     id = ViewId.SIGN_UP,
-                    text = "Sign up",
+                    text = stringResource(R.string.text_button_sign_up),
                     isSignUpMode = viewState.isSignUpMode,
                     onChangeMode = onEnterSignUpMode,
                     onSubmit = onSignUp
                 )
                 ActionButton(
                     id = ViewId.LOGIN,
-                    text = "Login",
+                    text = stringResource(R.string.text_button_login),
                     isSignUpMode = viewState.isSignUpMode,
                     onChangeMode = onEnterLoginMode,
                     onSubmit = onLogin
@@ -182,7 +182,7 @@ private fun IsTeacherGroup(
             shape = StudentShape
         ) {
             Text(
-                text = "Student",
+                text = stringResource(R.string.text_button_sign_up_student),
                 style = MaterialTheme.typography.button,
                 color = MaterialTheme.colors.primary
             )
@@ -195,7 +195,7 @@ private fun IsTeacherGroup(
             shape = TeacherShape
         ) {
             Text(
-                text = "Teacher",
+                text = stringResource(R.string.text_button_sign_up_teacher),
                 style = MaterialTheme.typography.button,
                 color = MaterialTheme.colors.primary
             )
