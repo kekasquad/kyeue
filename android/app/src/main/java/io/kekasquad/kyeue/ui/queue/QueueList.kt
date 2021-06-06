@@ -1,7 +1,6 @@
 package io.kekasquad.kyeue.ui.queue
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -110,6 +109,7 @@ fun QueueList(
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun QueueListItem(
     queue: Queue,
@@ -127,9 +127,9 @@ fun QueueListItem(
 
     Card(
         modifier = Modifier
-            .clickable { onClick(queue) }
             .height(48.dp)
             .fillMaxWidth(),
+        onClick = { onClick(queue) },
         backgroundColor = backgroundColor,
         shape = MaterialTheme.shapes.large
     ) {

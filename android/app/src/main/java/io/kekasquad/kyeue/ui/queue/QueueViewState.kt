@@ -66,7 +66,7 @@ data class QueueViewState(
             var valuesToDrop = 0
             val newDataSet = data.toHashSet()
             for (i in this.size - 1 downTo 0) {
-                if (!newDataSet.contains(this.get(i))) {
+                if (!newDataSet.contains(this[i])) {
                     break
                 }
                 valuesToDrop++
@@ -321,7 +321,7 @@ data class QueueViewState(
             for (i in indices) {
                 if (this[i].id == queue.id) {
                     this.removeAt(i)
-                    this.add(i, queue)
+                    this.add(0, queue)
                     break
                 }
             }

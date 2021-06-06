@@ -34,7 +34,7 @@ private val LightColorPalette = lightColors(
 @Composable
 fun KyeueTheme(
     isDarkTheme: Boolean = isSystemInDarkTheme(),
-    content: @Composable() () -> Unit
+    content: @Composable () -> Unit
 ) {
     val colors = if (isDarkTheme) DarkColorPalette else LightColorPalette
 

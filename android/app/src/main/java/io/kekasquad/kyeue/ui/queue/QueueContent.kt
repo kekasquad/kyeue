@@ -6,6 +6,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Logout
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -41,7 +42,14 @@ fun QueuesContent(
     onLogout: () -> Unit
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
-    val coroutineScope = rememberCoroutineScope()
+    val message = stringResourceOrNull(id = viewState.messageText)
+    LaunchedEffect(snackbarHostState) {
+        if (message != null) {
+            snackbarHostState.showSnackbar(message)
+        } else {
+            snackbarHostState.currentSnackbarData?.dismiss()
+        }
+    }
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -50,15 +58,6 @@ fun QueuesContent(
         floatingActionButton = { FabQueueAdd(onQueueCreateClick = onQueueCreateClick) },
         backgroundColor = MaterialTheme.colors.surface
     ) { innerPadding ->
-        val message = stringResourceOrNull(id = viewState.messageText)
-        if (message != null) {
-            coroutineScope.launch {
-                snackbarHostState.showSnackbar(message = message)
-            }
-        } else {
-            snackbarHostState.currentSnackbarData?.dismiss()
-        }
-
         Box(
             modifier = Modifier
                 .padding(innerPadding)
